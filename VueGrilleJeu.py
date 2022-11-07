@@ -1,6 +1,7 @@
 from typing_extensions import Self
 
-
+from controller.plateau import Plateau
+from controller.player import Player
 import customtkinter
 from PIL import Image,ImageTk
 from tkinter import RAISED, Canvas,LEFT
@@ -24,13 +25,13 @@ class VueGrilleJeu:
 
         img=Image.open(f)
         w,h=img.size
-        piece_canvas = Canvas(self.window, width=w, height=h, bd=0, highlightthickness=0, relief='ridge')
+        self.piece_canvas = Canvas(self.window, width=w, height=h, bd=0, highlightthickness=0, relief='ridge')
         self.img = ImageTk.PhotoImage(file=f)
-        piece_canvas.create_image(0,0,image=self.img,anchor = "nw" )
+        self.piece_canvas.create_image(0,0,image=self.img,anchor = "nw" )
+        self.piece_canvas.place(x=coord_x,y=coord_y)
+        self.liste_piece.append([f,self.piece_canvas,self.img])
 
-        piece_canvas.place(x=coord_x,y=coord_y)
 
-        self.liste_piece.append(f)
         
         
 
