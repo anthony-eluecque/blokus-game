@@ -24,7 +24,7 @@ class Player():
             num_piece (int): La pièce à jouer
 
         Returns:
-            list[int]: La liste des pièces jouables
+            list[int]: La pièce
         """
         return self.pieces.getPiece(num_piece)
     
