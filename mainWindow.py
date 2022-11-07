@@ -11,7 +11,7 @@ import customtkinter
 
 from controller.plateau import Plateau
 from controller.player import Player
-from controller.checkIn import *
+from controller.checkIn import valid_placement,coords_blocs
 from controller.pieces import Pieces
 
 from VuePiece import VuePiece
@@ -38,10 +38,24 @@ class VueBlokus():
 
         self.window.mainloop()
     
-    def callbackPiece(self,file,x:int,y:int):
-        self.grille_jeu.addPieceToGrille(file,x,y)
-        self.nextPlayer()
-        self.displayPiecesPlayer()
+    def callbackPiece(self:Self,file:str,x:int,y:int):
+
+        num_piece = int(file.split("/")[3].split(".")[0])
+        piece = self.actual_player.jouerPiece(num_piece)
+        statement = self.joueurs.index(self.actual_player.getCouleur())
+
+        # print("Position départ :",self.actual_player.getPositionDepart())
+        # print("Position voulu par l'input : ",x//30,"-",y//30)
+
+        # if valid_placement(piece,0,0,self.plateau,self.actual_player):
+        # Kept for testing (drag & drop bug :c )
+        if valid_placement(piece,x//30,y//30,self.plateau,self.actual_player):
+            self.grille_jeu.addPieceToGrille(file,x,y)
+            new_bloc = coords_blocs(piece,x//30,y//30)
+            for y,x in new_bloc:
+                self.plateau.setColorOfCase(y,x,statement)
+                self.nextPlayer()
+                self.displayPiecesPlayer()
         
 
     def displayPiecesPlayer(self:Self):
