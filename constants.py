@@ -3,7 +3,7 @@ POSITION_DEPART = {'Bleu':[0,0],'Jaune':[0,19],'Vert':[19,0],'Rouge':[19,19]}
 
 
 # à changer en fonction des tests (max 21 pièces)
-MAX_PIECES = 3 
+MAX_PIECES = 21
 
 
 PIECES_IMAGES = ["/1.png","/2.png","/3.png",
