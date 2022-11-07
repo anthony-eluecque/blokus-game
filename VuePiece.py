@@ -15,8 +15,9 @@ class VuePiece():
         self.images_pieces = player.pieces.getImagesPieces()
         self.liste_canvas = []
 
-        self.frame = customtkinter.CTkFrame(master=self.window,     
-                    width=600,height=300)
+        print(self.images_pieces)
+
+        self.frame = customtkinter.CTkFrame(master=self.window)
 
         self.frame.grid(rowspan=2,column=1,sticky='news')
 
@@ -82,7 +83,11 @@ class VuePiece():
             if liste_canvas[i][0]==e.widget:
                 print(i,"piece numero : ",i+1)
                 self.index_piece_dragdrop = i
-                widget_location = [self.getXinRoot(e),self.getYinRoot(e)]
+                widget_location = [
+                    e.x_root,
+                    e.y_root
+                ]
+                print(widget_location)
                 self.gestionPiece.addImageToGrid(self.images_pieces[i],widget_location)
 
                 
@@ -94,6 +99,7 @@ class VuePiece():
         # print(w,h)
         self.canvas = Canvas(self.frame, width=w, height=h, bd=0, highlightthickness=0, relief='ridge')
         self.canvas.grid(row=placementrow,column=placementcol)
+        # self.canvas.place(x=placementrow*100,y=placementcol*100)
         self.img = ImageTk.PhotoImage(file=f)
         self.canvas.create_image(0,0,image=self.img,anchor = "nw" )
         self.liste_canvas.append([self.canvas,self.img])

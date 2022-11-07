@@ -6,12 +6,15 @@ class Pieces():
 
     def __init__(self : Self,color:str) -> None:
         self.liste_pieces : list[list] = PIECES
-        self.liste_images_pieces : list[str] = self.__fichierJoueur(PIECES_IMAGES,color)
+        self.images_pieces : list[str] = PIECES_IMAGES
+        self.pieces_joueurs : list = [_ for _ in range(len(PIECES_IMAGES))]
+        self.liste_images_pieces : list[str] = self.__fichierJoueur(color)
 
-    def __fichierJoueur(self:Self,images_pieces:list[str],color:str)->list[str]:
+    def __fichierJoueur(self:Self,color:str)->list:
 
-        for i in range(len(images_pieces)):
-            images_pieces[i] = "./Pieces/"+color.upper()+images_pieces[i]
+        images_pieces : list[str] = ["" for _ in range(len(PIECES_IMAGES))]
+        for i in range(len(self.images_pieces)):
+            images_pieces[i] = "./Pieces/"+color.upper()+self.images_pieces[i]
         return images_pieces
 
     def getNbPieces(self: Self) -> int:
