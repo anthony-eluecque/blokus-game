@@ -25,7 +25,6 @@ class VueBlokus():
         self.joueurs = ["Bleu","Jaune","Vert","Rouge"]
         self.index = 0
         self.actual_player = Player(self.joueurs[self.index])
-
         self.plateau = Plateau(20,20)
 
 
@@ -41,22 +40,32 @@ class VueBlokus():
     def callbackPiece(self:Self,file:str,x:int,y:int):
 
         num_piece = int(file.split("/")[3].split(".")[0])
-        piece = self.actual_player.jouerPiece(num_piece)
-        statement = self.joueurs.index(self.actual_player.getCouleur())
+        print("Numéro pièce : ",num_piece)
+
+        # -1 car c'est une liste, ici c'est pas des png.
+        piece = self.actual_player.jouerPiece(num_piece-1)
+        couleur_joueur = self.actual_player.getCouleur()
+        index_joueur = self.joueurs.index(couleur_joueur)
 
         # print("Position départ :",self.actual_player.getPositionDepart())
         # print("Position voulu par l'input : ",x//30,"-",y//30)
 
         # if valid_placement(piece,0,0,self.plateau,self.actual_player):
         # Kept for testing (drag & drop bug :c )
+
+        print("Coord bloc : " ,x//30,y//30)
+
+
         if valid_placement(piece,x//30,y//30,self.plateau,self.actual_player):
-            self.grille_jeu.addPieceToGrille(file,x,y)
             new_bloc = coords_blocs(piece,x//30,y//30)
-            for y,x in new_bloc:
-                self.plateau.setColorOfCase(y,x,statement)
-                self.nextPlayer()
-                self.displayPiecesPlayer()
-        
+            chemin_piece = "./Pieces/" + couleur_joueur.upper()[0] + "/1.png"
+            print(new_bloc)
+            for y1,x1 in new_bloc:
+                self.grille_jeu.addPieceToGrille(chemin_piece,y1,x1)
+                self.plateau.setColorOfCase(y1,x1,index_joueur)
+            self.nextPlayer()
+            self.displayPiecesPlayer()
+
 
     def displayPiecesPlayer(self:Self):
         self.vue_piece = VuePiece(self.window,self.actual_player,self)
