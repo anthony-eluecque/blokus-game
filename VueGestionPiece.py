@@ -15,21 +15,31 @@ class VueGestionPiece:
         self.canvas_piece = None
         self.frame = frame
         self.master = master
+    
 
     def onMotion(self,e):
         # print("x fenetre :",self.window.winfo_rootx())
         # print("y fenetre :",self.window.winfo_rooty())
-     
+
+        # print([e.x_root,e.x],[e.y_root,e.y])
+
         if self.canvas_piece:
-            new_x = e.x_root 
-            new_y = e.y_root 
-            self.canvas_piece.place(x=new_x,y=new_y)  
+            self.new_x = e.x_root 
+            self.new_y = e.y_root 
+            self.canvas_piece.place(x=self.new_x,y=self.new_y)  
  
     def onDrop(self,e):
+        # print(e.x_root,e.y_root)
         x_round = self.round_down(e.x_root,-2)
         y_round = self.round_down(e.y_root,-2)
-        self.canvas_piece.destroy()
-        self.emitToGrille(x_round,y_round)
+
+        if x_round<=600 and y_round<=600 :
+
+            # print(x_round,y_round)
+
+            if self.canvas_piece:
+                self.canvas_piece.destroy()
+            self.emitToGrille(x_round,y_round)
 
     def emitToGrille(self,x,y):
         self.master.callbackPiece(self.file,x,y)
@@ -41,8 +51,7 @@ class VueGestionPiece:
 
         if int(str(n)[1])>5:
             result+=50
-
-
+        print(result)
         return (result//30)*30
 
 
@@ -59,6 +68,6 @@ class VueGestionPiece:
         self.png_piece = self.canvas_piece.create_image(0,0,image=self.img,anchor = "nw" )   
        
         self.canvas_piece.place(x=widget_location[0],y=widget_location[1])
-        self.canvas_piece.bind("<B1-Motion>",self.onMotion)
-        self.canvas_piece.bind("<ButtonRelease-1>",self.onDrop)
+        self.canvas_piece.bind('<B1-Motion>',self.onMotion)
+        self.canvas_piece.bind('<ButtonRelease-1>',self.onDrop)
         BoutonCanvas(self.canvas_piece,self.png_piece,self.window,f)
