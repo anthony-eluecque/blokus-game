@@ -39,9 +39,14 @@ def valid_placement(bloc: list[list], row: int, col: int, plateau: Plateau, play
     """
     playerColor : str = player.getCouleur()[0]
     new_bloc : list = coords_blocs(bloc,row,col)
+    print(new_bloc)
     for cube in new_bloc:
         if player.getNbPieces()==MAX_PIECES:
             if cube==player.getPositionDepart():
+                for other_cube in new_bloc:
+                    if other_cube!=cube:
+                        if other_cube[0]<0 or other_cube[0]>19 or other_cube[1]<0 or other_cube[1]>19:
+                            return False
                 return True
         pos_depart = player.getPositionDepart()
         if plateau.getColorOfCase(pos_depart[0],pos_depart[1]) == player.getCouleur()[0]:
