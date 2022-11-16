@@ -39,7 +39,7 @@ class VueBlokus():
         self.grille_jeu = VueGrilleJeu(self.window, 600, 600)
         
 
-        self.saveButton = customtkinter.CTkButton(text="save", command=self.CBsave)
+        self.saveButton = customtkinter.CTkButton(text="save", command=self.callbackSave)
         self.saveButton.place(x=600,y=700)
 
         self.window.mainloop()
@@ -72,17 +72,12 @@ class VueBlokus():
         self.index= (self.index+1)%4
         self.actual_player =  self.joueurs[self.index]
     
-    # Save button callback
-    def CBsave(self):
-        # Getting canvas dimensions
+    def callbackSave(self):
         x = Canvas.winfo_rootx(self.grille_jeu.canvas)
         y = Canvas.winfo_rooty(self.grille_jeu.canvas)
         w = Canvas.winfo_width(self.grille_jeu.canvas) 
         h = Canvas.winfo_height(self.grille_jeu.canvas)
-
-        # Open filedialog and set default extension to .png
         directory = filedialog.asksaveasfilename(defaultextension="png", filetypes=[("PNG", ".png"), ("JPG", ".jpg"), ("JPEG", ".jpeg")])
-        # Save file to the directory previously given
         ImageGrab.grab((x, y, x+w, y+h)).save(directory)
 
 
