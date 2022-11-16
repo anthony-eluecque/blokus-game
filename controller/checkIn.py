@@ -3,12 +3,43 @@ from controller.player import Player
 from constants import MAX_PIECES
 
 def hasAllPieces(player : Player)->bool:
+    """Fonction permettant de vérifier si un joueur n'a pas encore joué
+    sur le plateau
+
+    Args:
+        player (Player): Le joueur actuel
+
+    Returns:
+        bool: Vrai => Il a pas encore joué 
+    """
     return True if player.getNbPieces()==MAX_PIECES else False
 
 def isPositionDepart(cube_traite,player : Player)->bool:
+    """Fonction permettant de vérifier si le joueur place 
+    sa pièce à la première position (premier placement)
+
+    Args:
+        cube_traite (_type_): Le cube d'origine de la pièce
+        player (Player): le joueur actuel
+
+    Returns:
+        bool: Vrai => Le joueur est bien sur sa position de départ
+    """
     return True if player.getPositionDepart()==cube_traite else False
 
 def verifTotalPieces(piece,plateau:Plateau,player:Player)->bool:
+    """Fonction permettant de vérifier que tous les carrés de la pièce
+    respectent les conditions du jeu blokus, sinon la pièce ne peut pas
+    se poser.
+
+    Args:
+        piece (_type_): La pièce jouée par le joueur
+        plateau (Plateau): Le plateau de jeu
+        player (Player): Le joueur actuel
+
+    Returns:
+        bool: Vrai => Il peut jouer
+    """
     for part_piece in piece:
             if part_piece[0]<0 or part_piece[0]>19 or part_piece[1]<0 or part_piece[1]>19:
                 return False
@@ -19,6 +50,16 @@ def verifTotalPieces(piece,plateau:Plateau,player:Player)->bool:
     return True
         
 def notPieceBelow(piece,plateau:Plateau)->bool:
+    """Fonction permettant de vérifier qu'une pièce ne va pas se poser sur une pièce
+    existante
+
+    Args:
+        piece (_type_): La pièce jouée par le joueur
+        plateau (Plateau): Le plateau de jeu
+
+    Returns:
+        bool: Vrai => La pièce peut être posé
+    """
     for cube in piece:
         x = cube[0]
         y = cube[1]
@@ -27,6 +68,17 @@ def notPieceBelow(piece,plateau:Plateau)->bool:
     return True
 
 def verifAroundCube(player:Player,cube,plateau:Plateau)->bool:
+    """Fonction permettant de vérifier qu'un cube n'a pas un côté adjacent
+    avec une pièce déjà existante
+
+    Args:
+        player (Player): le joueur actuel
+        cube (_type_): le cube de la pièce 
+        plateau (Plateau): le plateau de jeu
+
+    Returns:
+        bool: Vrai => La pièce peut être joué
+    """
     adjacents = getSquare(cube)[1]
     for coords in adjacents:
         x = coords[0]
@@ -77,12 +129,10 @@ def validPlacement(bloc: list[list], row: int, col: int, plateau: Plateau, playe
     #  Cas ou le joueur n'a pas encore joué, et il va jouer sa première pièce
     for each_cube in new_bloc:
         if hasAllPieces(player):
-            print("Cas départ")
             if isPositionDepart(each_cube,player):
                 return True
         # Les cas généraux 
         else:
-            print("Cas généraux")
             if expectedPlayerInDiagonals(each_cube,plateau,playerColor):
                 if notPieceBelow(new_bloc,plateau):
                     if verifTotalPieces(new_bloc,plateau,player):
@@ -152,7 +202,7 @@ def expectedPlayerInDiagonals(piece: list, plateau: Plateau, colorPlayer: str) -
     return False
 
 if __name__ == "__main__":
-
+    # Kind of test if you want to try 
     pass
     # tab = Plateau(20,20)
     # joueur = Player("Vert")
