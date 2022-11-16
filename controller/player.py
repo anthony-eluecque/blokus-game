@@ -8,6 +8,7 @@ class Player():
         self.couleur : str = couleur
         self.pieces : Pieces = Pieces(self.couleur[0])
         self.position_depart : list = POSITION_DEPART[couleur]
+        self.nb_piece = 21
 
     def getCouleur(self: Self) -> str:
         """Retourne la couleur du joueur
@@ -32,7 +33,10 @@ class Player():
         return self.position_depart
 
     def getNbPieces(self)->int:
-        return len(self.pieces)
+        return self.nb_piece
+
+    def removePiece(self)->None:
+        self.nb_piece-=1
 
     def __str__(self: Self) -> str:
         return("Le joueur " + self.couleur + " est en possession de " +  str(self.pieces.getNbPieces()) + " pièce(s).")
