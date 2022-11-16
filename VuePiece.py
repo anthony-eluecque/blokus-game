@@ -47,41 +47,15 @@ class VuePiece():
             self.make_image(self.images_pieces[i],i%4,row)
             if i%4==3:
                 row+=1
-
-    #  Drag & Drop
-    # def moveCanvas(self,place_x,place_y,canvas):
-    #     canvas.place(x=place_x,y=place_y)   
-
-    # def getMotion(self,e,liste_widget):
-        
-    #     x = e.x_root - self.frame.winfo_rootx()
-    #     y = e.y_root - self.frame.winfo_rooty()
-    #     self.moveCanvas(x,y,liste_widget[self.index_piece_dragdrop][0])
-
-    #     z = self.frame.grid_location(x,y)
-
     def getLocation(self,e):
         x = e.x_root - self.frame.winfo_rootx()
         y = e.y_root - self.frame.winfo_rooty()
         return self.frame.grid_location(x,y)
-
-    def getXinRoot(self,e):
-        return e.x_root
-
-    def getXinParent(self,e):
-        return e.x_root - self.frame.winfo_rootx()
-
-    def getYinRoot(self,e):
-        return e.y_root
-
-    def getYinParent(self,e):
-        return e.y_root - self.frame.winfo_rooty()
-    
+   
 
     def get_index_of_image(self,e,liste_canvas):
         for i in range(len(liste_canvas)):
             if liste_canvas[i][0]==e.widget:
-                print(i,"piece numero : ",i+1)
                 self.index_piece_dragdrop = i
                 widget_location = [
                     e.x_root,
@@ -95,16 +69,12 @@ class VuePiece():
     def make_image(self:Self,f:str,placementcol,placementrow):
         img=Image.open(f)
         w,h=img.size
-        # print(placementcol,placementrow)
-        # print(w,h)
         self.canvas = Canvas(self.frame, width=w, height=h, bd=0, highlightthickness=0, relief='ridge')
         self.canvas.grid(row=placementrow,column=placementcol)
-        # self.canvas.place(x=placementrow*100,y=placementcol*100)
         self.img = ImageTk.PhotoImage(file=f)
         self.canvas.create_image(0,0,image=self.img,anchor = "nw" )
         self.liste_canvas.append([self.canvas,self.img])
         self.canvas.bind("<Button-1>",lambda e: self.get_index_of_image(e,self.liste_canvas))
-        # self.canvas.bind("<B1-Motion>",lambda e:self.getMotion(e,self.liste_canvas))
 
    
 

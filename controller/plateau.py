@@ -6,8 +6,8 @@ from controller.player import Player
 class Plateau():
 
     def __init__(self : Self,rows : int,cols : int) -> None:
-        self.tab : list[list] =  [[0]*rows for _ in range(cols)]
-        self.colors = ["B","V","J","R"]
+        self.tab : list[list] =  [['X']*rows for _ in range(cols)]
+        self.colors = ["B","J","V","R"]
 
     def getCase(self : Self,row : int,col : int)->int:
         """Retourne une case spécifiée du plateau
@@ -20,7 +20,7 @@ class Plateau():
             int: La case voulue du plateau
         """
         return self.tab[row][col]
-
+    
     def getColorOfCase(self: Self, row : int, col : int)->str:
         """Retourne la couleur d'une case spécifiée du plateau
 
@@ -31,7 +31,7 @@ class Plateau():
         Returns:
             str: Retourne la couleur de la case, empty si la case est vide
         """
-        return self.colors[self.tab[row][col]] if self.tab[row][col]!=0 else "empty"
+        return self.colors[self.tab[row][col]] if self.tab[row][col]!='X' else "empty"
 
     def setColorOfCase(self: Self, row: int, col: int, statement: int) -> None:
         """Donne une couleur spécifiée à une case spécifiée du plateau

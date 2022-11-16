@@ -16,6 +16,12 @@ class VueGestionPiece:
         self.frame = frame
         self.master = master
     
+    def getXSouris(self)->int:
+        return self.window.winfo_pointerx() - self.window.winfo_rootx()
+
+    def getYSouris(self)->int:
+        return self.window.winfo_pointery() - self.window.winfo_rooty()
+
 
     def onMotion(self,e):
         # print("x fenetre :",self.window.winfo_rootx())
@@ -24,19 +30,23 @@ class VueGestionPiece:
         # print([e.x_root,e.x],[e.y_root,e.y])
 
         if self.canvas_piece:
-            self.new_x = e.x_root 
-            self.new_y = e.y_root 
+            # self.new_x = e.x_root 
+            # self.new_y = e.y_root 
+
+            self.new_x = self.getXSouris()
+            self.new_y = self.getYSouris()
             self.canvas_piece.place(x=self.new_x,y=self.new_y)  
  
     def onDrop(self,e):
-        # print(e.x_root,e.y_root)
-        x_round = self.round_down(e.x_root,-2)
-        y_round = self.round_down(e.y_root,-2)
+        self.abs_x = self.getXSouris()
+        self.abs_y = self.getYSouris()
 
-        if x_round<=600 and y_round<=600 :
-
+        if 0<=self.abs_x<=600 and 0<=self.abs_y<=600 :
+            x_round = self.round_down(self.abs_x)
+            y_round = self.round_down(self.abs_y)
+            print(self.abs_x,"----",self.abs_y)
+            print(x_round," ---- ",y_round)
             # print(x_round,y_round)
-
             if self.canvas_piece:
                 self.canvas_piece.destroy()
             self.emitToGrille(x_round,y_round)
@@ -44,14 +54,16 @@ class VueGestionPiece:
     def emitToGrille(self,x,y):
         self.master.callbackPiece(self.file,x,y)
 
-
     def round_down(self,n, decimals=2)->int:
         multiplier = 10 ** decimals
         result =  int(math.floor(n * multiplier) / multiplier)
 
-        if int(str(n)[1])>5:
-            result+=50
-        print(result)
+        # print(result)
+
+        
+        # if int(str(n)[1])>5:
+        #     result+=50
+        # print(result)
         return (result//30)*30
 
 
