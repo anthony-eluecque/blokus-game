@@ -18,6 +18,14 @@ def verifTotalPieces(piece,plateau:Plateau,player:Player)->bool:
             
     return True
         
+def notPieceBelow(piece,plateau:Plateau)->bool:
+    for cube in piece:
+        x = cube[0]
+        y = cube[1]
+        if plateau.getColorOfCase(x,y)!='empty':
+            return False
+    return True
+
 def verifAroundCube(player:Player,cube,plateau:Plateau)->bool:
     adjacents = getSquare(cube)[1]
     for coords in adjacents:
@@ -49,14 +57,6 @@ def coordsBlocs(piece : list, col : int , row : int) -> list:
                 new_piece.append([y+row,col+x])
     return new_piece
 
-def pieceBelow(piece,plateau:Plateau)->bool:
-    for cube in piece:
-        x = cube[0]
-        y = cube[1]
-        if plateau.getColorOfCase(x,y)=='empty':
-            return True
-    return False
-
 
 def validPlacement(bloc: list[list], row: int, col: int, plateau: Plateau, player:Player) -> bool:
     """Fonction permettant de vérifier si un bloc peut être placer sur le plateau.
@@ -84,7 +84,7 @@ def validPlacement(bloc: list[list], row: int, col: int, plateau: Plateau, playe
         else:
             print("Cas généraux")
             if expectedPlayerInDiagonals(each_cube,plateau,playerColor):
-                # if not pieceBelow(new_bloc,plateau):
+                if notPieceBelow(new_bloc,plateau):
                     if verifTotalPieces(new_bloc,plateau,player):
                         return True
     return False
