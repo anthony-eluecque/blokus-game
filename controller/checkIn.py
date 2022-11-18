@@ -130,7 +130,8 @@ def validPlacement(bloc: list[list], row: int, col: int, plateau: Plateau, playe
     for each_cube in new_bloc:
         if hasAllPieces(player):
             if isPositionDepart(each_cube,player):
-                return True
+                if verifTotalPieces(new_bloc,plateau,player):
+                    return True
         # Les cas généraux 
         else:
             if expectedPlayerInDiagonals(each_cube,plateau,playerColor):
