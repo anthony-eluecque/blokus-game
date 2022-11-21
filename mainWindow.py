@@ -15,7 +15,6 @@ from tkinter import Canvas, filedialog
 from controller.plateau import Plateau
 from controller.player import Player
 from controller.checkIn import validPlacement,coordsBlocs
-from controller.pieces import Pieces
 
 from VuePiece import VuePiece
 
@@ -44,20 +43,33 @@ class VueBlokus():
 
         self.window.mainloop()
     
-    def callbackPiece(self:Self,file:str,x:int,y:int):
+    def callbackPiece(self:Self,file:str,x:int,y:int,rotation:int):
 
         num_piece = int(file.split("/")[3].split(".")[0])
-
+        print("Rotation : ",rotation//90)
         # -1 car c'est une liste, ici c'est pas des png.
         piece = self.actual_player.jouerPiece(num_piece-1)
         couleur_joueur = self.actual_player.getCouleur()
         index_joueur = self.joueurs.index(self.actual_player)
 
+        # ----- Partie rotation
+        nb_rotation = rotation//90
+        for i in range(nb_rotation):
+            print(piece)
+            self.actual_player.pieces.rotate(num_piece-1)
+            piece = self.actual_player.jouerPiece(num_piece-1)
+            print("Rotation effectué")
+
+        print(self.plateau)
+        print(y//30,x//30,piece)
+
         if validPlacement(piece,y//30,x//30,self.plateau,self.actual_player):
             new_bloc = coordsBlocs(piece,x//30,y//30)
             chemin_piece = "./Pieces/" + couleur_joueur.upper()[0] + "/1.png"
+            print(new_bloc)
+
             self.actual_player.removePiece()
-            
+
             for y1,x1 in new_bloc:
                 self.grille_jeu.addPieceToGrille(chemin_piece,x1,y1)
                 self.plateau.setColorOfCase(y1,x1,index_joueur)
