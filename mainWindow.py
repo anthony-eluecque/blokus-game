@@ -61,11 +61,14 @@ class VueBlokus():
             for y1,x1 in new_bloc:
                 self.grille_jeu.addPieceToGrille(chemin_piece,x1,y1)
                 self.plateau.setColorOfCase(y1,x1,index_joueur)
+
+            self.actual_player.hasPlayedPiece(num_piece-1)            
             self.nextPlayer()
             self.displayPiecesPlayer()
 
 
     def displayPiecesPlayer(self:Self):
+        self.vue_piece.frame.destroy()
         self.vue_piece = VuePiece(self.window,self.actual_player,self)
 
     def nextPlayer(self:Self)->None:
