@@ -1,11 +1,14 @@
 from typing_extensions import Self
 from constants import PIECES, PIECES_IMAGES
+from copy import deepcopy
 
 class Pieces():
 
 
     def __init__(self : Self,color:str) -> None:
+
         self.liste_pieces : list[list] = PIECES
+        self.liste_pieces_copy : list[list] = deepcopy(self.liste_pieces)
         self.images_pieces : list[str] = PIECES_IMAGES
         self.pieces_joueurs : list = [_ for _ in range(len(PIECES_IMAGES))]
         self.liste_images_pieces : list[str] = self.__fichierJoueur(color)
@@ -46,6 +49,9 @@ class Pieces():
             num_piece (int): La pièce à tourner
         """
         self.liste_pieces[num_piece] = [list(row) for row in zip(*reversed(self.getPiece(num_piece)))]
+
+    def resetRotation(self:Self, num_piece : int )->None:
+        self.liste_pieces[num_piece] = self.liste_pieces_copy[num_piece]
 
     def afficherPiece(self: Self , num_piece: int) -> None:
         """Affiche une pièce
