@@ -15,7 +15,6 @@ class VuePiece():
         self.images_pieces = player.pieces.getImagesPieces()
         self.liste_canvas = []
 
-        print(self.images_pieces)
 
         self.frame = customtkinter.CTkFrame(master=self.window)
 
@@ -61,7 +60,6 @@ class VuePiece():
                     e.x_root,
                     e.y_root
                 ]
-                print(widget_location)
                 self.gestionPiece.addImageToGrid(self.images_pieces[i],widget_location)
 
                 
