@@ -22,8 +22,6 @@ class VueGrilleJeu:
         self.canvas.bind('<Motion>',self.callback)
 
     def addPieceToGrille(self,f:str,coord_x:int,coord_y:int):
-
-        print(coord_x,coord_y)
         img=Image.open(f)
         w,h=img.size
         piece_canvas = Canvas(self.window, width=w, height=h, bd=0, highlightthickness=0, relief='ridge')
