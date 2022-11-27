@@ -26,7 +26,7 @@ class VueBlokus():
 
         self.joueurs : list[Player] = [Player("Bleu"),Player("Jaune"),Player("Vert"),Player("Rouge")]
         self.index : int = 0
-        self.actual_player : Player = self.joueurs[self.index]
+        self.actualPlayer : Player = self.joueurs[self.index]
         self.plateau = Plateau(20,20)
 
 
@@ -34,8 +34,8 @@ class VueBlokus():
         self.window.geometry("1575x900")
         self.window.title("Jeu Blokus")
 
-        self.vue_piece = VuePiece(self.window,Player('Bleu'),self)
-        self.grille_jeu = VueGrilleJeu(self.window, 600, 600)
+        self.vuePiece = VuePiece(self.window,Player('Bleu'),self)
+        self.grilleJeu = VueGrilleJeu(self.window, 600, 600)
         
 
         self.saveButton = customtkinter.CTkButton(text="save", command=self.callbackSave)
@@ -45,53 +45,50 @@ class VueBlokus():
     
     def callbackPiece(self:Self,file:str,x:int,y:int,rotation:int):
 
-        num_piece = int(file.split("/")[3].split(".")[0])
-        print("Rotation : ",rotation//90)
+        numPiece = int(file.split("/")[3].split(".")[0])
         # -1 car c'est une liste, ici c'est pas des png.
-        piece = self.actual_player.jouerPiece(num_piece-1)
-        couleur_joueur = self.actual_player.getCouleur()
-        index_joueur = self.joueurs.index(self.actual_player)
+
+        piece = self.actualPlayer.jouerPiece(numPiece-1)
+        couleurJoueur = self.actualPlayer.getCouleur()
+        indexJoueur = self.joueurs.index(self.actualPlayer)
 
         # ----- Partie rotation
-        nb_rotation = rotation//90
+        nb_rotation = abs(rotation)//90
         for i in range(nb_rotation):
-            print(piece)
-            self.actual_player.pieces.rotate(num_piece-1)
-            piece = self.actual_player.jouerPiece(num_piece-1)
-            print("Rotation effectué")
+            self.actualPlayer.pieces.rotate(numPiece-1)
+            piece = self.actualPlayer.jouerPiece(numPiece-1)
 
-        print(self.plateau)
-        print(y//30,x//30,piece)
+        pieceBlokus = coordsBlocs(piece,x//30,y//30)
+        cheminFichierPiece = "./Pieces/" + couleurJoueur.upper()[0] + "/1.png"
+        
+        # ---- Vérification du placement
+        if validPlacement(piece,y//30,x//30,self.plateau,self.actualPlayer):
+            self.actualPlayer.removePiece()
 
-        if validPlacement(piece,y//30,x//30,self.plateau,self.actual_player):
-            new_bloc = coordsBlocs(piece,x//30,y//30)
-            chemin_piece = "./Pieces/" + couleur_joueur.upper()[0] + "/1.png"
-            print(new_bloc)
+            for coordY,coordX in pieceBlokus:
+                self.grilleJeu.addPieceToGrille(cheminFichierPiece,coordX,coordY)
+                self.plateau.setColorOfCase(coordY,coordX,indexJoueur)
 
-            self.actual_player.removePiece()
-
-            for y1,x1 in new_bloc:
-                self.grille_jeu.addPieceToGrille(chemin_piece,x1,y1)
-                self.plateau.setColorOfCase(y1,x1,index_joueur)
-
-            self.actual_player.hasPlayedPiece(num_piece-1)            
+            self.actualPlayer.hasPlayedPiece(numPiece-1)            
             self.nextPlayer()
             self.displayPiecesPlayer()
-
+        # Partie reset rotation
+        if nb_rotation>0:    
+            self.actualPlayer.pieces.resetRotation(numPiece-1)
 
     def displayPiecesPlayer(self:Self):
-        self.vue_piece.frame.destroy()
-        self.vue_piece = VuePiece(self.window,self.actual_player,self)
+        self.vuePiece.frame.destroy()
+        self.vuePiece = VuePiece(self.window,self.actualPlayer,self)
 
     def nextPlayer(self:Self)->None:
         self.index= (self.index+1)%4
-        self.actual_player =  self.joueurs[self.index]
+        self.actualPlayer =  self.joueurs[self.index]
     
     def callbackSave(self):
-        x = Canvas.winfo_rootx(self.grille_jeu.canvas)
-        y = Canvas.winfo_rooty(self.grille_jeu.canvas)
-        w = Canvas.winfo_width(self.grille_jeu.canvas) 
-        h = Canvas.winfo_height(self.grille_jeu.canvas)
+        x = Canvas.winfo_rootx(self.grilleJeu.canvas)
+        y = Canvas.winfo_rooty(self.grilleJeu.canvas)
+        w = Canvas.winfo_width(self.grilleJeu.canvas) 
+        h = Canvas.winfo_height(self.grilleJeu.canvas)
         directory = filedialog.asksaveasfilename(defaultextension="png", filetypes=[("PNG", ".png"), ("JPG", ".jpg"), ("JPEG", ".jpeg")])
         ImageGrab.grab((x, y, x+w, y+h)).save(directory)
 
