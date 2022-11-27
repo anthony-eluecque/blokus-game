@@ -15,7 +15,7 @@ class BoutonCanvas():
         self.rotate = None
         self.png_piece = png_piece
         self.file_piece = file_piece
-        self.angle = 0
+        self.angle : int = 0
 
         self.AjoutBoutons(piece)
 
@@ -38,7 +38,7 @@ class BoutonCanvas():
         
                 
         # Add Angle to Simulate rotation
-        self.angle+=90
+        self.angle-=90
 
         # First delete png from canvas
         piece.delete(self.png_piece)
@@ -56,7 +56,7 @@ class BoutonCanvas():
         piece.config(width=w,height=h)
         piece.create_image(0,0,image=self.image_canvas,anchor = "nw")
 
-        if self.angle==360:
+        if self.angle==-360:
             self.angle = 0
 
 
