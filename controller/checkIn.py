@@ -110,7 +110,7 @@ def coordsBlocs(piece : list, col : int , row : int) -> list:
     return new_piece
 
 
-def validPlacement(bloc: list[list], row: int, col: int, plateau: Plateau, player:Player) -> bool:
+def validPlacement(bloc: list[int], row: int, col: int, plateau: Plateau, player:Player) -> bool:
     """Fonction permettant de vérifier si un bloc peut être placer sur le plateau.
 
     Args:
