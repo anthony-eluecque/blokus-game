@@ -10,39 +10,65 @@ from PIL import Image,ImageTk
 import customtkinter
 from PIL import ImageGrab
 import customtkinter
-from tkinter import Canvas, filedialog
+from tkinter import Canvas, filedialog,PhotoImage
 
 from controller.plateau import Plateau
 from controller.player import Player
 from controller.checkIn import validPlacement,coordsBlocs
 
 from VuePiece import VuePiece
-
 from VueGrilleJeu import VueGrilleJeu
+from VueTourJoueur import VueTourJoueur
+from VueNbPieceJoueur import VueNbPieceJoueur
+from VueStatsPlayer import VueStatsPlayer
 
 class VueBlokus():
 
-    def __init__(self):
+    def __init__(self,menu_window :customtkinter.CTk):
 
         self.joueurs : list[Player] = [Player("Bleu"),Player("Jaune"),Player("Vert"),Player("Rouge")]
         self.index : int = 0
         self.actualPlayer : Player = self.joueurs[self.index]
         self.plateau = Plateau(20,20)
 
-
-        self.window = customtkinter.CTk()
-        self.window.geometry("1575x900")
+        self.window = menu_window
+        self.window.geometry("1300x800")
         self.window.title("Jeu Blokus")
+        self.window.iconbitmap('./Icon/icon.ico')
+        self.window.resizable(width=False, height=False)
 
-        self.vuePiece = VuePiece(self.window,Player('Bleu'),self)
-        self.grilleJeu = VueGrilleJeu(self.window, 600, 600)
+        self.UI()
+        self.window.mainloop()
+
+    def UI(self):
         
 
-        self.saveButton = customtkinter.CTkButton(text="save", command=self.callbackSave)
-        self.saveButton.place(x=600,y=700)
+        self.backgroundImage = Image.open("./assets/background_game.png")
+        self.background = ImageTk.PhotoImage(self.backgroundImage)
 
-        self.window.mainloop()
-    
+        self.label = tkinter.Label(self.window, image = self.background, bd = 0)
+        self.label.place(x = 0,y = 0)
+
+        self.vuePiece = VuePiece(self.window,Player('Bleu'),self)
+        
+        self.grilleJeu = VueGrilleJeu(self.window, 600, 600)
+        
+        self.backgroundButtonSave = PhotoImage(file="./assets/button_save.png")
+        
+        self.button = tkinter.Button(
+            master=self.window, 
+            text='', 
+            image = self.backgroundButtonSave, 
+            command = self.callbackSave, 
+            borderwidth=0, 
+            bd=0,
+            highlightthickness=0,  
+            anchor="nw")
+        self.button.place(x=1000,y=665)
+
+        self.statsPlayer = VueStatsPlayer(self.window,self.actualPlayer)
+
+        
     def callbackPiece(self:Self,file:str,x:int,y:int,rotation:int):
 
         numPiece = int(file.split("/")[3].split(".")[0])
@@ -72,6 +98,8 @@ class VueBlokus():
             self.actualPlayer.hasPlayedPiece(numPiece-1)            
             self.nextPlayer()
             self.displayPiecesPlayer()
+            self.statsPlayer.tourJoueur.setNewColor()
+            self.statsPlayer.nbPiecesPlayer.nextPlayer(self.actualPlayer)
         # Partie reset rotation
         if nb_rotation>0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
@@ -95,7 +123,21 @@ class VueBlokus():
 
 
 if __name__ ==  "__main__":
-    app = VueBlokus()  
+    window = customtkinter.CTk()
+    app = VueBlokus(window) 
+
+
+    # a=customtkinter.CTk()
+    # a.geometry('800x500+275+100')
+    # a.title('HOME PAGE')
+
+
+    # load=Image.open('./Pieces/B/21.png')
+    # render=ImageTk.PhotoImage(load)
+    # img=customtkinter.CTkLabel(a,image=render)
+    # img.pack()
+
+    # a.mainloop()
 
 
 
