@@ -10,22 +10,23 @@ from tkinter.messagebox import YES
 from typing_extensions import Self
 from PIL import Image,ImageTk
 from mainWindow import VueBlokus
+from VueRegles import VueRegles
 
 
 class Menu():
 
-    def __init__(self: Self, longueur = 700, hauteur = 700):
+    def __init__(self: Self,window : ctk.CTk, longueur = 700, hauteur = 700):
 
-        self.window = ctk.CTk()
+        self.window = window
         self.window.title("jeu Blokus")
         self.window.iconbitmap('./Icon/icon.ico')
         self.window.resizable(width=False, height=False)
-        self.window.geometry(str(longueur) + 'x' + str(hauteur))
-        self.UI()
+
+        self.UI(700, 700)
         self.window.mainloop()
         
-    def UI(self :Self):
-
+    def UI(self :Self, hauteur, longueur):
+        self.window.geometry(str(longueur) + 'x' + str(hauteur))
         self.backgroundImage = Image.open("./assets/carre.png")
         self.background = ImageTk.PhotoImage(self.backgroundImage)
         self.label = tkinter.Label(self.window, image = self.background, bd = 0)
@@ -79,13 +80,14 @@ class Menu():
         self.button1.destroy()
         self.button2.destroy()
         self.button3.destroy()
-        app = VueBlokus(self.window)
+        VueBlokus(self.window)
     
     def rulesButton(self: Self):
         self.label.destroy()
         self.button1.destroy()
         self.button2.destroy()
         self.button3.destroy()
+        VueRegles(self, self.window)
 
     def statsButton(self: Self):
         self.label.destroy()
@@ -93,5 +95,9 @@ class Menu():
         self.button2.destroy()
         self.button3.destroy()
 
+    def emitCB(self : Self):
+        self.UI(700, 700)
+
 if __name__ == "__main__":
-    Menu() 
+    window = ctk.CTk()
+    app = Menu(window) 
