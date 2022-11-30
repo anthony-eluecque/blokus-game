@@ -2,7 +2,8 @@ from typing_extensions import Self
 
 from controller.player import Player
 import customtkinter
-from tkinter import BOTH, Canvas, PhotoImage
+from tkinter import BOTH, Canvas
+from tkinter import PhotoImage
 from PIL import Image,ImageTk
 import tkinter
 
@@ -23,16 +24,19 @@ class BoutonCanvas():
         if self.rotate:
             self.rotate.destroy()
 
+        self.backgroundButtonRotation = PhotoImage(file="./assets/button_rotation.png")
+
         self.rotate = customtkinter.CTkButton(
             master = self.window,
-            width=50,
-            height=32,
+            image=self.backgroundButtonRotation,
             border_width=0,
             corner_radius=8,
-            text="Rotation",
-            command=lambda:self.rotation_image(piece)
+            text="",
+            bg_color="white",
+            command=lambda:self.rotation_image(piece),
+            bd=0
         )
-        self.rotate.place(x=700,y=700)
+        self.rotate.place(x=700,y=665)
     
     def rotation_image(self,piece:Canvas):
         
