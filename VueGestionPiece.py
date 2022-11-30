@@ -6,6 +6,7 @@ from PIL import Image,ImageTk
 from tkinter import RAISED, Canvas
 import math
 from BoutonsCanvas import BoutonCanvas
+import tkinter
 
 class VueGestionPiece:
 
@@ -64,8 +65,14 @@ class VueGestionPiece:
         w,h=img.size 
 
 
-        self.canvas_piece = Canvas(self.window, width=w, height=h, bd=0, highlightthickness=0, relief='ridge')
-        self.img = ImageTk.PhotoImage(file=f)
+        self.canvas_piece = Canvas(
+            self.window, 
+            width=w, 
+            height=h, 
+            bd=0, 
+            highlightthickness=0, 
+            bg="white")
+        self.img = tkinter.PhotoImage(file=f)
         self.png_piece = self.canvas_piece.create_image(0,0,image=self.img,anchor = "nw" )   
        
         self.canvas_piece.place(x=widget_location[0],y=widget_location[1])
