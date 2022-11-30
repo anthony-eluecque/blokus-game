@@ -9,14 +9,17 @@ from VueGestionPiece import VueGestionPiece
 
 class VuePiece():
 
-    def __init__(self,window,player:Player,master):
+    def __init__(self,window:customtkinter.CTk,player:Player,master):
         
         self.window = window
         self.images_pieces = player.pieces.getImagesPieces()
         self.liste_canvas = []
 
 
-        self.frame = customtkinter.CTkFrame(master=self.window,fg_color="white")
+        self.frame = customtkinter.CTkFrame(
+            master=self.window,
+            fg_color="white"
+        )
 
         # self.frame.grid(rowspan=2,column=1,sticky='news')
 
@@ -36,8 +39,11 @@ class VuePiece():
         self.frame.grid_rowconfigure(5,weight=2)
         self.frame.grid_rowconfigure(6,weight=2)
 
+        self.frame.grid_propagate(0)
+        self.frame.config(width=550,height=650)
 
-        self.frame.place(x=750,y=50)
+
+        self.frame.place(x=700,y=10)
         # self.frame.config(width=750)
 
         self.gestionPiece = VueGestionPiece(self.window,self.frame,master)
@@ -52,19 +58,19 @@ class VuePiece():
             if i%5==4:
                 row+=1
 
-    def getLocation(self,e):
-        x = e.x_root - self.frame.winfo_rootx()
-        y = e.y_root - self.frame.winfo_rooty()
-        return self.frame.grid_location(x,y)
-   
+    def getXSouris(self:Self)->int:
+        return self.window.winfo_pointerx() - self.window.winfo_rootx()
+
+    def getYSouris(self:Self)->int:
+        return self.window.winfo_pointery() - self.window.winfo_rooty()  
 
     def get_index_of_image(self,e,liste_canvas):
         for i in range(len(liste_canvas)):
             if liste_canvas[i][0]==e.widget:
                 self.index_piece_dragdrop = i
                 widget_location = [
-                    e.x_root,
-                    e.y_root
+                    self.getXSouris(),
+                    self.getYSouris()
                 ]
                 self.gestionPiece.addImageToGrid(self.images_pieces[i],widget_location)
 
@@ -79,15 +85,16 @@ class VuePiece():
             width=w, 
             height=h, 
             bd=0, 
+            bg='white',
             highlightthickness=0, 
             relief='ridge'
         )
         self.canvas.grid(row=placementrow,column=placementcol)
-        self.img = ImageTk.PhotoImage(file=f)
+        self.img = tkinter.PhotoImage(file=f)
         self.canvas.create_image(0,0,image=self.img,anchor = "nw" )
         self.canvas.bind("<Button-1>",lambda e: self.get_index_of_image(e,self.liste_canvas))
         self.liste_canvas.append([self.canvas,self.img])
-        
+
         # self.window.wm_attributes('-transparentcolor','#000000')
         # self.window.wm_attributes('-topmost', True)
 
