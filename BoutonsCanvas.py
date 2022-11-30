@@ -6,6 +6,7 @@ from tkinter import BOTH, Canvas
 from tkinter import PhotoImage
 from PIL import Image,ImageTk
 import tkinter
+from tkinter import Button
 
 
 class BoutonCanvas():
@@ -26,15 +27,15 @@ class BoutonCanvas():
 
         self.backgroundButtonRotation = PhotoImage(file="./assets/button_rotation.png")
 
-        self.rotate = customtkinter.CTkButton(
+        self.rotate = Button(
             master = self.window,
             image=self.backgroundButtonRotation,
-            border_width=0,
-            corner_radius=8,
             text="",
-            bg_color="white",
-            command=lambda:self.rotation_image(piece),
-            bd=0
+            bg = 'white',
+            highlightthickness=0,
+            bd=0,
+            border=0,
+            command=lambda:self.rotation_image(piece)
         )
         self.rotate.place(x=700,y=665)
     
