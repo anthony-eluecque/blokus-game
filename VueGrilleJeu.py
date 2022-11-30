@@ -4,6 +4,7 @@ from controller.plateau import Plateau
 from controller.player import Player
 import customtkinter
 from PIL import Image,ImageTk
+import tkinter
 from tkinter import RAISED, Canvas,LEFT
 
 
@@ -32,7 +33,7 @@ class VueGrilleJeu:
         img=Image.open(f)
         w,h=img.size
         piece_canvas = Canvas(self.window, width=w, height=h, bd=0, highlightthickness=0, relief='ridge')
-        img = ImageTk.PhotoImage(file=f)
+        img = tkinter.PhotoImage(file=f)
         piece_canvas.create_image(0,0,image=img,anchor = "nw" )
         piece_canvas.place(x=coord_x*30+60,y=coord_y*30+150)
         self.liste_piece.append([f,piece_canvas,img])
