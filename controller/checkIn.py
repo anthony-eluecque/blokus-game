@@ -2,6 +2,7 @@ from controller.plateau import Plateau
 from controller.player import Player
 from constants import MAX_PIECES
 
+
 def hasAllPieces(player : Player)->bool:
     """Fonction permettant de vérifier si un joueur n'a pas encore joué
     sur le plateau
@@ -61,11 +62,17 @@ def notPieceBelow(piece,plateau:Plateau)->bool:
         bool: Vrai => La pièce peut être posé
     """
     for cube in piece:
+        if not isInPlateau(cube):
+            return False
         x = cube[0]
         y = cube[1]
         if plateau.getColorOfCase(x,y)!='empty':
             return False
     return True
+
+def isInPlateau(cube : list)->bool:
+    return True if 0<=cube[0]<20 and 0<=cube[1]<20 else False
+
 
 def verifAroundCube(player:Player,cube,plateau:Plateau)->bool:
     """Fonction permettant de vérifier qu'un cube n'a pas un côté adjacent
@@ -134,9 +141,13 @@ def validPlacement(bloc: list[int], row: int, col: int, plateau: Plateau, player
                     return True
         # Les cas généraux 
         else:
+            print("Cas générale")
             if expectedPlayerInDiagonals(each_cube,plateau,playerColor):
+                print("Joueur diagonale")
                 if notPieceBelow(new_bloc,plateau):
+                    print("Pas de pièce en dessous")
                     if verifTotalPieces(new_bloc,plateau,player):
+                        print("Vérif total pièce")
                         return True
     return False
     
@@ -200,6 +211,24 @@ def expectedPlayerInDiagonals(piece: list, plateau: Plateau, colorPlayer: str) -
     for y,x in diagonals:
         if plateau.getColorOfCase(y,x) == colorPlayer:
             return True
+    return False
+
+def playerCanPlay(player:Player,plateau:Plateau)->bool:
+    """Permet de vérifier si un joueur est en capacité de jouer ou non.
+
+    Args:
+        player (Player): Le joueur actuel
+        plateau (Plateau): Le plateau derrière l'affichage graphique
+
+    Returns:
+        bool: Vrai = Il peut jouer, Faux l'inverse
+    """
+    for indice_piece in player.pieces.pieces_joueurs:
+        for i in range(0,20):
+            for j in range(0,20):
+                if validPlacement(player.pieces.liste_pieces[indice_piece],i,j,plateau,player):
+                    print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j}")
+                    return True
     return False
 
 if __name__ == "__main__":
