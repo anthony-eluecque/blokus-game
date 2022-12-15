@@ -22,11 +22,15 @@ class Menu():
         self.window.iconbitmap('./Icon/icon.ico')
         self.window.resizable(width=False, height=False)
 
-        self.UI(700, 700)
+        self.UI(longueur, hauteur)
         self.window.mainloop()
         
     def UI(self :Self, hauteur, longueur):
-        self.window.geometry(str(longueur) + 'x' + str(hauteur))
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
+        x = (screen_width/2) - (longueur/2)
+        y = (screen_height/2) - (hauteur/2)
+        self.window.geometry('%dx%d+%d+%d' % (longueur, hauteur, x, y))
         self.backgroundImage = Image.open("./assets/carre.png")
         self.background = ImageTk.PhotoImage(self.backgroundImage)
         self.label = tkinter.Label(self.window, image = self.background, bd = 0)

@@ -24,7 +24,7 @@ from VueStatsPlayer import VueStatsPlayer
 
 class VueBlokus():
 
-    def __init__(self,menu_window :customtkinter.CTk):
+    def __init__(self,menu_window :customtkinter.CTk, longueur = 1300, hauteur = 800):
 
         self.joueurs : list[Player] = [Player("Bleu"),Player("Jaune"),Player("Vert"),Player("Rouge")]
         self.index : int = 0
@@ -32,7 +32,11 @@ class VueBlokus():
         self.plateau = Plateau(20,20)
 
         self.window = menu_window
-        self.window.geometry("1300x800")
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
+        x = (screen_width/2) - (longueur/2)
+        y = (screen_height/2) - (hauteur/2)
+        self.window.geometry('%dx%d+%d+%d' % (longueur, hauteur, x, y))
         self.window.title("Jeu Blokus")
         self.window.iconbitmap('./Icon/icon.ico')
         self.window.resizable(width=False, height=False)
