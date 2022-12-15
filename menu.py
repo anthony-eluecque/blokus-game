@@ -80,11 +80,12 @@ class Menu():
 
         
     def playButton(self: Self):
+
         self.label.destroy()
         self.button1.destroy()
         self.button2.destroy()
         self.button3.destroy()
-        VueBlokus(self.window)
+        VueBlokus(self,self.window)
     
     def rulesButton(self: Self):
         self.label.destroy()
@@ -101,6 +102,10 @@ class Menu():
 
     def emitCB(self : Self):
         self.UI(700, 700)
+
+    def emitFinishGame(self:Self):
+        # Faire ici
+        self.UI(700,700)
 
 if __name__ == "__main__":
     window = ctk.CTk()

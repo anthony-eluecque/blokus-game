@@ -14,7 +14,7 @@ from tkinter import Canvas, filedialog,PhotoImage
 
 from controller.plateau import Plateau
 from controller.player import Player
-from controller.checkIn import validPlacement,coordsBlocs
+from controller.checkIn import validPlacement,coordsBlocs,playerCanPlay
 
 from VuePiece import VuePiece
 from VueGrilleJeu import VueGrilleJeu
@@ -26,6 +26,7 @@ class VueBlokus():
 
     def __init__(self,menu_window :customtkinter.CTk, longueur = 1300, hauteur = 800):
 
+        self.master = menu_window
         self.joueurs : list[Player] = [Player("Bleu"),Player("Jaune"),Player("Vert"),Player("Rouge")]
         self.index : int = 0
         self.actualPlayer : Player = self.joueurs[self.index]
@@ -71,10 +72,12 @@ class VueBlokus():
         self.button.place(x=1000,y=665)
 
         self.statsPlayer = VueStatsPlayer(self.window,self.actualPlayer)
+        self.window.wm_attributes("-topmost", True)
+
 
         
     def callbackPiece(self:Self,file:str,x:int,y:int,rotation:int):
-
+        
         numPiece = int(file.split("/")[3].split(".")[0])
         # -1 car c'est une liste, ici c'est pas des png.
 
@@ -93,29 +96,52 @@ class VueBlokus():
         
         # ---- Vérification du placement
         if validPlacement(piece,y//30,x//30,self.plateau,self.actualPlayer):
-            self.actualPlayer.removePiece()
+            self.actualPlayer.removePiece(numPiece-1)
 
             for coordY,coordX in pieceBlokus:
                 self.grilleJeu.addPieceToGrille(cheminFichierPiece,coordX,coordY)
                 self.plateau.setColorOfCase(coordY,coordX,indexJoueur)
 
-            self.actualPlayer.hasPlayedPiece(numPiece-1)            
+            self.actualPlayer.hasPlayedPiece(numPiece-1)    
             self.nextPlayer()
             self.displayPiecesPlayer()
             self.statsPlayer.tourJoueur.setNewColor()
-            self.statsPlayer.nbPiecesPlayer.nextPlayer(self.actualPlayer)
+            self.statsPlayer.nbPiecesPlayer.nextPlayer(self.actualPlayer)        
         # Partie reset rotation
         if nb_rotation>0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
+        
+    
 
     def displayPiecesPlayer(self:Self):
         self.vuePiece.frame.destroy()
         self.vuePiece = VuePiece(self.window,self.actualPlayer,self)
 
     def nextPlayer(self:Self)->None:
+
+        playedPlayer = self.actualPlayer.getCouleur()
         self.index= (self.index+1)%4
         self.actualPlayer =  self.joueurs[self.index]
+        playable = False
+        for i in range(0,2):
+            if playerCanPlay(self.actualPlayer,self.plateau): 
+                playable = True
+                break
+            self.index= (self.index+1)%4
+            self.actualPlayer =  self.joueurs[self.index]
+        
+        print(playedPlayer,self.actualPlayer.getCouleur())
+        if not playable:
+            self.label.destroy()
+            self.vuePiece.frame.destroy()
+            self.grilleJeu.canvas.destroy()
+            self.button.destroy()
+            self.statsPlayer.frame.destroy()
+            self.master.emitFinishGame()
+
     
+
+
     def callbackSave(self):
         x = Canvas.winfo_rootx(self.grilleJeu.canvas)
         y = Canvas.winfo_rooty(self.grilleJeu.canvas)
