@@ -9,15 +9,10 @@ import tkinter
 # Class VueRegles
 class VueRegles():
 
-    def __init__(self, master,  window : customtkinter.CTk, longueur = 625, hauteur = 700):
+    def __init__(self, master,  window : customtkinter.CTk):
         # Window
         self.master = master
         self.window = window
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
-        x = (screen_width/2) - (longueur/2)
-        y = (screen_height/2) - (hauteur/2)
-        self.window.geometry('%dx%d+%d+%d' % (longueur, hauteur, x, y))
         self.window.title("Règles du Blokus")
         self.window.geometry("625x700")
         # self.window.resizable(width=False, height=False)
