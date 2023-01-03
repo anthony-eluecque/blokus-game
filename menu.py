@@ -11,6 +11,12 @@ from typing_extensions import Self
 from PIL import Image,ImageTk
 from mainWindow import VueBlokus
 from VueRegles import VueRegles
+from VueScore import VueScore
+
+import sys
+sys.path.append('./controller/')
+from controller.plateau import Plateau
+
 
 
 class Menu():
@@ -22,15 +28,11 @@ class Menu():
         self.window.iconbitmap('./Icon/icon.ico')
         self.window.resizable(width=False, height=False)
 
-        self.UI(longueur, hauteur)
+        self.UI(700, 700)
         self.window.mainloop()
         
     def UI(self :Self, hauteur, longueur):
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
-        x = (screen_width/2) - (longueur/2)
-        y = (screen_height/2) - (hauteur/2)
-        self.window.geometry('%dx%d+%d+%d' % (longueur, hauteur, x, y))
+        self.window.geometry(str(longueur) + 'x' + str(hauteur))
         self.backgroundImage = Image.open("./assets/carre.png")
         self.background = ImageTk.PhotoImage(self.backgroundImage)
         self.label = tkinter.Label(self.window, image = self.background, bd = 0)
@@ -85,7 +87,10 @@ class Menu():
         self.button1.destroy()
         self.button2.destroy()
         self.button3.destroy()
-        VueBlokus(self,self.window)
+
+        plateau = Plateau(20,20)
+
+        VueBlokus(self,self.window,plateau)
     
     def rulesButton(self: Self):
         self.label.destroy()
@@ -103,9 +108,25 @@ class Menu():
     def emitCB(self : Self):
         self.UI(700, 700)
 
-    def emitFinishGame(self:Self):
+    def emitFinishGame(self:Self,joueurs):
         # Faire ici
         self.UI(700,700)
+
+        classement = {}
+
+        for joueur in joueurs :
+            for numPiece in joueur.pieces.pieces_joueurs:
+                piece = joueur.jouerPiece(numPiece-1)
+                for line in piece:
+                    for square in line:
+                        if square == 1:
+                            joueur.removeScore()
+        
+            print(f"Score du joueur {joueur.couleur} : {joueur.score}")
+
+            classement[joueur.couleur]=joueur.score
+        VueScore(self,self.window,{k: v for k, v in sorted(classement.items(), key=lambda item: abs(item[1]))})
+
 
 if __name__ == "__main__":
     window = ctk.CTk()
