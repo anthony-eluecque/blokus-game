@@ -141,13 +141,13 @@ def validPlacement(bloc: list[int], row: int, col: int, plateau: Plateau, player
                     return True
         # Les cas généraux 
         else:
-            print("Cas générale")
+            # print("Cas générale")
             if expectedPlayerInDiagonals(each_cube,plateau,playerColor):
-                print("Joueur diagonale")
+                # print("Joueur diagonale")
                 if notPieceBelow(new_bloc,plateau):
-                    print("Pas de pièce en dessous")
+                    # print("Pas de pièce en dessous")
                     if verifTotalPieces(new_bloc,plateau,player):
-                        print("Vérif total pièce")
+                        # print("Vérif total pièce")
                         return True
     return False
     
