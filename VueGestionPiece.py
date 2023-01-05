@@ -8,6 +8,7 @@ import math
 from rotationBouton import rotationBouton
 from inversionBouton import inversionBouton
 import tkinter
+from gestionRotationInversion import gestionRotationInversion
 
 class VueGestionPiece:
 
@@ -37,6 +38,7 @@ class VueGestionPiece:
         self.abs_x = self.getXSouris() - width//2
         self.abs_y = self.getYSouris() - heigh//2
 
+
         if 60<=self.abs_x<=660 and 150<=self.abs_y<=750 :
 
             x_round = self.round_down(self.abs_x)
@@ -47,8 +49,13 @@ class VueGestionPiece:
             self.emitToGrille(x_round-60,y_round-150)
 
     def emitToGrille(self:Self,x,y):
-        if self.rotateButton:
-            self.master.callbackPiece(self.file,x,y,self.rotateButton.angle)
+        if self.manageRotation_Reverse.rotationButton:
+            self.master.callbackPiece(
+                self.file,
+                x,
+                y,
+                self.manageRotation_Reverse.rotationButton.angle,
+                self.manageRotation_Reverse.inversionButton.nbInversion)
 
     def round_down(self:Self,n, decimals=2)->int:
         multiplier = 10 ** decimals
@@ -85,25 +92,25 @@ class VueGestionPiece:
         self.canvas_piece.place(x=widget_location[0],y=widget_location[1])
         self.canvas_piece.bind('<B1-Motion>',lambda e :self.onMotion(e,w,h))
         self.canvas_piece.bind('<ButtonRelease-1>',lambda e : self.onDrop(e,w,h))
-        
-        self.rotateButton = rotationBouton(
+
+        self.manageRotation_Reverse = gestionRotationInversion(
             self.window,
             self.canvas_piece,
             self.png_piece,
             f
         )
 
-        self.inversionButton = inversionBouton(
-            self.window,
-            self.canvas_piece,
-            self.png_piece,
-            f,
-            self.rotateButton
-        )
-
         # self.rotateButton = rotationBouton(
+        #     self.window,
         #     self.canvas_piece,
         #     self.png_piece,
-        #     self.window,
         #     f
+        # )
+
+        # self.inversionButton = inversionBouton(
+        #     self.window,
+        #     self.canvas_piece,
+        #     self.png_piece,
+        #     f,
+        #     self.rotateButton
         # )

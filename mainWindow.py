@@ -75,8 +75,10 @@ class VueBlokus():
 
         self.displayPiecesPlayer()
 
-    def callbackPiece(self:Self,file:str,x:int,y:int,rotation:int):
-        
+    def callbackPiece(self:Self,file:str,x:int,y:int,rotation:int,inversion:int):
+
+
+        print(inversion)
         numPiece = int(file.split("/")[3].split(".")[0])
         # -1 car c'est une liste, ici c'est pas des png.
 
@@ -89,10 +91,14 @@ class VueBlokus():
         for i in range(nb_rotation):
             self.actualPlayer.pieces.rotate(numPiece-1)
             piece = self.actualPlayer.jouerPiece(numPiece-1)
-
+        # ----- Partie inversion
+        if inversion%2!=0:
+            self.actualPlayer.pieces.reverse(numPiece-1)
+            piece = self.actualPlayer.jouerPiece(numPiece-1)
+            print(piece)
         pieceBlokus = coordsBlocs(piece,x//30,y//30)
         cheminFichierPiece = "./Pieces/" + couleurJoueur.upper()[0] + "/1.png"
-        
+
         # ---- Vérification du placement
         if validPlacement(piece,y//30,x//30,self.plateau,self.actualPlayer):
             self.actualPlayer.removePiece(numPiece-1)
@@ -129,12 +135,12 @@ class VueBlokus():
             self.actualPlayer =  self.joueurs[self.index]
 
         # Si le joueur est dans l'incapacité de jouer
-        if not playable:
-            self.label.destroy()
-            self.vuePiece.frame.destroy()
-            self.grilleJeu.canvas.destroy()
-            self.statsPlayer.frame.destroy()
-            self.master.emitFinishGame(self.joueurs)
+        # if not playable:
+        #     self.label.destroy()
+        #     self.vuePiece.frame.destroy()
+        #     self.grilleJeu.canvas.destroy()
+        #     self.statsPlayer.frame.destroy()
+        #     self.master.emitFinishGame(self.joueurs)
 
 
 
