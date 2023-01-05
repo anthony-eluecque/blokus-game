@@ -88,6 +88,7 @@ class VueBlokus():
 
         # ----- Partie rotation
         nb_rotation = abs(rotation)//90
+        print("nbrotate : ",nb_rotation)
         for i in range(nb_rotation):
             self.actualPlayer.pieces.rotate(numPiece-1)
             piece = self.actualPlayer.jouerPiece(numPiece-1)
@@ -135,12 +136,12 @@ class VueBlokus():
             self.actualPlayer =  self.joueurs[self.index]
 
         # Si le joueur est dans l'incapacité de jouer
-        # if not playable:
-        #     self.label.destroy()
-        #     self.vuePiece.frame.destroy()
-        #     self.grilleJeu.canvas.destroy()
-        #     self.statsPlayer.frame.destroy()
-        #     self.master.emitFinishGame(self.joueurs)
+        if not playable:
+            self.label.destroy()
+            self.vuePiece.frame.destroy()
+            self.grilleJeu.canvas.destroy()
+            self.statsPlayer.frame.destroy()
+            self.master.emitFinishGame(self.joueurs)
 
 
 
