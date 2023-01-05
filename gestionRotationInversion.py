@@ -39,10 +39,10 @@ class gestionRotationInversion():
         nb_rotation = abs(self.rotationButton.angle)//90
 
         if self.inversionButton.nbInversion%2!=0:
-            if nb_rotation == 1 or nb_rotation == 3:
+            # if nb_rotation == 1 or nb_rotation == 3:
                 self.img = ImageOps.mirror(self.img)
-            else:
-                self.img = ImageOps.flip(self.img)
+            # else:
+                # self.img = ImageOps.flip(self.img)
 
         self.imageCanvas =  ImageTk.PhotoImage(self.img)
         w,h = self.img.size
