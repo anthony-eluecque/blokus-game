@@ -52,39 +52,5 @@ class gestionRotationInversion():
             self.rotationButton.angle = 0
 
 
-    # def rotationPiece(self,childPiece)->None:
-
-    #     self.rotationButton.angle-=90
-    #     childPiece.delete("all")
-    #     self.rotated_img = Image.open(self.filePiece).rotate(self.rotationButton.angle,expand=True)
-    #     if self.inversionButton.nbInversion%2!=0:
-    #         self.rotated_img = ImageOps.flip(self.rotated_img)
-    #     self.imageCanvas =  ImageTk.PhotoImage(self.rotated_img)
-    #     w,h = self.rotated_img.size
-    #     childPiece.config(width=w,height=h)
-    #     childPiece.create_image(0,0,image=self.imageCanvas,anchor = "nw")
-    #     if self.rotationButton.angle==-360:
-    #         self.rotationButton.angle = 0
-    
-    # def reversePiece(self,childPiece)->None:
-
-    #     nb_rotation = abs(self.rotationButton.angle)//90
-    #     self.inversionButton.nbInversion+=1
-
-    #     childPiece.delete("all")
-    #     self.img = Image.open(self.filePiece)
-    #     self.canvasImage =  ImageTk.PhotoImage(self.img)
-    #     if self.inversionButton.nbInversion%2!=0:
-    #         if nb_rotation == 1 or nb_rotation == 2:
-    #             self.mirrorImg = ImageOps.flip(self.img)
-    #         else:
-    #             self.mirrorImg = ImageOps.mirror(self.img)
-    #             # self.mirrorImg = ImageOps.flip(self.img)
-    #         self.canvasImage =  ImageTk.PhotoImage(self.mirrorImg)
-    
-    #     w,h = self.mirrorImg.size
-    #     childPiece.config(width=w,height=h)
-    #     childPiece.create_image(0,0,image=self.canvasImage,anchor="nw")
-
 
     
