@@ -5,7 +5,8 @@ import customtkinter
 from PIL import Image,ImageTk
 from tkinter import RAISED, Canvas
 import math
-from BoutonsCanvas import BoutonCanvas
+from rotationBouton import rotationBouton
+from inversionBouton import inversionBouton
 import tkinter
 
 class VueGestionPiece:
@@ -17,6 +18,7 @@ class VueGestionPiece:
         self.frame = frame
         self.master = master
         self.rotateButton = None
+        self.inversionButton = None
     
     def getXSouris(self:Self)->int:
         return self.window.winfo_pointerx() - self.window.winfo_rootx()
@@ -57,8 +59,12 @@ class VueGestionPiece:
         if self.canvas_piece:
             self.canvas_piece.destroy()
         if self.rotateButton:
-            if self.rotateButton.rotate:
-                self.rotateButton.rotate.destroy()
+            if self.rotateButton.rotation:
+                self.rotateButton.rotation.destroy()
+        if self.inversionButton:
+            if self.inversionButton.inversion :
+                self.inversionButton.inversion.destroy()
+                
         
         self.file = f
         img=Image.open(f)
@@ -71,11 +77,33 @@ class VueGestionPiece:
             height=h, 
             bd=0, 
             highlightthickness=0, 
-            bg="white")
+            bg="white"
+        )
         self.img = tkinter.PhotoImage(file=f)
         self.png_piece = self.canvas_piece.create_image(0,0,image=self.img,anchor = "nw" )   
        
         self.canvas_piece.place(x=widget_location[0],y=widget_location[1])
         self.canvas_piece.bind('<B1-Motion>',lambda e :self.onMotion(e,w,h))
         self.canvas_piece.bind('<ButtonRelease-1>',lambda e : self.onDrop(e,w,h))
-        self.rotateButton = BoutonCanvas(self.canvas_piece,self.png_piece,self.window,f)
+        
+        self.rotateButton = rotationBouton(
+            self.window,
+            self.canvas_piece,
+            self.png_piece,
+            f
+        )
+
+        self.inversionButton = inversionBouton(
+            self.window,
+            self.canvas_piece,
+            self.png_piece,
+            f,
+            self.rotateButton
+        )
+
+        # self.rotateButton = rotationBouton(
+        #     self.canvas_piece,
+        #     self.png_piece,
+        #     self.window,
+        #     f
+        # )
