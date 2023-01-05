@@ -42,6 +42,13 @@ class Pieces():
     def getImagesPieces(self)->list[str]:
         return self.liste_images_pieces
 
+    def reverse(self:Self,num_piece : int) -> None:
+        """Inverse une pièce
+        Args:
+            num_piece (int): Le numéro de la pièce à tourner
+        """
+        self.liste_pieces[num_piece] = list(map(lambda x: x[::-1], self.getPiece(num_piece)))
+
     def rotate(self: Self, num_piece: int) -> None:
         """Tourne une pièce
 
@@ -73,9 +80,8 @@ class Pieces():
 
 
 if __name__ == "__main__":
-
     test = Pieces('R')
     test.afficherPiece(1)
     for i in range(4):
-        test.rotate(1)
+        test.reverse(1)
         test.afficherPiece(1)
