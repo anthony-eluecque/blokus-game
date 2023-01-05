@@ -1,16 +1,12 @@
 import sys
 sys.path.append('./controller/')
 
-from tkinter import BOTH, Canvas
-from tkinter import Tk
+from tkinter import Canvas,filedialog,PhotoImage
 import tkinter
 from tkinter.messagebox import YES
 from typing_extensions import Self
-from PIL import Image,ImageTk
+from PIL import Image,ImageTk,ImageGrab
 import customtkinter
-from PIL import ImageGrab
-import customtkinter
-from tkinter import Canvas, filedialog,PhotoImage
 
 from controller.plateau import Plateau
 from controller.player import Player
@@ -56,23 +52,7 @@ class VueBlokus():
     
         self.vuePiece = VuePiece(self.window,Player('Bleu'),self)
 
-        self.backgroundButtonSave = PhotoImage(file="./assets/button_save.png")
-        
-        self.button = tkinter.Button(
-            master=self.window, 
-            text='', 
-            image = self.backgroundButtonSave, 
-            command = self.callbackSave, 
-            borderwidth=0, 
-            bd=0,
-            highlightthickness=0,  
-            anchor="nw")
-        self.button.place(x=1000,y=665)
-
         self.statsPlayer = VueStatsPlayer(self.window,self.actualPlayer)
-        # self.window.wm_attributes("-topmost", True)
-
-        
         self.loadMap()
 
     def loadMap(self:Self):
@@ -104,8 +84,6 @@ class VueBlokus():
         couleurJoueur = self.actualPlayer.getCouleur()
         indexJoueur = self.joueurs.index(self.actualPlayer)
 
-        print("----------------------------")
-        print(self.actualPlayer.pieces.pieces_joueurs)
         # ----- Partie rotation
         nb_rotation = abs(rotation)//90
         for i in range(nb_rotation):
@@ -140,7 +118,6 @@ class VueBlokus():
 
     def nextPlayer(self:Self)->None:
 
-        playedPlayer = self.actualPlayer.getCouleur()
         self.index= (self.index+1)%4
         self.actualPlayer =  self.joueurs[self.index]
         playable = False
@@ -150,45 +127,21 @@ class VueBlokus():
                 break
             self.index= (self.index+1)%4
             self.actualPlayer =  self.joueurs[self.index]
-        
-        # print(playedPlayer,self.actualPlayer.getCouleur())
+
+        # Si le joueur est dans l'incapacité de jouer
         if not playable:
             self.label.destroy()
             self.vuePiece.frame.destroy()
             self.grilleJeu.canvas.destroy()
-            self.button.destroy()
             self.statsPlayer.frame.destroy()
             self.master.emitFinishGame(self.joueurs)
-
-    
-
-
-    def callbackSave(self):
-        x = Canvas.winfo_rootx(self.grilleJeu.canvas)
-        y = Canvas.winfo_rooty(self.grilleJeu.canvas)
-        w = Canvas.winfo_width(self.grilleJeu.canvas) 
-        h = Canvas.winfo_height(self.grilleJeu.canvas)
-        directory = filedialog.asksaveasfilename(defaultextension="png", filetypes=[("PNG", ".png"), ("JPG", ".jpg"), ("JPEG", ".jpeg")])
-        ImageGrab.grab((x, y, x+w, y+h)).save(directory)
 
 
 
 if __name__ ==  "__main__":
+
     window = customtkinter.CTk()
     app = VueBlokus(window) 
-
-
-    # a=customtkinter.CTk()
-    # a.geometry('800x500+275+100')
-    # a.title('HOME PAGE')
-
-
-    # load=Image.open('./Pieces/B/21.png')
-    # render=ImageTk.PhotoImage(load)
-    # img=customtkinter.CTkLabel(a,image=render)
-    # img.pack()
-
-    # a.mainloop()
 
 
 
