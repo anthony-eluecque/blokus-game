@@ -30,7 +30,7 @@ class inversionBouton():
             border=0,
             command=lambda:self.inversionImage(self.piece)
         )
-        self.inversion.place(x=900,y=665)
+        self.inversion.place(x=1070,y=665)
 
     def inversionImage(self,piece:Canvas)->None:
         self.parent.reversePiece(piece)     
