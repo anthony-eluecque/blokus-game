@@ -20,7 +20,6 @@ sys.path.append('./controller/')
 from controller.plateau import Plateau
 
 
-
 class Menu():
 
     def __init__(self: Self,window : ctk.CTk, longueur = 700, hauteur = 700):
@@ -40,8 +39,8 @@ class Menu():
         self.label = tkinter.Label(self.window, image = self.background, bd = 0)
         self.label.place(x = 0,y = 0)
         
-        # Bouton jouer
-        self.backgroundButtunPlay = CTkImage(Image.open(os.path.join("./assets/button_play.png")),size=(158,49))
+# Bouton jouer
+        self.backgroundButtunPlay = ctk.CTkImage(Image.open(os.path.join("./assets/button_play.png")), size=(158, 49))
         self.button1 = ctk.CTkButton(
             master=self.window, 
             text='', 
@@ -52,10 +51,10 @@ class Menu():
             bg_color= "white", 
             hover_color="white"
         )
-        self.button1.place(relx=0.5, rely=0.55, anchor=ctk.CENTER)
+        self.button1.place(relx=0.5, rely=0.48, anchor=ctk.CENTER)
 
-        # Bouton Règles
-        self.backgroundButtunRules = CTkImage(Image.open(os.path.join("./assets/button_rules.png")),size=(196,49))
+        # Bouton RÃ¨gles
+        self.backgroundButtunRules = ctk.CTkImage(Image.open(os.path.join("./assets/button_rules.png")), size=(196, 49))
         self.button2 = ctk.CTkButton(
             master=self.window, 
             text='', 
@@ -66,10 +65,10 @@ class Menu():
             bg_color= "white", 
             hover_color="white"
         )
-        self.button2.place(relx=0.499, rely=0.65, anchor=ctk.CENTER)       
+        self.button2.place(relx=0.499, rely=0.58, anchor=ctk.CENTER)       
 
         # Bouton Statistiques
-        self.backgroundButtunStats = CTkImage(Image.open(os.path.join("./assets/button_stats.png")),size=(221,49))
+        self.backgroundButtunStats = ctk.CTkImage(Image.open(os.path.join("./assets/button_stats.png")), size=(221, 49))
         self.button3 = ctk.CTkButton(
             master=self.window, 
             text='', 
@@ -80,7 +79,21 @@ class Menu():
             bg_color= "white", 
             hover_color="white"
         )
-        self.button3.place(relx=0.493, rely=0.75, anchor=ctk.CENTER)   
+        self.button3.place(relx=0.493, rely=0.68, anchor=ctk.CENTER)
+
+        #Bouton Quitter
+        self.backgroundButtunStats = ctk.CTkImage(Image.open(os.path.join("./assets/button_leave.png")), size=(158, 49))
+        self.button3 = ctk.CTkButton(
+            master=self.window, 
+            text='', 
+            image = self.backgroundButtunStats, 
+            command = self.leaveButton, 
+            border_width=0, 
+            fg_color="white", 
+            bg_color= "white", 
+            hover_color="white"
+        )
+        self.button3.place(relx=0.493, rely=0.78, anchor=ctk.CENTER)   
 
         
     def playButton(self: Self):
@@ -129,6 +142,8 @@ class Menu():
             classement[joueur.couleur]=joueur.score
         VueScore(self,self.window,{k: v for k, v in sorted(classement.items(), key=lambda item: abs(item[1]))})
 
+    def leaveButton(self: Self):
+            sys.exit()
 
 if __name__ == "__main__":
     window = ctk.CTk()
