@@ -2,6 +2,7 @@ from typing_extensions import Self
 
 from controller.player import Player
 import customtkinter
+from customtkinter import CTkFont
 from tkinter import BOTH, Canvas, PhotoImage
 from PIL import Image,ImageTk
 import tkinter
@@ -22,7 +23,7 @@ class VueNbPieceJoueur():
         self.label = customtkinter.CTkLabel(
             master=self.window,
             text= str(self.player.getNbPieces()) +  " Pièces Restantes", 
-            text_font=("Roboto Medium", 40), 
+            font= CTkFont(family="Roboto Medium", size=40),
             text_color=self.color_player[self.index],
         )
         self.label.grid(row=1,column=0)

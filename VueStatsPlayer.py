@@ -1,6 +1,6 @@
 from typing_extensions import Self
 from controller.player import Player
-from customtkinter import CTkFrame,CTkLabel
+from customtkinter import CTkFrame,CTkLabel,CTkFont
 from VueNbPieceJoueur import VueNbPieceJoueur
 from VueTourJoueur import VueTourJoueur
 
@@ -22,7 +22,7 @@ class VueStatsPlayer():
         self.label = CTkLabel(
             master=self.frame,
             text="Joueur ", 
-            text_font=("Roboto Medium", 40)
+            font= CTkFont(family="Roboto Medium", size=40),
         )
         self.label.grid(row=0,column=0)
 
@@ -30,7 +30,7 @@ class VueStatsPlayer():
         self.nbPiecesPlayer = VueNbPieceJoueur(self.frame,self.actualPlayer)
 
         self.frame.grid_propagate(0)
-        self.frame.config(width=600,height=120)
+        self.frame.configure(width=600,height=120)
         self.frame.place(x=60,y=10)
 
 

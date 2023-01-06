@@ -1,6 +1,7 @@
 import tkinter
 from unicodedata import name
 import customtkinter as ctk
+from customtkinter import CTkImage
 from PIL import ImageTk
 from PIL import Image
 from tkinter import BOTH, Canvas, PhotoImage
@@ -11,6 +12,7 @@ from typing_extensions import Self
 from PIL import Image,ImageTk
 from mainWindow import VueBlokus
 from VueRegles import VueRegles
+import os
 from VueScore import VueScore
 
 import sys
@@ -39,7 +41,7 @@ class Menu():
         self.label.place(x = 0,y = 0)
         
         # Bouton jouer
-        self.backgroundButtunPlay = PhotoImage(file="./assets/button_play.png")
+        self.backgroundButtunPlay = CTkImage(Image.open(os.path.join("./assets/button_play.png")),size=(158,49))
         self.button1 = ctk.CTkButton(
             master=self.window, 
             text='', 
@@ -53,7 +55,7 @@ class Menu():
         self.button1.place(relx=0.5, rely=0.55, anchor=ctk.CENTER)
 
         # Bouton Règles
-        self.backgroundButtunRules = PhotoImage(file="./assets/button_rules.png")
+        self.backgroundButtunRules = CTkImage(Image.open(os.path.join("./assets/button_rules.png")),size=(196,49))
         self.button2 = ctk.CTkButton(
             master=self.window, 
             text='', 
@@ -67,7 +69,7 @@ class Menu():
         self.button2.place(relx=0.499, rely=0.65, anchor=ctk.CENTER)       
 
         # Bouton Statistiques
-        self.backgroundButtunStats = PhotoImage(file="./assets/button_stats.png")
+        self.backgroundButtunStats = CTkImage(Image.open(os.path.join("./assets/button_stats.png")),size=(221,49))
         self.button3 = ctk.CTkButton(
             master=self.window, 
             text='', 

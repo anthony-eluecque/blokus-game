@@ -21,7 +21,7 @@ class VueTourJoueur():
         self.label = customtkinter.CTkLabel(
             master=self.frame,
             text="Joueur " + self.liste_player[self.index], 
-            text_font=("Roboto Medium", 40), 
+            font=customtkinter.CTkFont(family="Roboto Medium", size=40),
             text_color=self.color_player[self.index],
         )
 

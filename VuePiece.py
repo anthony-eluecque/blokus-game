@@ -40,7 +40,7 @@ class VuePiece():
         self.frame.grid_rowconfigure(6,weight=2)
 
         self.frame.grid_propagate(0)
-        self.frame.config(width=550,height=650)
+        self.frame.configure(width=550,height=650)
 
 
         self.frame.place(x=700,y=10)

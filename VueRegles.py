@@ -1,4 +1,5 @@
 # Imports
+import os
 import customtkinter
 from typing_extensions import Self
 import customtkinter
@@ -9,13 +10,18 @@ import tkinter
 # Class VueRegles
 class VueRegles():
 
-    def __init__(self, master,  window : customtkinter.CTk):
+    def __init__(self, master,  window : customtkinter.CTk, longueur = 625, hauteur = 700):
         # Window
         self.master = master
         self.window = window
+        self.screen_width = self.window.winfo_screenwidth()
+        self.screen_height = self.window.winfo_screenheight()
+        self.x = (self.screen_width/2) - (longueur/2)
+        self.y = (self.screen_height/2) - (hauteur/2)
+        self.window.geometry('%dx%d+%d+%d' % (longueur, hauteur, self.x, self.y))
         self.window.title("Règles du Blokus")
         self.window.geometry("625x700")
-        # self.window.resizable(width=False, height=False)
+        self.window.resizable(width=False, height=False)
 
         # Background
         self.backgroundImage = Image.open("./assets/background_rules.png")
@@ -27,7 +33,7 @@ class VueRegles():
         self.rulesTitle = customtkinter.CTkLabel(master = self.window ,
         text="Règles du Blokus", 
         fg_color="white",
-        text_font=("Roboto Medium", 40), 
+        font=customtkinter.CTkFont(family="Roboto Medium", size=40), 
         text_color="black" )
 
         self.rulesTitle.pack(side="top", pady=40)
@@ -39,8 +45,9 @@ class VueRegles():
         corner_radius=0, 
         width=450, 
         height=500, 
-        text_font=("Roboto Medium", 13))
-        self.rules.pack(fill="none", expand=True)
+        font=customtkinter.CTkFont(family="Roboto Medium", size=17))
+        self.rules.pack(fill="none", expand=True, side="top")
+        self.rules.place(x=80, y=110)
 
         # Texts and inserts
         self.sentence1: str = "• La première pièce doit être posée dans le coin du plateau correspondant.\n\n"; self.rules.insert("end", self.sentence1) 
@@ -56,11 +63,19 @@ class VueRegles():
         self.rules.configure(state="disabled")
 
         # Back button
-        self.backgroundButtun = Image.open("./assets/buttun_rules_return.png")
-        self.backgroundB = ImageTk.PhotoImage(self.backgroundButtun)
-        self.Button = customtkinter.CTkButton(master = self.window, text="", command=self.CBback, image=self.backgroundB, bd=0)
+        self.backgroundB = customtkinter.CTkImage(Image.open(os.path.join("./assets/buttun_rules_return.png")), size=(206, 49))
+        self.Button = customtkinter.CTkButton(
+            master = self.window, 
+            text="", 
+            command=self.CBback, 
+            image=self.backgroundB, 
+            border_spacing=0,
+            fg_color="white", 
+            bg_color="white",
+            corner_radius=0,
+            hover_color="white")
         self.Button.pack()
-
+        self.Button.place(relx=0.5, rely=0.89, anchor=customtkinter.CENTER)
         self.window.mainloop()
 
     # Back button callback
@@ -70,10 +85,3 @@ class VueRegles():
         self.rulesTitle.destroy()
         self.Button.destroy()
         self.master.emitCB()
-        
-
-
-
-if __name__ == "__main__":
-    window = customtkinter.CTk()
-    App = VueRegles(window)
