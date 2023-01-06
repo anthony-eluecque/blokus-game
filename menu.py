@@ -1,47 +1,42 @@
-import tkinter
-from unicodedata import name
-import customtkinter as ctk
-from customtkinter import CTkImage
-from PIL import ImageTk
-from PIL import Image
-from tkinter import BOTH, Canvas, PhotoImage
-from tkinter import Tk
-import tkinter
-from tkinter.messagebox import YES
+import os
 from typing_extensions import Self
-from PIL import Image,ImageTk
+from PIL import ImageTk,Image
+
+from tkinter import Label
+from customtkinter import CTk,CTkImage,CTkButton,CENTER
+
 from mainWindow import VueBlokus
 from VueRegles import VueRegles
-import os
 from VueScore import VueScore
-
-import sys
-sys.path.append('./controller/')
-from controller.plateau import Plateau
-
 
 class Menu():
 
-    def __init__(self: Self,window : ctk.CTk, longueur = 700, hauteur = 700):
+    def __init__(self: Self,window : CTk, longueur = 700, hauteur = 700):
 
-        self.window = window
+        self.window : CTk = window
         self.window.title("jeu Blokus")
         self.window.iconbitmap('./Icon/icon.ico')
         self.window.resizable(width=False, height=False)
 
-        self.UI(700, 700)
+        self.screen_width : int = self.window.winfo_screenwidth()
+        self.screen_height : int  = self.window.winfo_screenheight()
+        self.x : float = (self.screen_width/2) - (longueur/2)
+        self.y : float = (self.screen_height/2) - (hauteur/2)
+        
+        self.UI(longueur, hauteur)
         self.window.mainloop()
         
-    def UI(self :Self, hauteur, longueur):
+    def UI(self : Self, hauteur : int , longueur :int):
+        
+        self.window.geometry('%dx%d+%d+%d' % (longueur, hauteur, self.x, self.y))
         self.window.geometry(str(longueur) + 'x' + str(hauteur))
         self.backgroundImage = Image.open("./assets/carre.png")
         self.background = ImageTk.PhotoImage(self.backgroundImage)
-        self.label = tkinter.Label(self.window, image = self.background, bd = 0)
+        self.label = Label(self.window, image = self.background, bd = 0)
         self.label.place(x = 0,y = 0)
         
-# Bouton jouer
-        self.backgroundButtunPlay = ctk.CTkImage(Image.open(os.path.join("./assets/button_play.png")), size=(158, 49))
-        self.button1 = ctk.CTkButton(
+        self.backgroundButtunPlay = CTkImage(Image.open(os.path.join("./assets/button_play.png")), size=(158, 49))
+        self.button1 = CTkButton(
             master=self.window, 
             text='', 
             image = self.backgroundButtunPlay, 
@@ -51,11 +46,11 @@ class Menu():
             bg_color= "white", 
             hover_color="white"
         )
-        self.button1.place(relx=0.5, rely=0.48, anchor=ctk.CENTER)
+        self.button1.place(relx=0.5, rely=0.48, anchor=CENTER)
 
-        # Bouton RÃ¨gles
-        self.backgroundButtunRules = ctk.CTkImage(Image.open(os.path.join("./assets/button_rules.png")), size=(196, 49))
-        self.button2 = ctk.CTkButton(
+        # Bouton Regles
+        self.backgroundButtunRules = CTkImage(Image.open(os.path.join("./assets/button_rules.png")), size=(196, 49))
+        self.button2 = CTkButton(
             master=self.window, 
             text='', 
             image = self.backgroundButtunRules, 
@@ -65,11 +60,11 @@ class Menu():
             bg_color= "white", 
             hover_color="white"
         )
-        self.button2.place(relx=0.499, rely=0.58, anchor=ctk.CENTER)       
+        self.button2.place(relx=0.499, rely=0.58, anchor=CENTER)       
 
         # Bouton Statistiques
-        self.backgroundButtunStats = ctk.CTkImage(Image.open(os.path.join("./assets/button_stats.png")), size=(221, 49))
-        self.button3 = ctk.CTkButton(
+        self.backgroundButtunStats = CTkImage(Image.open(os.path.join("./assets/button_stats.png")), size=(221, 49))
+        self.button3 = CTkButton(
             master=self.window, 
             text='', 
             image = self.backgroundButtunStats, 
@@ -79,11 +74,11 @@ class Menu():
             bg_color= "white", 
             hover_color="white"
         )
-        self.button3.place(relx=0.493, rely=0.68, anchor=ctk.CENTER)
+        self.button3.place(relx=0.493, rely=0.68, anchor=CENTER)
 
         #Bouton Quitter
-        self.backgroundButtunStats = ctk.CTkImage(Image.open(os.path.join("./assets/button_leave.png")), size=(158, 49))
-        self.button3 = ctk.CTkButton(
+        self.backgroundButtunStats = CTkImage(Image.open(os.path.join("./assets/button_leave.png")), size=(158, 49))
+        self.button3 = CTkButton(
             master=self.window, 
             text='', 
             image = self.backgroundButtunStats, 
@@ -93,37 +88,27 @@ class Menu():
             bg_color= "white", 
             hover_color="white"
         )
-        self.button3.place(relx=0.493, rely=0.78, anchor=ctk.CENTER)   
+        self.button3.place(relx=0.493, rely=0.78, anchor=CENTER)   
 
         
-    def playButton(self: Self):
-
-        self.label.destroy()
-        self.button1.destroy()
-        self.button2.destroy()
-        self.button3.destroy()
-
-        plateau = Plateau(20,20)
-
-        VueBlokus(self,self.window,plateau)
+    def playButton(self : Self):
+        for child in self.window.winfo_children():
+            child.destroy()
+        VueBlokus(self,self.window)
     
-    def rulesButton(self: Self):
-        self.label.destroy()
-        self.button1.destroy()
-        self.button2.destroy()
-        self.button3.destroy()
+    def rulesButton(self : Self):
+        for child in self.window.winfo_children():
+            child.destroy()
         VueRegles(self, self.window)
 
-    def statsButton(self: Self):
-        self.label.destroy()
-        self.button1.destroy()
-        self.button2.destroy()
-        self.button3.destroy()
+    def statsButton(self : Self):
+        for child in self.window.winfo_children():
+            child.destroy()
 
     def emitCB(self : Self):
         self.UI(700, 700)
 
-    def emitFinishGame(self:Self,joueurs):
+    def emitFinishGame(self : Self,joueurs):
         # Faire ici
         self.UI(700,700)
 
@@ -143,8 +128,8 @@ class Menu():
         VueScore(self,self.window,{k: v for k, v in sorted(classement.items(), key=lambda item: abs(item[1]))})
 
     def leaveButton(self: Self):
-            sys.exit()
+        self.window.quit()
 
 if __name__ == "__main__":
-    window = ctk.CTk()
+    window = CTk()
     app = Menu(window) 
