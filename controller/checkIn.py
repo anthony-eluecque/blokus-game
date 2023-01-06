@@ -229,28 +229,18 @@ def playerCanPlay(player:Player,plateau:Plateau)->bool:
                 if validPlacement(player.pieces.liste_pieces[indice_piece],i,j,plateau,player):
                     print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j}")
                     return True
+                if validPlacementRotation(indice_piece,i,j,plateau,player):
+                    print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j} en étant rotate")
+                    return True
     return False
 
-if __name__ == "__main__":
-    # Kind of test if you want to try 
-    pass
-    # tab = Plateau(20,20)
-    # joueur = Player("Vert")
-    # piece = joueur.jouerPiece(2)
-    # if valid_placement(piece,16,0,tab,joueur):
-    #     new_bloc = coords_blocs(piece,16,0)
-    #     for y,x in new_bloc:
-    #         tab.setColorOfCase(y,x,1)
-    # joueur.pieces.rotate(2)
-    # piece = joueur.jouerPiece(2)
-    # if valid_placement(piece,14,2,tab,joueur):
-    #         new_bloc = coords_blocs(piece,14,2)
-    #         for y,x in new_bloc:
-    #             tab.setColorOfCase(y,x,1)
-    # piece = joueur.jouerPiece(2)
-    # print(piece)
-    # if valid_placement(piece,12,3,tab,joueur):
-    #         new_bloc = coords_blocs(piece,12,3)
-    #         for y,x in new_bloc:
-    #             tab.setColorOfCase(y,x,1)
-    # print(tab)
+def validPlacementRotation(indice_piece,i:int,j:int,plateau:Plateau,player:Player)->bool:
+    for _ in range(3):
+        player.pieces.rotate(indice_piece)
+        piece = player.jouerPiece(indice_piece)
+        if validPlacement(piece,i,j,plateau,player):
+            player.pieces.resetRotation(indice_piece)
+            return True
+    player.pieces.resetRotation(indice_piece)
+    return False
+
