@@ -19,7 +19,7 @@ class inversionBouton():
     def UI(self:Self)->None:
         if self.inversion:
             self.inversion.destroy()
-        self.bgButton = PhotoImage(file="./assets/button_rotation.png")
+        self.bgButton = PhotoImage(file="./assets/button_inversion.png")
         self.inversion = Button(
             master = self.master,
             image = self.bgButton,
