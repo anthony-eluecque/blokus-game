@@ -1,13 +1,12 @@
 import sys
 sys.path.append('./controller/')
+import os
 
-from tkinter import Canvas,filedialog,PhotoImage
-import tkinter
 from tkinter.messagebox import YES
 from typing_extensions import Self
-from PIL import Image,ImageTk,ImageGrab
-import customtkinter
+from PIL import Image,ImageTk
 
+from customtkinter import CTk,CTkLabel,CTkImage
 from controller.plateau import Plateau
 from controller.player import Player
 from controller.checkIn import validPlacement,coordsBlocs,playerCanPlay
@@ -15,19 +14,19 @@ from controller.checkIn import validPlacement,coordsBlocs,playerCanPlay
 from testMap import MAP1
 from VuePiece import VuePiece
 from VueGrilleJeu import VueGrilleJeu
-from VueTourJoueur import VueTourJoueur
-from VueNbPieceJoueur import VueNbPieceJoueur
 from VueStatsPlayer import VueStatsPlayer
+from newGameButton import newGameButton
+from stopGameButton import stopGameButton
 
 class VueBlokus():
 
-    def __init__(self,master,menu_window :customtkinter.CTk,plateau:Plateau):
+    def __init__(self,master,menu_window : CTk):
 
         self.master = master
         self.joueurs : list[Player] = [Player("Bleu"),Player("Jaune"),Player("Vert"),Player("Rouge")]
         self.index : int = 0
         self.actualPlayer : Player = self.joueurs[self.index]
-        self.plateau = plateau       
+        self.plateau = Plateau(20,20)       
         self.window = menu_window
         self.window.geometry("1300x800")
         self.window.title("Jeu Blokus")
@@ -38,23 +37,33 @@ class VueBlokus():
         self.window.mainloop()
 
     def UI(self):
-
-
-
-        self.backgroundImage = Image.open("./assets/background_game.png")
-        self.background = ImageTk.PhotoImage(self.backgroundImage)
-
-        self.label = tkinter.Label(self.window, image = self.background, bd = 0)
-        self.label.place(x = 0,y = 0)
-
         
+        self.bgImage = CTkImage(Image.open(os.path.join("./assets/background_game.png")),size=(1300,800))
+        self.bg = CTkLabel(self.window,text="",image = self.bgImage)
+        self.bg.place(x = 0,y = 0)
+
         self.grilleJeu = VueGrilleJeu(self.window, 600, 600)
     
         self.vuePiece = VuePiece(self.window,Player('Bleu'),self)
 
         self.statsPlayer = VueStatsPlayer(self.window,self.actualPlayer)
-        self.loadMap()
+        
+        self.newGameButton = newGameButton(self,self.window)
+        self.stopGameButton = stopGameButton(self,self.window)
 
+        # Use a custom map
+        # self.loadMap()
+
+    def newGame(self):
+        for child in self.window.winfo_children():
+            child.destroy()
+        VueBlokus(self.master,self.window)
+    
+    def stopGame(self):
+        for child in self.window.winfo_children():
+            child.destroy()
+        self.master.emitCB()
+    
     def loadMap(self:Self):
         
         indexJoueur = 0
@@ -124,7 +133,6 @@ class VueBlokus():
         self.vuePiece = VuePiece(self.window,self.actualPlayer,self)
 
     def nextPlayer(self:Self)->None:
-
         self.index= (self.index+1)%4
         self.actualPlayer =  self.joueurs[self.index]
         playable = False
@@ -137,18 +145,10 @@ class VueBlokus():
 
         # Si le joueur est dans l'incapacité de jouer
         if not playable:
-            self.label.destroy()
-            self.vuePiece.frame.destroy()
-            self.grilleJeu.canvas.destroy()
-            self.statsPlayer.frame.destroy()
             self.master.emitFinishGame(self.joueurs)
 
 
 
-if __name__ ==  "__main__":
-
-    window = customtkinter.CTk()
-    app = VueBlokus(window) 
 
 
 
