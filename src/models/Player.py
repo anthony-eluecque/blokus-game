@@ -1,5 +1,5 @@
 from typing_extensions import Self
-from pieces import Pieces
+from models.Pieces import Pieces
 from constants import POSITION_DEPART
 
 class Player():
@@ -46,7 +46,7 @@ class Player():
 
     def hasPlayedPiece(self,indice_piece:int):
         self.pieces.pieces_joueurs.remove(indice_piece)
-        f_piece = './Pieces/'+self.couleur[0].upper()+'/'+str(indice_piece+1)+'.png'
+        f_piece = './media/pieces/'+self.couleur[0].upper()+'/'+str(indice_piece+1)+'.png'
         self.pieces.liste_images_pieces.remove(f_piece)
 
     def removeScore(self:Self)->None:
@@ -56,10 +56,5 @@ class Player():
         return("Le joueur " + self.couleur + " est en possession de " +  str(self.pieces.getNbPieces()) + " pièce(s).")
 
 
-# ---- kind of test
-if __name__ == "__main__":
-
-    joueur = Player("Rouge")
-    print(joueur.getPositionDepart())
 
 

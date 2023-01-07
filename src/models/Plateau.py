@@ -1,6 +1,4 @@
 from typing_extensions import Self
-from pieces import Pieces
-from controller.player import Player
 
 
 class Plateau():
