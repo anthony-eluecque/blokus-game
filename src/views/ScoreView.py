@@ -2,6 +2,7 @@ from utils.window_utils import _resizeWindow
 from tkinter import Frame,Label
 from views.View import View
 from PIL import ImageTk,Image
+from utils.leaderboard_utils import openJson
 
 class ScoreView(View):
 
@@ -12,11 +13,12 @@ class ScoreView(View):
 
         self.window = window
         self.scoreController = controller
+        classement = openJson()
         _resizeWindow(self.window,longueur,hauteur)
-
         self._makeFrame()
         self._makeBackground()
         self._makeTitleClassement()
+        self._makeClassement(classement)
 
     def _makeFrame(self):
         
@@ -26,8 +28,9 @@ class ScoreView(View):
 
     def _makeBackground(self):
         
-        img = ImageTk.PhotoImage(Image.open("./media/assets/bg_score.png"))
-        self.bgImg = Label(self.mainFrame,image=img,text="")
+        img = Image.open("./media/assets/bg_score.png")
+        self.img = ImageTk.PhotoImage(img)
+        self.bgImg = Label(self.mainFrame,image=self.img,text="")
         self.bgImg.place(x=0,y=0,anchor="nw")
 
     def _makeTitleClassement(self):
@@ -43,7 +46,7 @@ class ScoreView(View):
             podium: str = i == 1 and "1er :" or str( i ) + "ème :"
             podiumPos: Label = Label(self.mainFrame, text=podium, font="Roboto 30 bold", bg="white", fg=self.colors[ i - 1 ])
             podiumPos.place(x=280, y=250 + ( ( i-1) * 50 ), anchor="e")
-            podiumScore: Label = Label(self.mainFrame, text=f'{ couleur } avec { self.classement[ couleur ] } points', font="Roboto 30 bold", bg="white" )
+            podiumScore: Label = Label(self.mainFrame, text=f'{ couleur } avec { classement[ couleur ] } points', font="Roboto 30 bold", bg="white" )
             podiumScore.place(x=285, y=250 + ( ( i-1) * 50 ), anchor="w")
             i += 1
 
