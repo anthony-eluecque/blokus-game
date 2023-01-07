@@ -3,6 +3,7 @@ from core.Core import Core
 from models.Player import Player
 from models.Plateau import Plateau
 from utils.game_utils import coordsBlocs,validPlacement,playerCanPlay
+from utils.leaderboard_utils import makeClassement
 from testmap import MAP1
 
 class GameController(Controller):
@@ -14,7 +15,7 @@ class GameController(Controller):
         self.actualPlayer : Player = self.joueurs[self.index]
         self.plateau = Plateau(20,20)
         self.gameView = self.loadView("Game",window)
-        self.loadMap()
+        # self.loadMap()
     
     def callback(self,file:str,x:int,y:int,rotation:int,inversion:int):
 
@@ -65,6 +66,7 @@ class GameController(Controller):
         if not playable:
             for child in self.window.winfo_children():
                 child.destroy()
+            makeClassement(self.joueurs)
             c = Core.openController("Score",self.window,self.joueurs)
             c.main()
 
@@ -86,8 +88,8 @@ class GameController(Controller):
                 self.joueurs[indexJoueur].removePiece(piece[0])
 
             indexJoueur +=1
-        self.nextPlayer()
-
+        self.gameView.update(self.actualPlayer)
+        # self.nextPlayer()
 
     def main(self):
         self.gameView.main()
