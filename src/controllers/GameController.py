@@ -67,7 +67,7 @@ class GameController(Controller):
             for child in self.window.winfo_children():
                 child.destroy()
             makeClassement(self.joueurs)
-            c = Core.openController("Score",self.window,self.joueurs)
+            c = Core.openController("Score",self.window)
             c.main()
 
     def loadMap(self):
