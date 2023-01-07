@@ -5,7 +5,7 @@ from config import APP_PATH
 class Core:   
     
     @staticmethod
-    def openController(controller,window,classement=1):
+    def openController(controller,window):
         response = None
 
         controller = controller[0].upper()+controller[1:]
