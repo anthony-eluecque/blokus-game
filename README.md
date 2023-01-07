@@ -1,5 +1,5 @@
 <p  align="center">
-  <img src="./img_readme/Blokus.png">
+  <img src="./media/imgReadme/Blokus.png">
   <h1 align="center">
     🟨 🟩 🟦 🟥
   </h1>
@@ -85,7 +85,7 @@ Il existe 5 tailles de pièces avec :
 - 12 pièces de 5 cases 
 
 <p align="center">
-    <img src="./img_readme/piece.jpg" width=250>
+    <img src="./media/imgReadme/piece.jpg" width=250>
 </p>
 
 Ces 21 pièces sont de couleur jaune, verte, bleue ou rouge pour différencier chaque joueur.
@@ -97,7 +97,7 @@ Ces 21 pièces sont de couleur jaune, verte, bleue ou rouge pour différencier c
 Pour que le placement d’une pièce soit valide, il faut que celle que l’on désire poser soit en contact avec une pièce de la même couleur et **seulement une diagonale**. Si l’un des cubes d’une pièce est adjacent à un cube d’une pièce déjà posé sur le plateau, il est alors impossible de placer la pièce.Cette règle n’est valable **QUE** pour les pièces d’une même couleur.
 
 <p align="center">
-    <img src="./img_readme/fin_partie.jpg" width=300>
+    <img src="./media/imgReadme/fin_partie.jpg" width=300>
 </p>
 
 ### **3.3 Déroulement d'une partie**
@@ -107,7 +107,7 @@ Pour que le placement d’une pièce soit valide, il faut que celle que l’on d
 Au début de la partie, le joueur qui commence en premier est choisi aléatoirement. Chaque joueur ayant pour obligation de démarrer dans un angle du plateau, la première pièce posée par lui doit avoir un de ses carrés placé dans cet angle pour que le dépôt soit valide. 
 
 <p align="center">
-    <img src="./img_readme/debut_partie.jpg" width=400>
+    <img src="./media/imgReadme/debut_partie.jpg" width=400>
 </p>
 
 > #### 3.3.2 Au cours de la partie
