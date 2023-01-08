@@ -1,10 +1,10 @@
 import abc
 
-
-"""
-    Responsible for the program interface.
-"""
 class View(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def _makeFrame(self):
+        return
 
     @abc.abstractmethod
     def main(self):
