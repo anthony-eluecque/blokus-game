@@ -6,11 +6,11 @@ from PIL import Image,ImageTk
 from typing_extensions import Self
 from tkinter import Frame
 import os
-from utils.window_utils import _resizeWindow
+from utils.window_utils import _resizeWindow,_deleteChilds,_createFrame
 
 class HomeView(View):
 
-    def __init__(self,controller,window, longueur = 700, hauteur = 700):
+    def __init__(self,controller,window:CTk, longueur = 700, hauteur = 700):
         
         super().__init__()
 
@@ -18,9 +18,7 @@ class HomeView(View):
         self.homeController = controller
 
     def _makeFrame(self):
-        self.mainFrame = Frame(self.window,width= 700,height=1000)
-        self.mainFrame.pack()
-        self.mainFrame.pack_propagate(0)
+        self.mainFrame = _createFrame(self.window,700,1000)
 
     def _placement(self):
 
@@ -69,6 +67,6 @@ class HomeView(View):
         self._makeFrame()
         self._UI()
         self._placement()
+
     def close(self):
-        return
-    
+        _deleteChilds(self.window)

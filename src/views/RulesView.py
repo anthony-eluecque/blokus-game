@@ -6,7 +6,7 @@ from PIL import Image,ImageTk
 from typing_extensions import Self
 import os
 from tkinter import Label,Frame
-from utils.window_utils import _resizeWindow
+from utils.window_utils import _resizeWindow,_deleteChilds,_createFrame
 
 class RulesView(View):
 
@@ -21,7 +21,7 @@ class RulesView(View):
         "• Le gagnant est la personne ayant le plus de points à la fin de la partie.",
     ]
 
-    def __init__(self,controller,window,width=625,heigth=700):
+    def __init__(self,controller,window : CTk,width=625,heigth=700):
 
         super().__init__()
         self.rulesController = controller
@@ -29,9 +29,7 @@ class RulesView(View):
 
 
     def _makeFrame(self):
-        self.mainFrame = Frame(self.window,width= 1000,height=1000)
-        self.mainFrame.pack()
-        self.mainFrame.pack_propagate(0)
+        self.mainFrame = _createFrame(self.window,1000,1000)
 
     def _makeWindow(self):
         self.backgroundImage = Image.open("./media/assets/background_rules.png")
@@ -73,5 +71,5 @@ class RulesView(View):
         self._configWidget()
         
     def close(self):
-        return
+        _deleteChilds(self.window)
     

@@ -1,14 +1,15 @@
-from utils.window_utils import _resizeWindow
+from utils.window_utils import _resizeWindow,_createFrame
 from tkinter import Frame,Label
 from views.View import View
 from PIL import ImageTk,Image
 from utils.leaderboard_utils import openJson
+from customtkinter import CTk
 
 class ScoreView(View):
 
     colors = ["#ffb800", "#787878", "#ff5c00", "#110eb8" ]
 
-    def __init__(self,controller,window,longueur=914,hauteur=606):
+    def __init__(self,controller,window : CTk,longueur=914,hauteur=606):
         super().__init__()
 
         self.window = window
@@ -16,10 +17,7 @@ class ScoreView(View):
 
 
     def _makeFrame(self):
-        
-        self.mainFrame = Frame(self.window,width=914,height=606)
-        self.mainFrame.pack()
-        self.mainFrame.pack_propagate(0)
+        self.mainFrame = _createFrame(self.window,914,606)
 
     def _makeBackground(self):
         

@@ -1,7 +1,7 @@
 from views.View import View
-from utils.window_utils import _resizeWindow
+from utils.window_utils import _resizeWindow,_deleteChilds,_createFrame
 from tkinter import Frame
-from customtkinter import CTkImage,CTkLabel
+from customtkinter import CTk, CTkImage,CTkLabel
 from PIL import Image
 from components.game.grille import grille
 from components.game.score import score
@@ -11,7 +11,7 @@ from models.Player import Player
 
 class GameView(View):
 
-    def __init__(self,controller,window,width=1300,heigth=800):
+    def __init__(self,controller,window:CTk,width=1300,heigth=800):
 
         super().__init__()
         self.gameController = controller
@@ -19,9 +19,7 @@ class GameView(View):
 
 
     def _makeFrame(self):
-        self.mainFrame = Frame(self.window,width= 1300,height=800)
-        self.mainFrame.pack()
-        self.mainFrame.pack_propagate(0)
+        self.mainFrame = _createFrame(self.window,1300,800)
 
     def _callComponents(self):
         self._makeFrame()
@@ -52,4 +50,4 @@ class GameView(View):
         self.bg.place(x = 0,y = 0)
 
     def close(self):
-        return
+        _deleteChilds(self.window)
