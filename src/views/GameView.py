@@ -16,11 +16,7 @@ class GameView(View):
         super().__init__()
         self.gameController = controller
         self.window = window
-        _resizeWindow(self.window,width,heigth)
 
-        self._callComponents()
-        self.bg.place(x = 0,y = 0)
-    
 
     def _makeFrame(self):
         self.mainFrame = Frame(self.window,width= 1300,height=800)
@@ -45,13 +41,15 @@ class GameView(View):
     def _addToGrid(self,chemin,x,y):
         self.grille._addPieceToGrille(chemin,x,y)
 
-    def update(self,player):
-        self.score.nextPlayer(player)
+    def update(self,player,index):
+        self.score.nextPlayer(index)
         self.piecesManager.frame.destroy()
         self.piecesManager = piecesManager(self.window,player,self)
 
-    def main(self):
-        pass
+    def main(self,largeur = 1300,hauteur = 800):
+        _resizeWindow(self.window,largeur,hauteur)
+        self._callComponents()
+        self.bg.place(x = 0,y = 0)
 
     def close(self):
         return

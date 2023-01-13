@@ -13,12 +13,7 @@ class ScoreView(View):
 
         self.window = window
         self.scoreController = controller
-        classement = openJson()
-        _resizeWindow(self.window,longueur,hauteur)
-        self._makeFrame()
-        self._makeBackground()
-        self._makeTitleClassement()
-        self._makeClassement(classement)
+
 
     def _makeFrame(self):
         
@@ -51,9 +46,15 @@ class ScoreView(View):
             i += 1
 
 
-    def main(self):
-        pass
-        
+    def main(self,longueur=914,hauteur=606):
+        classement = openJson()
+        _resizeWindow(self.window,longueur,hauteur)
+        self._makeFrame()
+        self._makeBackground()
+        self._makeTitleClassement()
+        self._makeClassement(classement)
+
+
     def close(self):
         return
     

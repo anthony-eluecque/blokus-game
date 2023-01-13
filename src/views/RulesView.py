@@ -27,15 +27,6 @@ class RulesView(View):
         self.rulesController = controller
         self.window = window
 
-        _resizeWindow(self.window,width,heigth)
-        self._makeFrame()
-        self._makeWindow()
-        self._makeTitle()
-        self._makeTextBox()
-        self._makeRules()
-        self._makeButtonRules()
-        self._configWidget()
-
 
     def _makeFrame(self):
         self.mainFrame = Frame(self.window,width= 1000,height=1000)
@@ -71,8 +62,15 @@ class RulesView(View):
         self.backRules.pack()
         self.backRules.place(relx=0.5, rely=0.89, anchor=CENTER)
 
-    def main(self):
-        pass
+    def main(self,longueur = 625 ,hauteur = 700):
+        _resizeWindow(self.window,longueur,hauteur)
+        self._makeFrame()
+        self._makeWindow()
+        self._makeTitle()
+        self._makeTextBox()
+        self._makeRules()
+        self._makeButtonRules()
+        self._configWidget()
         
     def close(self):
         return

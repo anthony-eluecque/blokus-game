@@ -17,11 +17,6 @@ class HomeView(View):
         self.window = window
         self.homeController = controller
 
-        _resizeWindow(self.window,longueur,hauteur)
-        self._makeFrame()
-        self._UI()
-        self._placement()
-    
     def _makeFrame(self):
         self.mainFrame = Frame(self.window,width= 700,height=1000)
         self.mainFrame.pack()
@@ -69,9 +64,11 @@ class HomeView(View):
         self.window.geometry('%dx%d+%d+%d' % (width, heigth, x, y))
         self.window.geometry(str(width) + 'x' + str(heigth))
     
-    def main(self):
-        pass
-
+    def main(self, longueur = 700 ,hauteur = 700):
+        _resizeWindow(self.window,longueur,hauteur)
+        self._makeFrame()
+        self._UI()
+        self._placement()
     def close(self):
         return
     
