@@ -63,7 +63,7 @@ class score:
         self.label_player.grid(row=1,column=0)
         self.label_tour.grid(row=0,column=0)
 
-        self.frame.grid_propagate(0)
+        self.frame.grid_propagate(False)
         self.frame.configure(width=600,height=120)
         self.frame.place(x=60,y=10)
 
