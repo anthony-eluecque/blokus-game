@@ -5,6 +5,7 @@ from models.Plateau import Plateau
 from utils.game_utils import coordsBlocs,validPlacement,playerCanPlay
 from utils.leaderboard_utils import makeClassement
 from testmap import MAP1
+from tkinter.messagebox import showinfo
 
 class GameController(Controller):
     
@@ -61,6 +62,8 @@ class GameController(Controller):
             if playerCanPlay(joueur,self.plateau): 
                 playable = True
                 break
+            # else:
+                # showinfo("Blokus", "Le joueur " + joueur.getCouleur() + " ne peut plus jouer")
         
         self.actualPlayer = joueur
         if not playable:
@@ -88,6 +91,16 @@ class GameController(Controller):
             self.index = (self.index+1)% 4
         self.gameView.update(self.actualPlayer,self.index)
         # self.nextPlayer()
+
+    def _newGame(self):
+        self.gameView.close()
+        c = Core.openController("Game",self.window)
+        c.main()
+
+    def _backToHome(self):
+        self.gameView.close()
+        c = Core.openController("Home",self.window)
+        c.main()
 
     def main(self):
         self.gameView.main()
