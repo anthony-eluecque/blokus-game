@@ -15,7 +15,6 @@ class GameController(Controller):
         self.actualPlayer : Player = self.joueurs[self.index]
         self.plateau = Plateau(20,20)
         self.gameView = self.loadView("Game",window)
-        # self.loadMap()
     
     def callback(self,file:str,x:int,y:int,rotation:int,inversion:int):
 
@@ -46,50 +45,51 @@ class GameController(Controller):
             self.actualPlayer.hasPlayedPiece(numPiece-1)
             
             self.nextPlayer()
-            self.gameView.update(self.actualPlayer)
+            self.gameView.update(self.actualPlayer,self.index)
 
         if nb_rotation>0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
         
 
     def nextPlayer(self)->None:
-        self.index= (self.index+1)%4
-        self.actualPlayer =  self.joueurs[self.index]
+
         playable = False
-        for i in range(0,2):
-            if playerCanPlay(self.actualPlayer,self.plateau): 
+        joueur : Player = Player("Rouge") 
+        for i in range(len(self.joueurs)):
+            self.index = (self.index+1)%4
+            joueur =  self.joueurs[self.index]
+            if playerCanPlay(joueur,self.plateau): 
                 playable = True
                 break
-            self.index = (self.index+1)%4
-            self.actualPlayer =  self.joueurs[self.index]
-
+        
+        self.actualPlayer = joueur
         if not playable:
             for child in self.window.winfo_children():
                 child.destroy()
+            print("terminé")
             makeClassement(self.joueurs)
             c = Core.openController("Score",self.window)
             c.main()
-
     def loadMap(self):
         
-        indexJoueur = 0
         for couleur,pieces in MAP1.items():
             cheminFichierPiece = "./media/pieces/" + couleur.upper()[0] + "/1.png"
             
             for piece in pieces :
 
-                p = self.joueurs[indexJoueur].jouerPiece(piece[0]) 
+                p = self.joueurs[self.index].jouerPiece(piece[0]) 
                 p = coordsBlocs(p,piece[1][1],piece[1][0])
                 for coordx,coordy in p:
                     self.gameView._addToGrid(cheminFichierPiece,coordy,coordx)
-                    self.plateau.setColorOfCase(coordx,coordy,indexJoueur)
+                    self.plateau.setColorOfCase(coordx,coordy,self.index)
                 
-                self.joueurs[indexJoueur].hasPlayedPiece(piece[0])
-                self.joueurs[indexJoueur].removePiece(piece[0])
+                self.joueurs[self.index].hasPlayedPiece(piece[0])
+                self.joueurs[self.index].removePiece(piece[0])
 
-            indexJoueur +=1
-        self.gameView.update(self.actualPlayer)
+            self.index = (self.index+1)% 4
+        self.gameView.update(self.actualPlayer,self.index)
         # self.nextPlayer()
 
     def main(self):
         self.gameView.main()
+        self.loadMap()
