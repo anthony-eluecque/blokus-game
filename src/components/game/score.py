@@ -5,13 +5,13 @@ class score:
 
     liste_player = ["Bleu","Jaune","Vert","Rouge"]
     color_player = ["#3D5ECC","#F9DE2F","#45A86B","#FF0004"]
+
     def __init__(self,window,player:Player):
 
         self.window = window
         self.player = player 
         self.frame = CTkFrame(master=self.window,fg_color="white")
-        self.index : int = 0
-
+        self.index : int
         self._configGrid()
         self._createWidgets()
 
@@ -21,8 +21,9 @@ class score:
         self.frame.grid_rowconfigure(1,weight=1)
         self.frame.grid_columnconfigure(0,weight=1)
 
-    def _createWidgets(self):
+    def _createWidgets(self,index : int = 0):
 
+        self.index = index
         self._createLabel()
         self._createCounterPiecePlayer()
         self._createTourPlayer()
@@ -67,8 +68,6 @@ class score:
         self.frame.place(x=60,y=10)
 
 
-    def nextPlayer(self, player:Player):
-        self.player = player
-        self.index = (self.index+1)%4
+    def nextPlayer(self, index : int):
         self._destroyWidgets()
-        self._createWidgets()
+        self._createWidgets(index)
