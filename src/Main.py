@@ -3,9 +3,6 @@ from core.Core import Core
 from customtkinter import CTk
 from utils.window_utils import _resizeWindow
 
-"""
-    Main class. Responsible for running the application.
-"""
 class Main:
     @staticmethod    
     def run():
