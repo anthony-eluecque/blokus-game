@@ -1,5 +1,5 @@
-from components.game.reverseButton import reverseButton
-from components.game.rotateButton import rotationButton
+from components.game.buttons.reverseButton import reverseButton
+from components.game.buttons.rotateButton import rotationButton
 from PIL import ImageOps,ImageTk,Image
 
 class buttonsManager:
