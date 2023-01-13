@@ -6,15 +6,13 @@ class RulesController(Controller):
 
     def __init__(self,window : CTk):
         self.window = window
-        self.homeView = self.loadView("Rules",self.window)
+        self.rulesView = self.loadView("Rules",self.window)
         self.core = Core()
     
     def btn_clear(self):
-        for child in self.window.winfo_children():
-            child.destroy()
-        # peut être callback Core avec home
+        self.rulesView.close()
         c = Core.openController("home",self.window)
         c.main()
 
     def main(self):
-        self.homeView.main()
+        self.rulesView.main()

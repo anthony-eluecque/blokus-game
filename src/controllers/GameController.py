@@ -64,8 +64,7 @@ class GameController(Controller):
         
         self.actualPlayer = joueur
         if not playable:
-            for child in self.window.winfo_children():
-                child.destroy()
+            self.gameView.close()
             print("terminé")
             makeClassement(self.joueurs)
             c = Core.openController("Score",self.window)

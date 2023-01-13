@@ -9,18 +9,17 @@ class HomeController(Controller):
         self.homeView = self.loadView("Home",window)
     
     def btnPlay(self):
-        for child in self.window.winfo_children():
-            child.destroy()
+        self.homeView.close()
         c = Core.openController("Game",self.window)
         c.main()
 
     def btnRules(self):
-        for child in self.window.winfo_children():
-            child.destroy()
+        self.homeView.close()
         c = Core.openController("Rules",self.window)
         c.main()
 
     def btnStats(self):
+        self.homeView.close()
         c = Core.openController("Stats",self.window)
         c.main()
         
