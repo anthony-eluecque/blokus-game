@@ -49,7 +49,7 @@ class GameController(Controller):
             
             self.nextPlayer()
             self.gameView.update(self.actualPlayer,self.index)
-            
+
         if nb_rotation>0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
 
@@ -71,11 +71,10 @@ class GameController(Controller):
         
         self.actualPlayer = joueur
         if not playable:
-            # self.gameView.close()
             print("terminé")
             makeClassement(self.joueurs)
-            c = Core.openController("Score",self.window)
-            c.main()
+            _openController(self.gameView,"Score",self.window)
+
     def loadMap(self):
         
         for couleur,pieces in MAP1.items():
