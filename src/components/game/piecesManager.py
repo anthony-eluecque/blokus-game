@@ -59,3 +59,17 @@ class piecesManager:
                 self.index_piece_dragdrop = i
                 widgetLocation = [getMouseX(self.window),getMouseY(self.window)]
                 self.selectedPiece.displayPiece(self.imagesPieces[i],widgetLocation)
+
+    def update( self, window: CTk, player: Player, master ):
+        self.window = window
+        self.master = master
+        self.imagesPieces = player.pieces.getImagesPieces()
+
+        for piece in self.listeCanvas:
+            piece[ 0 ].destroy()
+
+        self.listeCanvas = []
+
+        self.frame.destroy()
+        self._makeFrame()
+        self._displayPieces()

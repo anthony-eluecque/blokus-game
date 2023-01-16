@@ -53,8 +53,7 @@ class GameView(View):
 
     def update(self,player,index):
         self.score.nextPlayer(index)
-        self.piecesManager.frame.destroy()
-        self.piecesManager = piecesManager(self.window,player,self)
+        self.piecesManager.update(self.window,player,self)
 
     def main(self,largeur = 1300,hauteur = 800):
         _resizeWindow(self.window,largeur,hauteur)
