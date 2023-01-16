@@ -112,13 +112,13 @@ class piecesManager:
             self.callbackPiece(canvas,x_round-60,y_round-150)
 
     def callbackPiece(self,canvas,x,y):
-        for i in range (len(self.listeCanvas)):
+        for i in range(0,len(self.listeCanvas)):
             if self.listeCanvas[i][0] == canvas:
                 self.master._callbackOnDrop(self.listeCanvas[i][2],x,y,self.nbrotation,self.nbinversion)
 
 
     def getIndexImage(self,e,listeCanvas):
-        for i in range(len(listeCanvas)):
+        for i in range(0,len(listeCanvas)):
             if listeCanvas[i][0]==e.widget:
                 self.index_piece_dragdrop = i
                 widgetLocation = [getMouseX(self.window),getMouseY(self.window)]
@@ -130,6 +130,9 @@ class piecesManager:
         self.imagesPieces = player.pieces.getImagesPieces()
         for piece in self.listeCanvas:
             piece[0].destroy()
+
+        self.nbinversion = 0
+        self.nbrotation = 0
 
         self.listeCanvas = []
         self.frame.destroy()
