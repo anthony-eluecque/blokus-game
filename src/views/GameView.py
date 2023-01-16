@@ -30,8 +30,8 @@ class GameView(View):
         self.grille = grille(self.window,600,600)
         self.score = score(self.window,Player('Bleu'))
         self.piecesManager = piecesManager(self.window,Player('Bleu'),self)
-        self.newGameButton = newGameButton(self.window,self,700,730)
-        self.leaveButton = LeaveButton(self.window,self,1070,730)
+        self.newGameButton = newGameButton(self.window,self,700,690)
+        self.leaveButton = LeaveButton(self.window,self,1070,690)
 
     def _makeBackground(self):
         self.bgImage = CTkImage(Image.open("./media/assets/background_game.png"),size=(1300,800))
