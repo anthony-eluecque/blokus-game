@@ -38,7 +38,7 @@ class GameView(View):
         self.bg = CTkLabel(self.window,text="",image = self.bgImage)
 
     def _callbackOnDrop(self,file:str,x:int,y:int,rotation:int,inversion:int):
-        self.gameController.callback(file,x,y,rotation,inversion)
+        self.gameController.callbackGame(file,x,y,rotation,inversion)
 
     def _addToGrid(self,chemin,x,y):
         self.grille._addPieceToGrille(chemin,x,y)
@@ -53,8 +53,7 @@ class GameView(View):
 
     def update(self,player,index):
         self.score.nextPlayer(index)
-        self.piecesManager.frame.destroy()
-        self.piecesManager = piecesManager(self.window,player,self)
+        self.piecesManager.update(player)
 
     def main(self,largeur = 1300,hauteur = 800):
         _resizeWindow(self.window,largeur,hauteur)
