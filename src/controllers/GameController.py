@@ -6,6 +6,7 @@ from utils.game_utils import coordsBlocs,validPlacement,playerCanPlay
 from utils.leaderboard_utils import makeClassement
 from testmap import MAP1
 from tkinter.messagebox import showinfo
+from utils.controller_utils import _openController
 
 class GameController(Controller):
     
@@ -17,8 +18,8 @@ class GameController(Controller):
         self.plateau = Plateau(20,20)
         self.gameView = self.loadView("Game",window)
     
-    def callback(self,file:str,x:int,y:int,rotation:int,inversion:int):
-
+    def callbackGame(self,file:str,x:int,y:int,rotation:int,inversion:int):
+        print("test")
         numPiece = int(file.split("/")[4].split(".")[0])
         
         piece = self.actualPlayer.jouerPiece(numPiece-1)
@@ -67,7 +68,7 @@ class GameController(Controller):
         
         self.actualPlayer = joueur
         if not playable:
-            self.gameView.close()
+            # self.gameView.close()
             print("terminé")
             makeClassement(self.joueurs)
             c = Core.openController("Score",self.window)
@@ -93,15 +94,11 @@ class GameController(Controller):
         # self.nextPlayer()
 
     def _newGame(self):
-        self.gameView.close()
-        c = Core.openController("Game",self.window)
-        c.main()
+        _openController(self.gameView,"Game",self.window)
 
     def _backToHome(self):
-        self.gameView.close()
-        c = Core.openController("Home",self.window)
-        c.main()
+        _openController(self.gameView,"Home",self.window)
 
     def main(self):
         self.gameView.main()
-        self.loadMap()
+        # self.loadMap()
