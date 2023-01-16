@@ -1,6 +1,7 @@
 # -*- encoding:utf-8 -*-
 from core.Controller import Controller
 from core.Core import Core
+from utils.controller_utils import _openController
 
 class HomeController(Controller):
 
@@ -9,19 +10,14 @@ class HomeController(Controller):
         self.homeView = self.loadView("Home",window)
     
     def btnPlay(self):
-        self.homeView.close()
-        c = Core.openController("Game",self.window)
-        c.main()
+        _openController(self.homeView,"Game",self.window)
 
     def btnRules(self):
-        self.homeView.close()
-        c = Core.openController("Rules",self.window)
-        c.main()
+        _openController(self.homeView,"Rules",self.window)
 
     def btnStats(self):
-        self.homeView.close()
-        c = Core.openController("Stats",self.window)
-        c.main()
+        _openController(self.homeView,"Stats",self.window)
+      
         
     def main(self):
         self.homeView.main()
