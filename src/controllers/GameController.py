@@ -53,9 +53,6 @@ class GameController(Controller):
         if nb_rotation>0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
 
-        
-        
-
     def nextPlayer(self)->None:
 
         playable = False

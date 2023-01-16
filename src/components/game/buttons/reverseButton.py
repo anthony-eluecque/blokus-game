@@ -28,7 +28,6 @@ class reverseButton(Bouton):
     def _placeWidget(self, x_pos: int, y_pos: int):
         if self.inversion:
             self.inversion.place(x=x_pos,y=y_pos)
-        # self.inversion.place(x=1070,y=665)
 
 
     def main(self,x_coord,y_coord):

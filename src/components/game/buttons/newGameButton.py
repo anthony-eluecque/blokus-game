@@ -20,7 +20,6 @@ class newGameButton(Bouton):
 
     def _placeWidget(self,x_pos:int,y_pos:int)->None:
         self.button.place(x=x_pos,y=y_pos)
-        # self.button.place(x=700,y=730)
 
     def newGame(self)->None:
         self.gameView._newGame()
