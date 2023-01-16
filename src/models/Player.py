@@ -10,6 +10,7 @@ class Player():
         self.position_depart : list = POSITION_DEPART[couleur]
         self.nb_piece = 21
         self.score = 0
+        self.canplay = True
 
     def getCouleur(self: Self) -> str:
         """Retourne la couleur du joueur

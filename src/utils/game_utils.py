@@ -132,21 +132,24 @@ def validPlacement(bloc: list[int], row: int, col: int, plateau: Plateau, player
     """
     playerColor : str = player.getCouleur()[0]
     new_bloc : list = coordsBlocs(bloc,col,row)
+    allPieces: bool = hasAllPieces(player)
+    verifTotal: bool = verifTotalPieces(new_bloc,plateau,player)
+    notBelow: bool = notPieceBelow(new_bloc,plateau)
     
     #  Cas ou le joueur n'a pas encore joué, et il va jouer sa première pièce
     for each_cube in new_bloc:
-        if hasAllPieces(player):
+        if allPieces:
             if isPositionDepart(each_cube,player):
-                if verifTotalPieces(new_bloc,plateau,player):
+                if verifTotal:
                     return True
         # Les cas généraux 
         else:
             # print("Cas générale")
             if expectedPlayerInDiagonals(each_cube,plateau,playerColor):
                 # print("Joueur diagonale")
-                if notPieceBelow(new_bloc,plateau):
+                if notBelow:
                     # print("Pas de pièce en dessous")
-                    if verifTotalPieces(new_bloc,plateau,player):
+                    if verifTotal:
                         # print("Vérif total pièce")
                         return True
     return False
@@ -223,6 +226,8 @@ def playerCanPlay(player:Player,plateau:Plateau)->bool:
     Returns:
         bool: Vrai = Il peut jouer, Faux l'inverse
     """
+    if not player.canplay: return False
+
     for indice_piece in player.pieces.pieces_joueurs:
         for i in range(0,20):
             for j in range(0,20):
@@ -232,6 +237,8 @@ def playerCanPlay(player:Player,plateau:Plateau)->bool:
                 if validPlacementRotation(indice_piece,i,j,plateau,player):
                     print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j} en étant rotate")
                     return True
+                    
+    player.canplay = False
     return False
 
 def validPlacementRotation(indice_piece,i:int,j:int,plateau:Plateau,player:Player)->bool:
