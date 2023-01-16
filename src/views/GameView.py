@@ -37,8 +37,8 @@ class GameView(View):
         self.bgImage = CTkImage(Image.open("./media/assets/background_game.png"),size=(1300,800))
         self.bg = CTkLabel(self.window,text="",image = self.bgImage)
 
-    def _callbackOnDrop(self,file:str,x:int,y:int,rotation:int,inversion:int):
-        self.gameController.callbackGame(file,x,y,rotation,inversion)
+    def _callbackOnDrop(self,file:str,x:int,y:int,rotation:int,inversion:int,canvas):
+        self.gameController.callbackGame(file,x,y,rotation,inversion,canvas)
 
     def _addToGrid(self,chemin,x,y):
         self.grille._addPieceToGrille(chemin,x,y)

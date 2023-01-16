@@ -92,6 +92,7 @@ class piecesManager:
                 if self.nbrotation ==-360:
                     self.nbrotation = 0
 
+
     def onMotion(self,e,canvas,width,heigh):
         self.new_x = getMouseX(self.window) - width//2
         self.new_y = getMouseY(self.window) - heigh//2
@@ -105,16 +106,12 @@ class piecesManager:
 
             x_round = roundDown(self.abs_x)
             y_round = roundDown(self.abs_y)
-
-            if canvas:
-                canvas.destroy()
-
             self.callbackPiece(canvas,x_round-60,y_round-150)
 
     def callbackPiece(self,canvas,x,y):
         for i in range(0,len(self.listeCanvas)):
             if self.listeCanvas[i][0] == canvas:
-                self.master._callbackOnDrop(self.listeCanvas[i][2],x,y,self.nbrotation,self.nbinversion)
+                self.master._callbackOnDrop(self.listeCanvas[i][2],x,y,self.nbrotation,self.nbinversion,canvas)
 
 
     def getIndexImage(self,e,listeCanvas):

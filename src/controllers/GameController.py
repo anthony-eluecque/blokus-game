@@ -18,7 +18,7 @@ class GameController(Controller):
         self.plateau = Plateau(20,20)
         self.gameView = self.loadView("Game",window)
     
-    def callbackGame(self,file:str,x:int,y:int,rotation:int,inversion:int):
+    def callbackGame(self,file:str,x:int,y:int,rotation:int,inversion:int,canvas):
         print("test")
         numPiece = int(file.split("/")[4].split(".")[0])
         
@@ -39,6 +39,7 @@ class GameController(Controller):
         cheminFichierPiece = "./media/pieces/" + couleurJoueur.upper()[0] + "/1.png"
 
         if validPlacement(piece,y//30,x//30,self.plateau,self.actualPlayer):
+            canvas.destroy()
             self.actualPlayer.removePiece(numPiece-1)
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece,coordX,coordY)
@@ -48,9 +49,11 @@ class GameController(Controller):
             
             self.nextPlayer()
             self.gameView.update(self.actualPlayer,self.index)
-
+            
         if nb_rotation>0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
+
+        
         
 
     def nextPlayer(self)->None:
