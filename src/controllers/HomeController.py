@@ -2,11 +2,14 @@
 from core.Controller import Controller
 from core.Core import Core
 from utils.controller_utils import _openController
+from components.soundclass import Sound
 
-class HomeController(Controller):
+class HomeController(Controller,Sound):
 
     def __init__(self,window):
+        super().__init__("background")
         self.window = window
+        super().play()
         self.homeView = self.loadView("Home",window)
     
     def btnPlay(self):
