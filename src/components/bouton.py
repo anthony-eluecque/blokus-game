@@ -3,7 +3,7 @@ from tkinter import Button
 from customtkinter import CTk
 from tkinter import PhotoImage
 
-class Bouton(Button,Sound):
+class Bouton(Button):
 
     def __init__(
         self,window:CTk,view,xpos,ypos,

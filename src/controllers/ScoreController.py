@@ -1,6 +1,7 @@
 from core.Controller import Controller
 from core.Core import Core
 from customtkinter import CTk
+from utils.controller_utils import _openController
 
 class ScoreController(Controller):
 
@@ -15,7 +16,7 @@ class ScoreController(Controller):
 
     def _sortClassement(joueurs):
         classement = {}
-        for joueur in joueurs :
+        for joueur in joueurs:
             for numPiece in joueur.pieces.pieces_joueurs:
                 piece = joueur.jouerPiece(numPiece-1)
                 for line in piece:
@@ -25,6 +26,9 @@ class ScoreController(Controller):
             classement[joueur.couleur]=joueur.score
 
         print(classement)
+
+    def _backToHome(self):
+        _openController(self.scoreView,"Home",self.window)
 
     def main(self):
         self.scoreView.main()
