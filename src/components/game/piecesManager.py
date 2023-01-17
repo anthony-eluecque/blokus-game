@@ -3,7 +3,6 @@ from customtkinter import CTk,CTkFrame
 from PIL import Image
 from tkinter import Canvas,PhotoImage
 from utils.mouse_utils import getMouseX,getMouseY
-from components.game.selectedPiece import selectedPiece
 from utils.game_utils import roundDown
 from PIL import ImageOps,ImageTk,Image
 
@@ -38,7 +37,6 @@ class piecesManager:
         self.frame.grid_propagate(False)
         self.frame.configure(width=550,height=650)
         self.frame.place(x=700,y=10)
-        self.selectedPiece = selectedPiece(self.window,self.frame,self.master)
 
     def _displayPieces(self):
         row = 750
@@ -121,7 +119,7 @@ class piecesManager:
                 if listeCanvas[i][0]==e.widget:
                     self.index_piece_dragdrop = i
                     widgetLocation = [getMouseX(self.window),getMouseY(self.window)]
-                    self.selectedPiece.displayPiece(self.imagesPieces[i],widgetLocation)
+                    # self.selectedPiece.displayPiece(self.imagesPieces[i],widgetLocation)
 
     
     def update(self,player:Player):
