@@ -112,16 +112,7 @@ class piecesManager:
                 if self.listeCanvas[i][0] == canvas:
                     self.master._callbackOnDrop(self.listeCanvas[i][2],x,y,self.nbrotation,self.nbinversion,canvas)
 
-
-    def getIndexImage(self,e,listeCanvas):
-        for i in range(0,len(listeCanvas)):
-            if len( self.listeCanvas ) -1 >= i:
-                if listeCanvas[i][0]==e.widget:
-                    self.index_piece_dragdrop = i
-                    widgetLocation = [getMouseX(self.window),getMouseY(self.window)]
-                    # self.selectedPiece.displayPiece(self.imagesPieces[i],widgetLocation)
-
-    
+   
     def update(self,player:Player):
         
         self.imagesPieces = player.pieces.getImagesPieces()
