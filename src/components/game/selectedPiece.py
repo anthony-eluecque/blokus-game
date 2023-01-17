@@ -2,7 +2,6 @@ from utils.mouse_utils import getMouseX,getMouseY
 from utils.game_utils import roundDown
 from PIL import Image
 from tkinter import Canvas,PhotoImage
-from components.game.buttonsManager import buttonsManager
 
 class selectedPiece:
 
