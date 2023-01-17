@@ -6,9 +6,8 @@ from PIL import Image
 from components.game.grille import grille
 from components.game.score import score
 from components.game.piecesManager import piecesManager
-from components.game.buttons.stopButton import LeaveButton
-from components.game.buttons.newGameButton import newGameButton
 from models.Player import Player
+from components.bouton import Bouton
 
 
 class GameView(View):
@@ -30,8 +29,9 @@ class GameView(View):
         self.grille = grille(self.window,600,600)
         self.score = score(self.window,Player('Bleu'))
         self.piecesManager = piecesManager(self.window,Player('Bleu'),self)
-        self.newGameButton = newGameButton(self.window,self,700,690)
-        self.leaveButton = LeaveButton(self.window,self,1070,690)
+        
+        self.newGameButton = Bouton(self.window,self,700,690,width=250,heigth=125,file="./media/assets/Button_new_game.png",son="button",command=self._newGame)
+        self.leaveButton = Bouton(self.window,self,1070,690,width=250,heigth=125,file="./media/assets/button_leave.png",son="button",command=self._leaveGame)
 
     def _makeBackground(self):
         self.bgImage = CTkImage(Image.open("./media/assets/background_game.png"),size=(1300,800))
@@ -44,6 +44,7 @@ class GameView(View):
         self.grille._addPieceToGrille(chemin,x,y)
 
     def _newGame(self):
+        print("test")
         self.close()
         self.gameController._newGame()
 
