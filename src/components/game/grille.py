@@ -10,7 +10,7 @@ class grille:
     Ne gère que la partie graphique
     """
 
-    def __init__(self,window:CTk,largeur:int,hauteur:int):
+    def __init__(self,window:CTk,largeur:int,hauteur:int)->None:
 
         self.liste_piece = []
         self.window = window
@@ -20,7 +20,7 @@ class grille:
         self._playersCorner(largeur,hauteur)
         self._configWidget()
 
-    def _canvasCreation(self,w:int,h:int):
+    def _canvasCreation(self,w:int,h:int)->None:
         """Fonction permttant de crée un Canvas pour afficher la grille.
 
         Args:
@@ -29,7 +29,7 @@ class grille:
         """
         self.canvas = Canvas(self.window,width=w,height=h,bd=0,highlightthickness=0,bg='white')
 
-    def _gridCreation(self,largeur:int):
+    def _gridCreation(self,largeur:int)->None:
         """Fonction permettant la création du quadrillage de la grille.
 
         Args:
@@ -40,7 +40,7 @@ class grille:
             self.canvas.create_line(i,0,i,largeur)
         
 
-    def _playersCorner(self,largeur:int,hauteur:int):
+    def _playersCorner(self,largeur:int,hauteur:int)->None:
         """Fonction permettant la création des 4 corners pour indiquer ou chaque joueur commence
 
         Args:
@@ -59,14 +59,14 @@ class grille:
         self.canvas.create_rectangle(0, 0, 30, 30, fill=self.depart_bleu)
 
 
-    def _configWidget(self):
+    def _configWidget(self)->None:
         """
         Fonction permettant de configurer les widgets et d'initialiser les callbacks
         """
         self.canvas.place(x=60,y=150)
         self.canvas.bind('<Motion>',self._callback)
 
-    def _addPieceToGrille(self,f:str,coord_x:int,coord_y:int):
+    def _addPieceToGrille(self,f:str,coord_x:int,coord_y:int)->None:
         """Fonction permettant de placer un cube d'une couleur sur la grille.
         On peut ainsi gérer le soucis de transparence des canvas
 
@@ -83,7 +83,7 @@ class grille:
         piece_canvas.place(x=coord_x*30+60,y=coord_y*30+150)
         self.liste_piece.append([f,piece_canvas,img])
 
-    def _callback(self,e):
+    def _callback(self,e)->None:
         """Fonction utilisé pour vérifié un callback
         (Test unitaire)
 
