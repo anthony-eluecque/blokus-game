@@ -9,20 +9,20 @@ class HomeController(Controller,Sound):
     Hérite aussi de Sound pour jouer la musique de fond.
     """
 
-    def __init__(self,window):
+    def __init__(self, window):
         super().__init__("background")
         self.window = window
         super().play()
-        self.homeView = self.loadView("Home",window)
+        self.homeView = self.loadView("Home", window)
     
     def btnPlay(self):
-        _openController(self.homeView,"Game",self.window)
+        _openController(self.homeView, "Game", self.window)
 
     def btnRules(self):
-        _openController(self.homeView,"Rules",self.window)
+        _openController(self.homeView, "Rules", self.window)
 
     def btnStats(self):
-        _openController(self.homeView,"Stats",self.window)
+        _openController(self.homeView, "Stats", self.window)
       
         
     def main(self):

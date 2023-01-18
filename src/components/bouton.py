@@ -3,7 +3,7 @@ from tkinter import Button
 from customtkinter import CTk
 from tkinter import PhotoImage
 
-class Bouton(Button,Sound):
+class Bouton(Button):
 
     """
     Classe qui hérite de la classe Button de tkinter et de la classe Sound

@@ -14,6 +14,6 @@ def _openController(oldView,controllerName,window:CTk):
         response : le main à exécuter.
     """
     oldView.close()
-    c = Core.openController(controllerName,window)
+    c = Core.openController(controllerName, window)
     return c.main()
 

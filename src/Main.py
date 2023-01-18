@@ -8,8 +8,8 @@ class Main:
     def run():
         try:
             window = CTk()
-            _resizeWindow(window,700,700)
-            app = Core.openController("Home",window)
+            _resizeWindow(window, 700, 700)
+            app = Core.openController("Home", window)
             app.main()
             window.mainloop()
         except Exception as e:

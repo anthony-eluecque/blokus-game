@@ -1,5 +1,5 @@
 # Position départ Joueur
-POSITION_DEPART = {'Bleu':[0,0],'Jaune':[0,19],'Vert':[19,0],'Rouge':[19,19]}
+POSITION_DEPART = {'Bleu':[0, 0], 'Jaune':[0, 19], 'Vert':[19, 0], 'Rouge':[19, 19]}
 
 
 # Le nombre de pièce maximal par joueur
