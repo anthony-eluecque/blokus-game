@@ -5,6 +5,12 @@ from tkinter import PhotoImage
 
 class Bouton(Button,Sound):
 
+    """
+    Classe qui hérite de la classe Button de tkinter et de la classe Sound
+    Permet de passer par paramètre le son , ainsi que tous les attributs d'un bouton tkinter.
+    Respecte notamment les principes SOLID.
+    """
+
     def __init__(
         self,window:CTk,view,xpos,ypos,
         file:str|None = None,command=None, 
@@ -29,6 +35,10 @@ class Bouton(Button,Sound):
             self.sound = Sound(son)
 
     def callbackButton(self):
+        """
+        Callback permettant d'appeler la commande associé au bouton si elle existe
+        Ainsi que de jouer un son si celui-ci a été associé au bouton.
+        """
         if self.command:
             if self.sound:
                 self.sound.play()
