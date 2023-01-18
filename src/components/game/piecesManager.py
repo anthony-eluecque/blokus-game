@@ -105,6 +105,7 @@ class piecesManager:
 
         for i in range(len(self.listeCanvas)):
             if self.listeCanvas[i][0]==canvas:
+                print(canvas)
                 canvas.delete("all")
                 self.img = Image.open(self.listeCanvas[i][2]).rotate(self.nbrotation,expand=True)
                 if self.nbinversion%2!=0:
@@ -113,6 +114,7 @@ class piecesManager:
                 w,h = self.img.size
                 canvas.config(width=w,height=h)
                 canvas.create_image(0,0,image=self.imageCanvas,anchor = "nw")
+                self.listeCanvas[i][1] = self.imageCanvas
                 if self.nbrotation ==-360:
                     self.nbrotation = 0
 
