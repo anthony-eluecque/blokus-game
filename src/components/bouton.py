@@ -4,7 +4,6 @@ from customtkinter import CTk
 from tkinter import PhotoImage
 
 class Bouton(Button):
-
     """
     Classe qui hérite de la classe Button de tkinter et de la classe Sound
     Permet de passer par paramètre le son , ainsi que tous les attributs d'un bouton tkinter.
