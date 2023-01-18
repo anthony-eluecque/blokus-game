@@ -1,10 +1,13 @@
 # -*- encoding:utf-8 -*-
 from core.Controller import Controller
-from core.Core import Core
 from utils.controller_utils import _openController
 from components.soundclass import Sound
 
 class HomeController(Controller,Sound):
+    """ 
+    Controller gérant le menu héritant de la classe Controller ainsi que de sa méthode abstraite main()
+    Hérite aussi de Sound pour jouer la musique de fond.
+    """
 
     def __init__(self,window):
         super().__init__("background")

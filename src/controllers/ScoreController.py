@@ -3,6 +3,9 @@ from core.Core import Core
 from customtkinter import CTk
 
 class ScoreController(Controller):
+    """ 
+    Controller gérant la fin de partie (score) héritant de la classe Controller ainsi que de sa méthode abstraite main()
+    """
 
     def __init__(self,window : CTk):
         
