@@ -9,6 +9,9 @@ from tkinter import Label,Frame
 from utils.window_utils import _resizeWindow,_deleteChilds,_createFrame
 
 class RulesView(View):
+    """
+    Classe qui gère la partie graphique du RulesController . RulesView hérite de View
+    """
 
     RULES = [
         "• La première pièce doit être posée dans le coin du plateau correspondant.\n\n",

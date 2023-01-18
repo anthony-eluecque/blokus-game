@@ -11,6 +11,9 @@ from components.bouton import Bouton
 
 
 class GameView(View):
+    """
+    Classe qui gère la partie graphique du GameController . GameView hérite de View
+    """
 
     def __init__(self,controller,window:CTk,width=1300,heigth=800):
 
@@ -22,7 +25,7 @@ class GameView(View):
     def _makeFrame(self):
         self.mainFrame = _createFrame(self.window,1300,800)
 
-    def _callComponents(self):
+    def _callComponents(self):  
         self._makeFrame()
         self._makeBackground()
 

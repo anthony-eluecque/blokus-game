@@ -11,6 +11,9 @@ from components.bouton import Bouton
 from components.SoundButton import SoundButton
 
 class HomeView(View):
+    """
+    Classe qui gère la partie graphique du HomeController . HomeView hérite de View
+    """
 
     def __init__(self,controller,window:CTk, longueur = 700, hauteur = 700):
         
