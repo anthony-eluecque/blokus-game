@@ -1,7 +1,14 @@
 import json
 from models.Player import Player
 
-def makeClassement(joueurs: list[Player]):
+def makeClassement(joueurs:list[Player]):
+    """Fonction permettant de réaliser un classement trier du plus bas en point au plus haut.
+    Attention , ici nous sommes avec des nombres négatifs pour le score, donc le résultat sera l'inverse
+    (Le plus bas en point sera le premier, et le + haut le dernier).
+
+    Args:
+        joueurs (list[Player]): la liste des joueurs.
+    """
     classement = {}
     for joueur in joueurs:
         for numPiece in joueur.pieces.pieces_joueurs:
@@ -16,12 +23,21 @@ def makeClassement(joueurs: list[Player]):
     writeInJson(classement)
 
 def writeInJson(classement):
-
+    """
+    Permet d'écrire dans un fichier json le résultat du classement
+    """
+    
     classement = json.dumps(classement, indent = 4)
     with open("./src/classement.json", "w") as outfile:
         outfile.write(classement)
 
 def openJson():
-    with open("./src/classement.json", "r") as file:
+    """
+    Fonction permettant d'ouvrir un fichier json
+
+    Returns:
+        Le classement de la partie
+    """
+    with open("./src/classement.json","r") as file:
         classement = json.load(file)
     return classement

@@ -7,6 +7,9 @@ from customtkinter import CTk
 from components.bouton import Bouton
 
 class ScoreView(View):
+    """
+    Classe qui gère la partie graphique du ScoreController . ScoreView hérite de View
+    """
 
     colors = ["#ffb800", "#787878", "#ff5c00", "#110eb8"]
 
