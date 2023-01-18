@@ -5,10 +5,10 @@ from utils.controller_utils import _openController
 
 class ScoreController(Controller):
 
-    def __init__(self,window : CTk):
+    def __init__(self, window : CTk):
         
         self.window = window
-        self.scoreView = self.loadView("score",self.window)
+        self.scoreView = self.loadView("score", self.window)
         # self.core = Core()
 
         # self._sortClassement()
@@ -28,7 +28,7 @@ class ScoreController(Controller):
         print(classement)
 
     def _backToHome(self):
-        _openController(self.scoreView,"Home",self.window)
+        _openController(self.scoreView, "Home", self.window)
 
     def main(self):
         self.scoreView.main()

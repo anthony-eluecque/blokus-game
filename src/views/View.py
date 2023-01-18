@@ -1,6 +1,6 @@
 import abc
 
-class View(metaclass=abc.ABCMeta):
+class View(metaclass = abc.ABCMeta):
 
     @abc.abstractmethod
     def _makeFrame(self):

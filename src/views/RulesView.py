@@ -20,7 +20,6 @@ class RulesView(View):
     ]
 
     def __init__(self: Self, controller, window: CTk, width=625, heigth=700):
-
         super().__init__()
         self.rulesController = controller
         self.window = window
@@ -32,7 +31,7 @@ class RulesView(View):
     def _makeWindow(self):
         self.backgroundImage = Image.open("./media/assets/background_rules.png")
         self.background = ImageTk.PhotoImage(self.backgroundImage)
-        self.bgRules = Label(self.mainFrame,text="",image = self.background, bd = 0)
+        self.bgRules = Label(self.mainFrame, text="", image = self.background, bd = 0)
 
     def _makeTitle(self):
         self.rulesTitle = CTkLabel(master = self.mainFrame , text="Règles du Blokus", fg_color="white",font=CTkFont(family="Roboto Medium", size=40), text_color="black" )
@@ -45,7 +44,7 @@ class RulesView(View):
             self.rulesBox.insert("end", rule)
 
     def _makeButtonRules(self):
-        self.backRules = Bouton(self.window, self, 378, 500, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.rulesController.btn_clear)
+        self.backRules: Bouton = Bouton(self.window, self, 378, 500, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.rulesController.btn_clear)
 
     def _configWidget(self):
         self.bgRules.place(x = 0,y = 0)
@@ -56,8 +55,8 @@ class RulesView(View):
         self.backRules.pack()
         self.backRules.place(relx=0.5, rely=0.89, anchor=CENTER)
 
-    def main(self,longueur = 625 ,hauteur = 700):
-        _resizeWindow(self.window,longueur,hauteur)
+    def main(self, longueur = 625, hauteur = 700):
+        _resizeWindow(self.window, longueur, hauteur)
         self._makeFrame()
         self._makeWindow()
         self._makeTitle()
