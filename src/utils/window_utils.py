@@ -10,13 +10,16 @@ def _resizeWindow(window:CTk,width:int,heigth:int):
         heigth (int): la hauteur souhaité
     """
     window.resizable(width=False, height=False)
+
     _screen_width : int = window.winfo_screenwidth()
     _screen_height : int  = window.winfo_screenheight()
+
     x : float = (_screen_width/2) - (width/2)
     y : float = (_screen_height/2) - (heigth/2)
 
     window.geometry('%dx%d+%d+%d' % (width, heigth, x, y))
     window.geometry(str(width) + 'x' + str(heigth))
+
 
 def _deleteChilds(window : CTk):
     """Permet de détruire tous les enfants d'une fenêtre (donc tous les éléments sur celle-ci)
