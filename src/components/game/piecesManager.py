@@ -120,6 +120,7 @@ class piecesManager:
 
 
     def onMotion(self,e,canvas:Canvas,width:int,heigh:int)->None:
+
         """Callback activé lors du drag à la souris.
         Permet d'afficher la pièce aux nouvelles coordonnées
 
@@ -129,8 +130,12 @@ class piecesManager:
             width (int): La largeur de la pièce 
             heigh (int): La hauteur de la pièce
         """
-        self.new_x = getMouseX(self.window) - width//2
-        self.new_y = getMouseY(self.window) - heigh//2
+        if self.nbrotation == 0 or self.nbrotation == -270:
+            self.new_x = getMouseX(self.window) - width//2
+            self.new_y = getMouseY(self.window) - heigh//2
+        else: 
+            self.new_x = getMouseX(self.window) - heigh//2
+            self.new_y = getMouseY(self.window) - width//2
         canvas.place(x=self.new_x,y=self.new_y)  
  
     def onDrop(self,e,canvas:Canvas,width:int,height:int)->None:
@@ -143,14 +148,22 @@ class piecesManager:
             width (int): La largeur de la pièce 
             heigh (int): La hauteur de la pièce
         """
-        self.abs_x = getMouseX(self.window) - width//2
-        self.abs_y = getMouseY(self.window) - height//2
+        # self.abs_x = getMouseX(self.window) - width//2
+        # self.abs_y = getMouseY(self.window) - height//2
+
+        if self.nbrotation == 0 or self.nbrotation == -270:
+            self.abs_x = getMouseX(self.window) - width//2
+            self.abs_y = getMouseY(self.window) - height//2
+        else: 
+            self.abs_x = getMouseX(self.window) - height//2
+            self.abs_y = getMouseY(self.window) - width//2
 
         if 60<=self.abs_x<=660 and 150<=self.abs_y<=750 :
 
             x_round = roundDown(self.abs_x)
             y_round = roundDown(self.abs_y)
             self.callbackPiece(canvas,x_round-60,y_round-150)
+
 
     def callbackPiece(self,canvas:Canvas,x:int,y:int)->None:
         """Fonction permettant la transition entre le drop de la souris et l'envoie au parent 
@@ -164,6 +177,7 @@ class piecesManager:
             if len( self.listeCanvas ) - 1 >= i:
                 if self.listeCanvas[i][0] == canvas:
                     self.master._callbackOnDrop(self.listeCanvas[i][2],x,y,self.nbrotation,self.nbinversion,canvas)
+            
 
    
     def update(self,player:Player)->None:
