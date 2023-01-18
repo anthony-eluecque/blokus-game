@@ -105,7 +105,7 @@ class piecesManager:
         Args:
             canvas (Canvas): Le calque sous l'image de la pièce.
         """
-
+        
         for i in range(len(self.listeCanvas)):
             if self.listeCanvas[i][0]==canvas:
                 print(canvas)
@@ -117,9 +117,14 @@ class piecesManager:
                 w,h = self.img.size
                 canvas.config(width=w,height=h)
                 canvas.create_image(0,0,image=self.imageCanvas,anchor = "nw")
+<<<<<<< Updated upstream
                 self.listeCanvas[i][1] = self.imageCanvas
+=======
+
+>>>>>>> Stashed changes
                 if self.nbrotation ==-360:
                     self.nbrotation = 0
+                break
 
 
     def onMotion(self,e,canvas:Canvas,width:int,heigh:int)->None:
@@ -180,7 +185,11 @@ class piecesManager:
             if len( self.listeCanvas ) - 1 >= i:
                 if self.listeCanvas[i][0] == canvas:
                     self.master._callbackOnDrop(self.listeCanvas[i][2],x,y,self.nbrotation,self.nbinversion,canvas)
+<<<<<<< Updated upstream
             
+=======
+                    break
+>>>>>>> Stashed changes
 
    
     def update(self,player:Player)->None:
