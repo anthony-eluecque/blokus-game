@@ -33,6 +33,8 @@ class GameView(View):
         self.score: score = score(self.window, Player('Bleu'))
         self.piecesManager: piecesManager = piecesManager(self.window, Player('Bleu'), self)
         
+    def __createButtons(self):
+
         self.newGameButton: Bouton = Bouton(self.window, self, 700, 690, width=182, heigth=64, file="./media/assets/Button_new_game.png", son="button", command=self._newGame)
         self.leaveButton: Bouton = Bouton(self.window, self, 1070, 697, width=158, heigth=53, file="./media/assets/button_leave.png", son="button", command=self._leaveGame)
 
@@ -58,10 +60,15 @@ class GameView(View):
     def update(self, player, index):
         self.score.nextPlayer(index)
         self.piecesManager.update(player)
+        
+        self.leaveButton.destroy()
+        self.newGameButton.destroy()
+        self.__createButtons()
 
     def main(self, largeur = 1300, hauteur = 800):
         _resizeWindow(self.window, largeur, hauteur)
         self._callComponents()
+        self.__createButtons()
         self.bg.place(x = 0, y = 0)
 
     def close(self):

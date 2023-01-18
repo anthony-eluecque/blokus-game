@@ -44,7 +44,7 @@ class piecesManager:
             self.frame.grid_rowconfigure(i,weight=2)
 
         self.frame.grid_propagate(False)
-        self.frame.configure(width=550,height=650)
+        self.frame.configure(width=550,height=745)
         self.frame.place(x=700,y=10)
 
     def _displayPieces(self)->None:
@@ -58,7 +58,10 @@ class piecesManager:
             row+=100
             if i%5==4:
                 col+= 160
-                row = 750
+                if col==690:
+                    row = 925
+                    col -=40
+                else:row = 750
 
     def _makeImagePiece(self,fichier:str,_col:int,_row:int)->None:
         """Fonction permettant la création de chaque pièce du joueur
@@ -197,5 +200,6 @@ class piecesManager:
 
         self.listeCanvas = []
         self.frame.destroy()
+        
         self._makeFrame()
         self._displayPieces()
