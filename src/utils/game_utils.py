@@ -242,6 +242,18 @@ def playerCanPlay(player:Player,plateau:Plateau)->bool:
     return False
 
 def validPlacementRotation(indice_piece,i:int,j:int,plateau:Plateau,player:Player)->bool:
+    """Fonction permettant de vérifier si un joueur est en capacité de jouer parmis les 4 rotations possibles d'une pièce
+
+    Args:
+        indice_piece (int): l'indice de la pièce 
+        i (int): la position en i dans le tableau 
+        j (int): la position en j dans le tableau
+        plateau (Plateau): Le plateau de jeu 
+        player (Player): Le joueur actuel
+
+    Returns:
+        bool: True = il peut jouer, False = Il ne peut pas
+    """
     for _ in range(3):
         player.pieces.rotate(indice_piece)
         piece = player.jouerPiece(indice_piece)
@@ -252,6 +264,15 @@ def validPlacementRotation(indice_piece,i:int,j:int,plateau:Plateau,player:Playe
     return False
 
 def roundDown(n, decimals=2)->int:
+    """Fonction permettant d'arrondir à l'inférieur pour notre jeu.
+
+    Args:
+        n : le nombre à arrondir à l'inférieur
+        decimals (int, optional): l'arrondis à faire . Defaults to 2.
+
+    Returns:
+        int: le nombre arrondi
+    """
     multiplier = 10 ** decimals
     result =  int(math.floor(n * multiplier) / multiplier)
     return (result//30)*30
