@@ -26,13 +26,13 @@ class HomeView(View):
         self.label.place(x = 0,y = 0)  
 
     def _UI(self : Self):
-        self.playButton: Bouton = Bouton(self.window, self, 271, 315, width=158, heigth=49, file="./media/assets/button_play.png", son="button", command=self.homeController.btnPlay)
+        self.playButton: Bouton = Bouton(self.window, self, 165, 315, width=370, heigth=49, file="./media/assets/button_play.png", son="button", command=self.homeController.btnPlay)
 
-        self.rulesButton: Bouton = Bouton(self.window, self, 252, 380, width=196, heigth=49, file="./media/assets/button_rules.png", son="button", command=self.homeController.btnRules)
+        self.rulesButton: Bouton = Bouton(self.window, self, 165, 380, width=370, heigth=49, file="./media/assets/button_rules.png", son="button", command=self.homeController.btnRules)
         
-        self.statsButton: Bouton = Bouton(self.window, self, 239.5, 440, width=221, heigth=49, file="./media/assets/button_stats.png", son="button", command=self.homeController.btnStats)
+        self.statsButton: Bouton = Bouton(self.window, self, 165, 445, width=370, heigth=49, file="./media/assets/button_stats.png", son="button", command=self.homeController.btnStats)
 
-        self.leaveButton: Bouton = Bouton(self.window, self, 271, 500, width=158, heigth=49, file="./media/assets/button_leave.png", son="button", command=self.window.destroy)
+        self.leaveButton: Bouton = Bouton(self.window, self, 165, 510, width=370, heigth=49, file="./media/assets/button_leave.png", son="button", command=self.window.destroy)
                 
         self.backgroundImage = Image.open(os.path.join("./media/assets/carre.png"))
         self.background = ImageTk.PhotoImage(self.backgroundImage)
@@ -40,7 +40,6 @@ class HomeView(View):
 
         self.soundButton: SoundButton = SoundButton(self.window, self, 85, 560)
 
-    
 
     def main(self, longueur = 700 ,hauteur = 700):
         _resizeWindow(self.window,longueur,hauteur)
