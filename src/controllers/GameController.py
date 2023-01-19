@@ -2,7 +2,7 @@ from core.Controller import Controller
 from models.Player import Player
 from models.Plateau import Plateau
 from utils.game_utils import coordsBlocs, validPlacement, playerCanPlay
-from utils.leaderboard_utils import makeClassement
+from utils.leaderboard_utils import makeClassement, writeInJson, updateClassementFromPlay
 from testmap import MAP1
 from utils.controller_utils import _openController
 
@@ -12,6 +12,7 @@ class GameController(Controller):
         self.joueurs = [Player("Bleu"), Player("Jaune"), Player("Vert"), Player("Rouge")]
         self.window = window
         self.index = 0
+        self.debut = True
         self.actualPlayer: Player = self.joueurs[self.index]
         self.plateau = Plateau(20,20)
         self.gameView = self.loadView("Game",window)
@@ -40,7 +41,12 @@ class GameController(Controller):
         if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
             canvas.destroy()
             self.actualPlayer.removePiece(numPiece-1)
-
+            if self.debut == False:
+                self.classement = updateClassementFromPlay(self.actualPlayer, numPiece)
+            else:
+                self.classement = makeClassement(self.joueurs)
+                writeInJson(self.classement)  
+            print(self.classement)
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)
@@ -48,6 +54,7 @@ class GameController(Controller):
             self.actualPlayer.hasPlayedPiece(numPiece-1)
             
             self.nextPlayer()
+            self.debut = False
             self.gameView.update(self.actualPlayer, self.index)
 
         if nb_rotation > 0:    
