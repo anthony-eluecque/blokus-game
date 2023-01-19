@@ -40,7 +40,10 @@ class ScoreView(View):
             podiumPos.place(x=280, y=250 + ( ( i-1) * 50 ), anchor="e")
             podiumScore: Label = Label(self.mainFrame, text=f'{ couleur } avec { classement[ couleur ] } points', font="Roboto 30 bold", bg="white" )
             podiumScore.place(x=285, y=250 + ( ( i-1) * 50 ), anchor="w")
-            i += 1
+            if i+1 > len(self.colors):
+                break
+            else:
+                i += 1
 
     def _leaveGame(self):
         self.close()
