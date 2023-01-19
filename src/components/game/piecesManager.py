@@ -181,7 +181,7 @@ class piecesManager:
             if len( self.listeCanvas ) - 1 >= i:
                 if self.listeCanvas[i][0] == canvas:
                     self.master._callbackOnDrop(self.listeCanvas[i][2],x,y,self.nbrotation,self.nbinversion,canvas)
-            
+                    break
 
    
     def update(self,player:Player)->None:

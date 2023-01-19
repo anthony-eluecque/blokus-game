@@ -82,11 +82,13 @@ class score:
         self.frame.place(x=60,y=10)
 
 
-    def nextPlayer(self, index : int)->None:
+    def nextPlayer(self, index : int, player: Player)->None:
         """Fonction permettant de mettre à jour l'affichage
 
         Args:
             index (int): C'est à quel joueur de jouer.
         """
         self._destroyWidgets()
+        
+        self.player = player
         self._createWidgets(index)

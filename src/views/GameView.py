@@ -58,7 +58,7 @@ class GameView(View):
         self.gameController._backToHome()
 
     def update(self, player, index):
-        self.score.nextPlayer(index)
+        self.score.nextPlayer(index, player )
         self.piecesManager.update(player)
         
         self.leaveButton.destroy()
