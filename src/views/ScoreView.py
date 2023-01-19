@@ -50,7 +50,7 @@ class ScoreView(View):
         self.backButton: Bouton = Bouton(self.window, self, 354, 500,  width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self._leaveGame)
 
     def main(self, longueur=914, hauteur=606):
-        classement = openJson()
+        classement = list(openJson()).pop()
         _resizeWindow(self.window, longueur, hauteur)
         self._makeFrame()
         self._makeBackground()
