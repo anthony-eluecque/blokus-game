@@ -25,7 +25,7 @@ class ScoreView(View):
     def _makeBackground(self):
         img = Image.open("./media/assets/bg_score.png")
         self.img = ImageTk.PhotoImage(img)
-        self.bgImg = Label(self.mainFrame, image=self.img, text="")
+        self.bgImg = Label(self.mainFrame, image=self.img, text="", bd=0)
         self.bgImg.place(x=0,y=0,anchor="nw")
 
     def _makeTitleClassement(self):
