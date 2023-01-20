@@ -44,7 +44,7 @@ class GameView(View):
         self.bg = CTkLabel(self.window, text="", image = self.bgImage)
 
     def _makePopup(self , player : Player):
-        self.popup = showinfo("Blokus", "Le joueur " + player.getCouleur() + " ne peux plus jouer.")
+        self.popup = showinfo("Blokus", "Le joueur " + player.getCouleur() + " ne peut plus jouer.")
 
     def _callbackOnDrop(self, file:str, x:int, y:int, rotation:int, inversion:int, canvas):
         self.gameController.callbackGame(file, x, y, rotation, inversion, canvas)
