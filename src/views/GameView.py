@@ -7,6 +7,7 @@ from components.game.score import score
 from components.game.piecesManager import piecesManager
 from models.Player import Player
 from components.bouton import Bouton
+from tkinter.messagebox import showinfo
 
 
 class GameView(View):
@@ -41,6 +42,9 @@ class GameView(View):
     def _makeBackground(self):
         self.bgImage = CTkImage(Image.open("./media/assets/background_game.png"), size=(1300, 800))
         self.bg = CTkLabel(self.window, text="", image = self.bgImage)
+
+    def _makePopup(self , player : Player):
+        self.popup = showinfo("Blokus", "Le joueur " + player.getCouleur() + " ne peux plus jouer.")
 
     def _callbackOnDrop(self, file:str, x:int, y:int, rotation:int, inversion:int, canvas):
         self.gameController.callbackGame(file, x, y, rotation, inversion, canvas)
