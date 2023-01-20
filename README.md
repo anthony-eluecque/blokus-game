@@ -29,8 +29,7 @@
         - 3.3.1 Début de la partie
         - 3.3.2 Au cours de la partie
         - 3.3.3 Fin de la partie
-- **4 Comment l'utiliser**
-- **5 Conclusion**
+- **4 Copyrights & Droits d'auteur**
 
 ## **1 Introduction 📌**
 
@@ -123,6 +122,13 @@ Lorsqu’un joueur est bloqué et ne peut plus placer de pièce, il est obligé 
 - +20 points si les 21 pièces ont été posées avec le carré solitaire (seul et unique sur les 21 pièces) en dernière position. 
 
 
-## **4 Comment l'utiliser ❓**
+## **4 Copyrights & Droits d'auteur ©️**
+Tous les <u>sons</u> utilisés sont libres de droit, accessibles et utilisables par tous. <br>
+La <u>musique de fond</u> provenant du jeu **Portal 2** qui utilisée sur le menu principal est la propriété intellectuelle de **Valve Corporation**. <br>
+Selon l'**Utilisation Équitable** ou **Fair Use** en anglais et du respect de ses quatres facteurs, l'utilisation de la musique du jeu **Portal 2** pour ce projet à fin éducatif et non lucratif, ne brise ni les copyrights ni les droits d'auteurs.
 
-## **5 Conclusion 📌**
+### **Sources:**
+- [Mentions légales de Valve](https://store.steampowered.com/legal)
+- [Fair Use](https://support.google.com/legal/answer/4558992?hl=en) / [Utilisation Équitable](https://support.google.com/legal/answer/4558992?hl=fr)
+- [Digital Media Law Project](http://www.dmlp.org/legal-guide/fair-use)
+- [Post sur gaming.stackexchange.com](https://gaming.stackexchange.com/questions/96049/what-are-the-licensing-terms-for-portal-2s-soundtrack)

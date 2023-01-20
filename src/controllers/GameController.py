@@ -131,4 +131,4 @@ class GameController(Controller):
 
     def main(self):
         self.gameView.main()
-        self.loadMap()
+        #self.loadMap()
