@@ -7,6 +7,10 @@ from testmap import MAP1
 from utils.controller_utils import _openController
 
 class GameController(Controller):
+    """ 
+    Controller gérant le menu héritant de la classe Controller ainsi que de sa méthode abstraite main()
+    Hérite également des éléments pour le bon fonctionnement d'une partie.
+    """
     
     def __init__(self, window):
         self.joueurs = [Player("Bleu"), Player("Jaune"), Player("Vert"), Player("Rouge")]
@@ -16,8 +20,20 @@ class GameController(Controller):
         self.actualPlayer: Player = self.joueurs[self.index]
         self.plateau = Plateau(20,20)
         self.gameView = self.loadView("Game",window)
+        self.nePeutPlusJouer = []
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
+        """
+        Procédure permettant de placer une pièce et de gérer les rotations/inversions. Si le placement est bon, la pièce se place sur la grille.
+
+        Args:
+            file (str) : chemin d'accès de l'image de la pièce.
+            x (int) : coordonnées en abscisses de la pièce
+            y (int) : coordonnées en ordonnées de la pièce
+            rotation (int) : nombre de rotation
+            inversion (int) : nombre d'inversion
+            canvas : l'affichage de la pièce
+        """
         print("test")
         numPiece = int(file.split("/")[4].split(".")[0])
         
@@ -61,6 +77,9 @@ class GameController(Controller):
             self.actualPlayer.pieces.resetRotation(numPiece-1)
 
     def nextPlayer(self) -> None:
+        """        
+        Procédure permettant de gérer les changements de joueur
+        """
         playable: bool = False
         joueur: Player = Player("Rouge") 
 
@@ -70,6 +89,10 @@ class GameController(Controller):
             if playerCanPlay(joueur, self.plateau): 
                 playable = True
                 break
+            else:
+                if joueur.getCouleur() not in self.nePeutPlusJouer:
+                    self.nePeutPlusJouer.append(joueur.getCouleur())
+                    self.gameView._makePopup(joueur)
 
         self.actualPlayer = joueur
 
@@ -79,6 +102,9 @@ class GameController(Controller):
             _openController(self.gameView, "Score", self.window)
 
     def loadMap(self):
+        """
+        Procédure permettant de chager une grille avec des pièces déjà placées.
+        """
         for couleur, pieces in MAP1.items():
             cheminFichierPiece = "./media/pieces/" + couleur.upper()[0] + "/1.png"
             
@@ -105,4 +131,4 @@ class GameController(Controller):
 
     def main(self):
         self.gameView.main()
-        # self.loadMap()
+        self.loadMap()
