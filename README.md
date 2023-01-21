@@ -6,8 +6,8 @@
 <p>
 
 <p align="center">
-    <img src="https://img.shields.io/github/last-commit/Fredericdrnl/blockus-readme">
-    <img src="https://img.shields.io/github/contributors/Fredericdrnl/blockus-readme">
+    <img src="https://img.shields.io/github/last-commit/Antorakk/blokus-game">
+    <img src="https://img.shields.io/github/contributors/Antorakk/blokus-game">
 </p>
 
 > **Auteur :** Anthony ELUECQUE, Frédéric DOURNEL, Evan LABIT, Anatole GINIAUX
