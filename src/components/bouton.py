@@ -2,6 +2,9 @@ from components.soundclass import Sound
 from tkinter import Button
 from customtkinter import CTk
 from tkinter import PhotoImage
+from PIL.Image import ANTIALIAS
+from PIL.Image import open as openImg
+from PIL.ImageTk import PhotoImage as PhotoImg
 
 class Bouton(Button):
     """
@@ -9,26 +12,33 @@ class Bouton(Button):
     Permet de passer par paramètre le son , ainsi que tous les attributs d'un bouton tkinter.
     Respecte notamment les principes SOLID.
     """
-
+    
     def __init__(
         self,window:CTk,view,xpos,ypos,
         file:str|None = None,command=None, 
         width = 250, heigth = 250,
         text="template",son:str|None=None,*args,**kwags)->None:
-
         self.command = command
+
         if file:
             self.image = PhotoImage(file = file)
+            self.imagesized = openImg( file )
+            self.imagesized = self.imagesized.resize( ( width - 30, heigth - 10 ), ANTIALIAS )
+            self.imagesized = PhotoImg( self.imagesized )
             super().__init__(window,image=self.image,text=text,bg="white",highlightthickness=0,bd=0,border=0)
         else:
             super().__init__(window,text=text,bg="white",highlightthickness=0,bd=0,border=0)
         
         self.window = window
         self.view = view 
+        self.xpos = xpos
+        self.ypos = ypos
         self.width = width
         self.heigth = heigth
         super().configure(width=width,height=heigth,command=self.callbackButton)
-        super().place(x=xpos,y=ypos)
+        super().bind( "<Enter>", self.MouseEnter )
+        super().bind( "<Leave>", self.MouseExit )
+        super().place(x=self.xpos,y=self.ypos)
 
         if son:
             self.sound = Sound(son)
@@ -43,9 +53,10 @@ class Bouton(Button):
                 self.sound.play()
             self.command()
             
+    def MouseEnter( self, e ):
+        super().configure( width = self.width - 30, height = self.heigth - 10, image = self.imagesized )
+        super().place( x = self.xpos + 15, y = self.ypos + 5 )
 
-
-
-        
-
-
+    def MouseExit( self, e ):
+        super().configure( width = self.width, height = self.heigth, image = self.image )
+        super().place( x = self.xpos, y = self.ypos )
