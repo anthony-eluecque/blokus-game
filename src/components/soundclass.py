@@ -4,11 +4,14 @@ environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # Retire l'alerte de pygame dans le 
 from pygame import mixer
 
 class Sound:
+    """
+    Classe pour jouer un son ainsi que modifier le volume
+    """
     def __init__(self, sound: str) -> None:
         # Initialisation du mixer
         mixer.init()
         # Constante
-        self.SOUND_LIST: list[str] = ["background", "select", "drop", "button"]
+        self.sounds: list[str] = ["background", "select", "drop", "button", "testing"]
         # Son
         self.sound = sound.lower()
 
@@ -19,7 +22,7 @@ class Sound:
         mixer.music.stop()
 
         # Verification si le son existe
-        if(self.sound not in self.SOUND_LIST):
+        if(self.sound not in self.sounds):
             return "Sound does not exist"
 
         # Chargement du son
@@ -34,7 +37,7 @@ class Sound:
             mixer.music.play() # On joue le son
 
     def setVolume(self, i: float) -> None:
-        """ Changer le volume d'un son
+        """Changer le volume d'un son
 
         Args:
             i (int): Nouveau volume
@@ -42,10 +45,22 @@ class Sound:
         assert i>=0 and i<=1, "Le volume doit être entre 0 & 1"
         mixer.music.set_volume(i)
 
+    def getVolume(self) -> float|int:
+        """Obtenir le volume du son qui se joue actuellement
+
+        Returns:
+            float|int: Le volume du son actuel
+        """
+        return round(mixer.music.get_volume(), 2) # Arrondi pour des questions de simplicité
+
+
 if __name__ == '__main__':
     from customtkinter import CTk 
 
     w = CTk()
+
     a = Sound("background")
     a.play()
+    print(a.getVolume())
+    
     w.mainloop()
