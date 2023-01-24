@@ -53,7 +53,6 @@ class GameView(View):
         self.grille._addPieceToGrille(chemin, x, y)
 
     def _newGame(self):
-        print("test")
         self.close()
         self.gameController._newGame()
 
