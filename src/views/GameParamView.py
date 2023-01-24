@@ -29,9 +29,9 @@ class GameParamView(View):
         
     def __makeButtons( self ):
         self.settingsBt: Bouton = Bouton( self.window, self, 56, 12, width=65, heigth=65, file="./media/assets/button_settings.png", son="button" )
-        self.launchBt: Bouton = Bouton( self.window, self, 543.5, 345.5, width=207, heigth=105, file="./media/assets/button_launch.png", son="button" )
-        self.retourBt: Bouton = Bouton( self.window, self, 40, 743, width=570, heigth=48, file="./media/assets/button_retour.png", son="button" )
-        self.reglesBt: Bouton = Bouton( self.window, self, 695, 743, width=570, heigth=48, file="./media/assets/button_regles.png", son="button" )
+        self.launchBt: Bouton = Bouton( self.window, self, 543.5, 345.5, width=207, heigth=105, file="./media/assets/button_launch.png", son="button", command=self.paramController.btn_play )
+        self.retourBt: Bouton = Bouton( self.window, self, 40, 743, width=570, heigth=48, file="./media/assets/button_retour.png", son="button", command=self.paramController.btn_retour )
+        self.reglesBt: Bouton = Bouton( self.window, self, 695, 743, width=570, heigth=48, file="./media/assets/button_regles.png", son="button", command=self.paramController.btn_regles )
 
     def main( self, longueur = 1300, hauteur = 800 ):
         _resizeWindow( self.window, longueur, hauteur )

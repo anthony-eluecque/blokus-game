@@ -12,14 +12,19 @@ class GameParamController( Controller ):
         self.gameParamView = self.loadView( "GameParam", self.window )
         self.core: Core = Core()
     
-    def btn_clear( self ):
+    def btn_retour( self ):
         self.gameParamView.close()
         c = Core.openController( "home", self.window )
         c.main()
     
-    def btn_retour( self ):
+    def btn_regles( self ):
         self.gameParamView.close()
         c = Core.openController( "rules", self.window )
+        c.main()
+    
+    def btn_play( self ):
+        self.gameParamView.close()
+        c = Core.openController( "game", self.window )
         c.main()
 
     def main( self ):
