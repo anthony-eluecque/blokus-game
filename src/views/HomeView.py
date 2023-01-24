@@ -26,6 +26,8 @@ class HomeView(View):
         self.label.place(x = 0,y = 0)  
 
     def _UI(self : Self):
+        self.testButton : Bouton = Bouton(self.window, self, 20, 20, width=370, heigth=49, file="./media/assets/button_play.png", son="button", command=self.homeController.btnSettings)
+
         self.playButton: Bouton = Bouton(self.window, self, 165, 315, width=370, heigth=49, file="./media/assets/button_play.png", son="button", command=self.homeController.btnPlay)
 
         self.rulesButton: Bouton = Bouton(self.window, self, 165, 380, width=370, heigth=49, file="./media/assets/button_rules.png", son="button", command=self.homeController.btnRules)
