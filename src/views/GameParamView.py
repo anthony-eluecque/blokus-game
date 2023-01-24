@@ -24,6 +24,10 @@ class GameParamView(View):
             "4":{"pos":[850,460],"arrow":{"left":[790,460],"right":[1110,460]}}
         }
 
+        self.dataCardPlayers = []
+        self.bgImagePlayer = CTkImage(Image.open("./media/assets/player_frame_param.png"), size=(250,50))
+        self.bgImageIA = CTkImage(Image.open("./media/assets/IA_frame_param.png"), size=(250,50))
+
     def _makeFrame(self)->None:
         self.mainFrame = _createFrame( self.window, 1300, 800 )
 
@@ -42,23 +46,40 @@ class GameParamView(View):
         self.reglesBt: Bouton = Bouton( self.window, self, 695, 743, width=570, heigth=48, file="./media/assets/button_regles.png", son="button", command=self.paramController.btn_regles )
 
     def __makeCardPlayer(self)->None:
-        self.dataCardPlayers = []
-        self.bgImage = CTkImage(Image.open("./media/assets/player_frame_param.png"), size=(250,50))
 
-        for items in self.positions.values():
-            self.__makeLabelPlayer(self.bgImage,items["pos"][0],items["pos"][1])
-            self.__makeDirectionnalsArrows(items["arrow"]["left"][0],items["arrow"]["left"][1],"./media/assets/fleche_gauche.png")
-            self.__makeDirectionnalsArrows(items["arrow"]["right"][0],items["arrow"]["right"][1],"./media/assets/fleche_droite.png")
+        for i in range(len(self.positions)):
+            index = str(i+1)
+            label = self.__makeLabelPlayer(self.bgImagePlayer,self.positions[index]["pos"][0],self.positions[index]["pos"][1])
+            arrow_l = self.__makeDirectionnalsArrows(self.positions[index]["arrow"]["left"][0],self.positions[index]["arrow"]["left"][1],"./media/assets/fleche_gauche.png",index)
+            arrow_r = self.__makeDirectionnalsArrows(self.positions[index]["arrow"]["right"][0],self.positions[index]["arrow"]["right"][1],"./media/assets/fleche_droite.png",index)
 
-    def __makeLabelPlayer(self,bgimage,xpos,ypos)->None:
-        self.labelPlayers = []
-        self.player = CTkLabel(master = self.mainFrame,text="" , image=bgimage)
-        self.player.place(x=xpos,y=ypos)
+            self.dataCardPlayers.append([arrow_l,arrow_r,self.bgImagePlayer,label])
 
-    def __makeDirectionnalsArrows(self,x,y,_file)->None:
-        self.button = Bouton(self.window,self,width=50,heigth=50,xpos=x,ypos=y,file=_file)
+    def __makeLabelPlayer(self,bgimage,xpos,ypos):
+        player = CTkLabel(master = self.mainFrame,text="" , image=bgimage)
+        player.place(x=xpos,y=ypos)
+        return player
 
-    
+    def __makeDirectionnalsArrows(self,x,y,_file,index):
+        button = Bouton(self.window,self,width=50,heigth=50,xpos=x,ypos=y,file=_file,text=str(index),command=lambda:self.callbackStatus(button),son="button")
+        return button
+
+    def callbackStatus(self,button):
+
+        components : list =  self.dataCardPlayers[int(button.cget('text'))-1]
+        xpos = self.positions[button.cget('text')]["pos"][0]
+        ypos = self.positions[button.cget('text')]["pos"][1]
+        image = components[2]
+        if image == self.bgImagePlayer:
+            components[2] =  self.bgImageIA
+            components[3] = self.__makeLabelPlayer(self.bgImageIA,xpos,ypos)
+        else:
+            components[2] = self.bgImagePlayer
+            components[3] = self.__makeLabelPlayer(self.bgImagePlayer,xpos,ypos)
+
+
+
+
     def __makeEntry(self)->None:
         pass
 
