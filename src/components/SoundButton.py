@@ -19,8 +19,8 @@ class SoundButton(Bouton, Sound):
         """
         Fonction permettant la création du Bouton
         """
-        self.bgButton = PhotoImage(file = "./media/assets/sound_on.png")
-        self.img: int = 1 # Current img
+        self.bgButton = PhotoImage(file = "./media/assets/sound_off.png")
+        self.img: int = 0 # Current img
         self.button = Button(master = self.window, image = self.bgButton, text="", bg='white', highlightthickness=0, bd=0, border=0, command=self.changeStatus, width=50, height=50)
 
     def _placeWidget(self, x_pos:int, y_pos:int)->None:
