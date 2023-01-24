@@ -14,11 +14,8 @@ class SettingsController(Controller):
         self.window = window
         self.settingsView = self.loadView("Settings", self.window)
 
-    def callbackSlider(slider : CTkSlider, valeur: int):
-        valeur = int(slider.get() *100)
-
     def btn_clear(self):
         _openController(self.settingsView, "Home", self.window)
 
     def main(self):
-        self.settingsView.main()
+        self.settingsView.main() #type: ignore
