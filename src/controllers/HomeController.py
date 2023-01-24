@@ -16,7 +16,8 @@ class HomeController(Controller,Sound):
         self.homeView = self.loadView("Home", window)
     
     def btnPlay(self):
-        _openController(self.homeView, "Game", self.window)
+        #_openController(self.homeView, "Game", self.window)
+        _openController(self.homeView, "GameParam", self.window)
 
     def btnRules(self):
         _openController(self.homeView, "Rules", self.window)
