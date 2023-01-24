@@ -19,9 +19,9 @@ class GameParamView(View):
         # Values : x positions[key][0] ; y positions[key][1]
         self.positions = {
             "1":{"pos":[200,100],"arrow":{"left":[140,100],"right":[460,100]}},
-            "2":{"pos":[850,100],"arrow":{"left":[790,100],"right":[1100,100]}},
+            "2":{"pos":[850,100],"arrow":{"left":[790,100],"right":[1110,100]}},
             "3":{"pos":[200,460],"arrow":{"left":[140,460],"right":[460,460]}},
-            "4":{"pos":[850,460],"arrow":{"left":[790,460],"right":[1100,460]}}
+            "4":{"pos":[850,460],"arrow":{"left":[790,460],"right":[1110,460]}}
         }
 
     def _makeFrame(self)->None:
@@ -46,7 +46,6 @@ class GameParamView(View):
         self.bgImage = CTkImage(Image.open("./media/assets/player_frame_param.png"), size=(250,50))
 
         for items in self.positions.values():
-
             self.__makeLabelPlayer(self.bgImage,items["pos"][0],items["pos"][1])
             self.__makeDirectionnalsArrows(items["arrow"]["left"][0],items["arrow"]["left"][1],"./media/assets/fleche_gauche.png")
             self.__makeDirectionnalsArrows(items["arrow"]["right"][0],items["arrow"]["right"][1],"./media/assets/fleche_droite.png")
