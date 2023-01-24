@@ -10,11 +10,10 @@ from components.soundclass import Sound
 
 class SettingsView(View):
     """
-    Classe qui gère la partie graphique du SettingsController. SettingsView hérite de View.
+    Classe qui gère la partie graphique du SettingsController. SettingsView hérite de View
     """
 
     def __init__(self,controller,window:CTk,width=1300,heigth=800):
-
         super().__init__()
         self.sound = Sound("testing")
         self.settingsController = controller

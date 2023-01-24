@@ -6,11 +6,10 @@ from utils.controller_utils import _openController
 
 class SettingsController(Controller):
     """ 
-    Controller gérant la fin de partie (score) héritant de la classe Controller ainsi que de sa méthode abstraite main()
+    Controller gérant la partie des options héritant de la classe Controller ainsi que de sa méthode abstraite main()
     """
 
     def __init__(self, window : CTk):
-        
         self.window = window
         self.settingsView = self.loadView("Settings", self.window)
 
