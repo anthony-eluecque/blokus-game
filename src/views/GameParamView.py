@@ -11,44 +11,59 @@ class GameParamView(View):
     Classe qui gère la partie graphique du GameParamController . GamesParamView hérite de View
     """
 
-    def __init__( self: Self, controller, window: CTk, width=1300, heigth=800 ):
+    def __init__( self: Self, controller, window: CTk, width=1300, heigth=800 )->None:
         super().__init__()
         self.paramController = controller
         self.window = window
 
-    def _makeFrame(self):
+        # Values : x positions[key][0] ; y positions[key][1]
+        self.positions = {
+            "1":{"pos":[200,100],"arrow":{"left":[140,100],"right":[460,100]}},
+            "2":{"pos":[850,100],"arrow":{"left":[790,100],"right":[1100,100]}},
+            "3":{"pos":[200,460],"arrow":{"left":[140,460],"right":[460,460]}},
+            "4":{"pos":[850,460],"arrow":{"left":[790,460],"right":[1100,460]}}
+        }
+
+    def _makeFrame(self)->None:
         self.mainFrame = _createFrame( self.window, 1300, 800 )
 
-    def _makeWindow(self):
+    def _makeWindow(self)->None:
         self.backgroundImage = Image.open( "./media/assets/background_gameparam.png" )
         self.background = ImageTk.PhotoImage( self.backgroundImage )
         self.gameParamTitle = Label( self.mainFrame, text="", image = self.background, bd = 0 )
 
-    def _configWidget(self):
+    def _configWidget(self)->None:
         self.gameParamTitle.place(x = 0,y = 0)
         
-    def __makeButtons(self):
+    def __makeButtons(self)->None:
         self.settingsBt: Bouton = Bouton( self.window, self, 56, 12, width=65, heigth=65, file="./media/assets/button_settings.png", son="button" )
         self.launchBt: Bouton = Bouton( self.window, self, 543.5, 345.5, width=207, heigth=105, file="./media/assets/button_launch.png", son="button", command=self.paramController.btn_play )
         self.retourBt: Bouton = Bouton( self.window, self, 40, 743, width=570, heigth=48, file="./media/assets/button_retour.png", son="button", command=self.paramController.btn_retour )
         self.reglesBt: Bouton = Bouton( self.window, self, 695, 743, width=570, heigth=48, file="./media/assets/button_regles.png", son="button", command=self.paramController.btn_regles )
 
-    def __makeCardPlayer(self):
-
-        # Values : x positions[key][0] ; y positions[key][1]
-        positions = {"1":[200,100],"2":[850,100],"3":[200,460],"4":[850,460]}
-        self.labelPlayers = []
+    def __makeCardPlayer(self)->None:
+        self.dataCardPlayers = []
         self.bgImage = CTkImage(Image.open("./media/assets/player_frame_param.png"), size=(250,50))
-        
-        for items in positions.values():
-            self.player = CTkLabel(master = self.mainFrame,text="" , image=self.bgImage)
-            self.player.place(x=items[0],y=items[1])
-            self.labelPlayers.append(self.player)
+
+        for items in self.positions.values():
+
+            self.__makeLabelPlayer(self.bgImage,items["pos"][0],items["pos"][1])
+            self.__makeDirectionnalsArrows(items["arrow"]["left"][0],items["arrow"]["left"][1],"./media/assets/fleche_gauche.png")
+            self.__makeDirectionnalsArrows(items["arrow"]["right"][0],items["arrow"]["right"][1],"./media/assets/fleche_droite.png")
+
+    def __makeLabelPlayer(self,bgimage,xpos,ypos)->None:
+        self.labelPlayers = []
+        self.player = CTkLabel(master = self.mainFrame,text="" , image=bgimage)
+        self.player.place(x=xpos,y=ypos)
+
+    def __makeDirectionnalsArrows(self,x,y,_file)->None:
+        self.button = Bouton(self.window,self,width=50,heigth=50,xpos=x,ypos=y,file=_file)
+
     
-    def __makeEntry(self):
+    def __makeEntry(self)->None:
         pass
 
-    def main( self, longueur = 1300, hauteur = 800 ):
+    def main( self, longueur = 1300, hauteur = 800 )->None:
         _resizeWindow( self.window, longueur, hauteur )
         self._makeFrame()
         self._makeWindow()
