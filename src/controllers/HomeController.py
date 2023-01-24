@@ -23,6 +23,9 @@ class HomeController(Controller,Sound):
 
     def btnStats(self):
         _openController(self.homeView, "Stats", self.window)
+
+    def btnSettings(self):
+        _openController(self.homeView, "Settings", self.window)
       
         
     def main(self):
