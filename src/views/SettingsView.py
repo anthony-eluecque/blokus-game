@@ -6,6 +6,7 @@ from typing_extensions import Self
 from utils.window_utils import _resizeWindow, _deleteChilds, _createFrame
 from components.bouton import Bouton
 from components.soundclass import Sound
+from utils.sound_utils import _editValue, _getValues
 
 
 class SettingsView(View):
@@ -16,6 +17,7 @@ class SettingsView(View):
     def __init__(self: Self, controller, window: CTk, width = 1300, heigth = 800):
         super().__init__()
         self.sound: Sound = Sound("testing")
+        self.volumes: dict[str, float | int] = _getValues()
         self.settingsController = controller
         self.window = window
 
@@ -63,14 +65,14 @@ class SettingsView(View):
     def _playMusicSound(self, e):
         volume: float|int = self.musicBar.get()/100
         # On récup et modifie la value de sfx pour jouer le son puis on remet à la valeur d'origine (pas d'autre moyen)
-        sfx_vol = SOUND_VOLUME["sfx"]
-        SOUND_VOLUME.update({"sfx" : volume, "music" : volume})
+        sfx_vol = self.volumes["sfx"]
+        _editValue("sfx", volume);  _editValue("music", volume)
         self.sound.play()
-        SOUND_VOLUME.update({"sfx" : sfx_vol})
+        _editValue("sfx", sfx_vol)
 
     def _playSFXSound(self, e):
         volume: float|int = self.sfxBar.get()/100
-        SOUND_VOLUME.update({"sfx" : volume})
+        _editValue("sfx", volume)
         self.sound.play()
 
     # Config
