@@ -28,11 +28,17 @@ class GameParamView(View):
         }
 
         self.posWidgetsPlayer = {
-            "1":{"nom_joueur":[80,180],"couleur_joueur":[80,260],"choix_couleur":[380,260],"saisi_clavier":[320,180]}
+            "1":{"nom_joueur":[80,180],"couleur_joueur":[80,260],"choix_couleur":[380,260],"saisi_clavier":[320,180]},
+            "2":{"nom_joueur":[735,180],"couleur_joueur":[735,260],"choix_couleur":[1035,260],"saisi_clavier":[975,180]},
+            "3":{"nom_joueur":[80,540],"couleur_joueur":[80,620],"choix_couleur":[380,620],"saisi_clavier":[320,540]},
+            "4":{"nom_joueur":[735,540],"couleur_joueur":[735,620],"choix_couleur":[1035,620],"saisi_clavier":[975,540]},
         }
 
         self.posWidgetsIA = {
-            "1":{"nom_IA":[80,180],"couleur_IA":[80,240],"choix_couleur":[380,240],"saisi_clavier":[320,180],"difficulte_IA":[80,300],"selecteur_difficulte":[380,300]}
+            "1":{"nom_IA":[80,180],"couleur_IA":[80,240],"choix_couleur":[380,240],"saisi_clavier":[320,180],"difficulte_IA":[80,300],"selecteur_difficulte":[380,300]},
+            "2":{"nom_IA":[735,180],"couleur_IA":[735,240],"choix_couleur":[1035,240],"saisi_clavier":[975,180],"difficulte_IA":[735,300],"selecteur_difficulte":[1035,300]},
+            "3":{"nom_IA":[80,540],"couleur_IA":[80,600],"choix_couleur":[380,600],"saisi_clavier":[320,540],"difficulte_IA":[80,660],"selecteur_difficulte":[380,660]},
+            "4":{"nom_IA":[735,540],"couleur_IA":[735,600],"choix_couleur":[1035,600],"saisi_clavier":[975,540],"difficulte_IA":[735,660],"selecteur_difficulte":[1035,660]},
         }
 
         self.dataCardPlayers = []
@@ -64,10 +70,10 @@ class GameParamView(View):
             arrow_l = self.__makeDirectionnalsArrows(self.positions[index]["arrow"]["left"][0],self.positions[index]["arrow"]["left"][1],"./media/assets/fleche_gauche.png",index)
             arrow_r = self.__makeDirectionnalsArrows(self.positions[index]["arrow"]["right"][0],self.positions[index]["arrow"]["right"][1],"./media/assets/fleche_droite.png",index)
             
-            if i==0:
-                childs = self.__makeEntryPlayer(index)
-                self.dataCardPlayers.append([arrow_l,arrow_r,self.bgImagePlayer,label,childs])
-            self.dataCardPlayers.append([arrow_l,arrow_r,self.bgImagePlayer,label])
+            childs = self.__makeEntryPlayer(index)
+            self.dataCardPlayers.append([arrow_l,arrow_r,self.bgImagePlayer,label,childs])
+
+
     def __makeLabelPlayer(self,bgimage,xpos,ypos):
         player = CTkLabel(master = self.mainFrame,text="" , image=bgimage)
         player.place(x=xpos,y=ypos)
@@ -84,12 +90,11 @@ class GameParamView(View):
         xpos = self.positions[button.cget('text')]["pos"][0]
         ypos = self.positions[button.cget('text')]["pos"][1]
         image = components[2]
-
         if image == self.bgImagePlayer:
             components[3].destroy()
             components[3] = self.__makeLabelPlayer(self.bgImageIA,xpos,ypos)
             components[2] =  self.bgImageIA
-
+            
             for childs in components[4]:
                 childs.destroy()
             components[4] = self.__makeEntryIA(button.cget('text'))
@@ -100,8 +105,7 @@ class GameParamView(View):
             components[2] = self.bgImagePlayer
             for childs in components[4]:
                 childs.destroy()
-            components[4] = self.__makeEntryPlayer(button.cget('text'))
-        
+            components[4] = self.__makeEntryPlayer(button.cget('text'))      
 
     def __makeEntryPlayer(self,index)->list:
 
