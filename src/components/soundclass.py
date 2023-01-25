@@ -29,7 +29,7 @@ class Sound:
 
         # Si le son à jouer est la musique de fond 
         if(self.sound == "background"):
-            self.volume = SOUND_VOLUME["sound"]
+            self.volume = SOUND_VOLUME["music"]
             self.setVolume(self.volume) # On baisse le son
             mixer.music.play(loops=-1) # Et on joue la musique indéfiniment
         else:
