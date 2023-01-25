@@ -38,4 +38,5 @@ PIECES =    [
                 [[0,1,0],[1,1,1],[0,1,0]]        
             ]
 
-
+# Liste sons
+SOUND_LIST: list[str] = ["background", "select", "drop", "button", "testing"]
