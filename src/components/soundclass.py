@@ -2,7 +2,8 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # Retire l'alerte de pygame dans le terminal
 from pygame import mixer
-from utils.sound_utils import SOUND_LIST, SOUND_VOLUME
+from json import load
+from constants import SOUND_LIST
 
 class Sound:
     """
@@ -26,6 +27,10 @@ class Sound:
 
         # Chargement du son
         mixer.music.load("././media/sounds/" + self.sound + ".wav")
+
+        # Liste des volumes
+        with open("../utils/sound_utils.json") as f:
+            SOUND_VOLUME = load(f)
 
         # Si le son à jouer est la musique de fond 
         if(self.sound == "background"):

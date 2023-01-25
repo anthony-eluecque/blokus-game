@@ -13,9 +13,9 @@ class SettingsView(View):
     Classe qui gère la partie graphique du SettingsController. SettingsView hérite de View
     """
 
-    def __init__(self,controller,window:CTk,width=1300,heigth=800):
+    def __init__(self: Self, controller, window: CTk, width = 1300, heigth = 800):
         super().__init__()
-        self.sound = Sound("testing")
+        self.sound: Sound = Sound("testing")
         self.settingsController = controller
         self.window = window
 
@@ -26,36 +26,52 @@ class SettingsView(View):
     def _makeWindow(self):
         self.backgroundImage = Image.open("./media/assets/background_rules.png")
         self.background = ImageTk.PhotoImage(self.backgroundImage)
-        self.bgSettings = Label(self.mainFrame, text="", image = self.background, bd = 0)
+        self.bgSettings: Label = Label(self.mainFrame, text="", image = self.background, bd = 0)
 
     # Parts
     def _makeTitle(self):
-        self.settingsTitle = CTkLabel(master = self.mainFrame , text="Settings", fg_color="white",font=CTkFont(family="Roboto Medium", size=40), text_color="black")
+        self.settingsTitle: CTkLabel = CTkLabel(master = self.mainFrame, text="Settings", fg_color="white", font = CTkFont(family="Roboto Medium", size=40), text_color="black")
 
     def _makeMusicPart(self):
-        self.musicBar = CTkSlider(master = self.mainFrame, width=300, height=20, orientation="horizontal", from_=0, to=100, number_of_steps=100, variable=IntVar(value=50), bg_color="white", fg_color="white", button_color="grey", button_hover_color="grey", progress_color="yellow", command=self._callbackMusicValue) # type: ignore
-        self.musicValue = int(self.musicBar.get())
-        self.musicNumber =  CTkLabel(master = self.mainFrame , text="Sound: " + str(self.musicValue), fg_color="white",font=CTkFont(family="Roboto Medium", size=35), text_color="black")
+        self.musicBar: CTkSlider = CTkSlider(master = self.mainFrame, width=300, height=20, orientation="horizontal", from_=0, to=100, number_of_steps=100, variable=IntVar(value=50), bg_color="white", fg_color="lightgray", button_color="grey", button_hover_color="grey", progress_color="yellow", command=self._callbackMusicValue)
+        self.musicBar.bind("<ButtonRelease-1>", self._playMusicSound)
+        self.musicValue: int = int(self.musicBar.get())
+        self.musicNumber: CTkLabel =  CTkLabel(master = self.mainFrame, text="Sound: " + str(self.musicValue), fg_color="white", font = CTkFont(family="Roboto Medium", size=35), text_color="black")
 
     def _makeSFXPart(self):
-        self.sfxBar = CTkSlider(master = self.mainFrame, width=300, height=20, orientation="horizontal", from_=0, to=100, number_of_steps=100, variable=IntVar(value=50), bg_color="white", fg_color="white", button_color="grey", button_hover_color="grey", progress_color="yellow", command=self._callbackSFXValue) # type: ignore
-        self.sfxValue = int(self.sfxBar.get())
-        self.sfxNumber =  CTkLabel(master = self.mainFrame , text="SFX: " + str(self.musicValue), fg_color="white",font=CTkFont(family="Roboto Medium", size=35), text_color="black")
+        self.sfxBar: CTkSlider = CTkSlider(master = self.mainFrame, width=300, height=20, orientation="horizontal", from_=0, to=100, number_of_steps=100, variable=IntVar(value=50), bg_color="white", fg_color="lightgray", button_color="grey", button_hover_color="grey", progress_color="yellow", command=self._callbackSFXValue)
+        self.sfxBar.bind("<ButtonRelease-1>", self._playSFXSound)
+        self.sfxValue: int = int(self.sfxBar.get())
+        self.sfxNumber: CTkLabel =  CTkLabel(master = self.mainFrame, text="SFX: " + str(self.musicValue), fg_color="white", font = CTkFont(family="Roboto Medium", size=35), text_color="black")
 
     def _makeLanguagesPart(self):
-        self.languageTitle = CTkLabel(master = self.mainFrame , text="Languages", fg_color="white",font=CTkFont(family="Roboto Medium", size=35), text_color="black")
-        self.frenchButton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/settings_french.png", son="button")
-        self.englishButton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/english_settings.png", son="button")
+        self.languageTitle: CTkLabel = CTkLabel(master = self.mainFrame, text="Languages", fg_color="white", font = CTkFont(family="Roboto Medium", size=35), text_color="black")
+        self.frenchButton: Bouton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/settings_french.png", son="button")
+        self.englishButton: Bouton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/english_settings.png", son="button")
 
     def _makeButtonApply(self):
-        self.backSettings: Bouton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/apply_settings.png", son="button")
+        self.backSettings: Bouton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/apply_settings.png", son="button", command=self.settingsController.btn_clear)
 
     # Callbacks
-    def _callbackMusicValue(self, value):
-        self.musicNumber.configure(text="Sound: " + str(int(value)))    
+    def _callbackMusicValue(self, value: float):
+        self.musicNumber.configure(text="Sound: " + str(int(value)))
 
-    def _callbackSFXValue(self, value):
+    def _callbackSFXValue(self, value: float):
         self.sfxNumber.configure(text="SFX: " + str(int(value)))
+
+    # Sound callbacks
+    def _playMusicSound(self, e):
+        volume: float|int = self.musicBar.get()/100
+        # On récup et modifie la value de sfx pour jouer le son puis on remet à la valeur d'origine (pas d'autre moyen)
+        sfx_vol = SOUND_VOLUME["sfx"]
+        SOUND_VOLUME.update({"sfx" : volume, "music" : volume})
+        self.sound.play()
+        SOUND_VOLUME.update({"sfx" : sfx_vol})
+
+    def _playSFXSound(self, e):
+        volume: float|int = self.sfxBar.get()/100
+        SOUND_VOLUME.update({"sfx" : volume})
+        self.sound.play()
 
     # Config
     def _configWidget(self):
