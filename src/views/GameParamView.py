@@ -73,7 +73,6 @@ class GameParamView(View):
             childs = self.__makeEntryPlayer(index)
             self.dataCardPlayers.append([arrow_l,arrow_r,self.bgImagePlayer,label,childs])
 
-
     def __makeLabelPlayer(self,bgimage,xpos,ypos):
         player = CTkLabel(master = self.mainFrame,text="" , image=bgimage)
         player.place(x=xpos,y=ypos)
@@ -84,8 +83,8 @@ class GameParamView(View):
         return button
 
     def callbackStatus(self,button):
-
-        components : list =  self.dataCardPlayers[int(button.cget('text'))-1]
+        index: list = int(button.cget('text'))-1
+        components : list =  self.dataCardPlayers[index]
 
         xpos = self.positions[button.cget('text')]["pos"][0]
         ypos = self.positions[button.cget('text')]["pos"][1]
@@ -94,18 +93,18 @@ class GameParamView(View):
             components[3].destroy()
             components[3] = self.__makeLabelPlayer(self.bgImageIA,xpos,ypos)
             components[2] =  self.bgImageIA
-            
             for childs in components[4]:
                 childs.destroy()
             components[4] = self.__makeEntryIA(button.cget('text'))
-
+            self.paramController.resetConfig( index, True )    
         else:
             components[3].destroy()
             components[3] = self.__makeLabelPlayer(self.bgImagePlayer,xpos,ypos)
             components[2] = self.bgImagePlayer
             for childs in components[4]:
                 childs.destroy()
-            components[4] = self.__makeEntryPlayer(button.cget('text'))      
+            components[4] = self.__makeEntryPlayer(button.cget('text'))
+            self.paramController.resetConfig( index, False )    
 
     def __makeEntryPlayer(self,index)->list:
 
@@ -120,10 +119,12 @@ class GameParamView(View):
 
         selecteur = Combobox(self.window,values=["Blue","Rouge","Vert","Jaune"])
         selecteur.configure(width=10,height=10,font=('Roboto Bold', 20))
+        selecteur.bind( "<<ComboboxSelected>>", lambda e: self.setConfAttr( e, int( index ), "couleur" ) )
         selecteur.place(x=self.posWidgetsPlayer[index]["choix_couleur"][0],y=self.posWidgetsPlayer[index]["choix_couleur"][1])
 
         entryy = Entry(self.window,width=15)
         entryy.configure(font=('Roboto Bold', 20))
+        entryy.bind( "<<KeyReleased>>", lambda e: self.setConfAttr( e, int( index ), "nom" ) )
         entryy.place(x=self.posWidgetsPlayer[index]["saisi_clavier"][0],y=self.posWidgetsPlayer[index]["saisi_clavier"][1])
         return [label,label2,selecteur,entryy]
 
@@ -139,6 +140,7 @@ class GameParamView(View):
 
         selecteur = Combobox(self.window,values=["Blue","Rouge","Vert","Jaune"])
         selecteur.config(width=10,height=10,font=('Roboto Bold', 20))
+        selecteur.bind( "<<ComboboxSelected>>", lambda e: self.setConfAttr( e, int( index ), "couleur" ) )
         selecteur.place(x=self.posWidgetsIA[index]["choix_couleur"][0],y=self.posWidgetsIA[index]["choix_couleur"][1])
 
         label3 = Label(self.window,text="La difficulté de l'IA : ",bg='white')
@@ -147,15 +149,15 @@ class GameParamView(View):
 
         selecteur2 = Combobox(self.window,values=["Facile","Moyen","Difficile","Impossible"])
         selecteur2.config(width=10,height=10,font=('Roboto Bold', 20))
+        selecteur2.bind( "<<ComboboxSelected>>", lambda e: self.setConfAttr( e, int( index ), "diff" ) )
         selecteur2.place(x=self.posWidgetsIA[index]["selecteur_difficulte"][0],y=self.posWidgetsIA[index]["selecteur_difficulte"][1])
 
         entryy = Entry(self.window,width=15)
-        entryy.configure(font=('Roboto Bold', 20))
+        entryy.configure(font=('Roboto Bold', 20), )
+        entryy.bind( "<<KeyReleased>>", lambda e: self.setConfAttr( e, int( index ), "nom" ) )
         entryy.place(x=self.posWidgetsIA[index]["saisi_clavier"][0],y=self.posWidgetsIA[index]["saisi_clavier"][1])
 
         return [label,label2,label3,selecteur,selecteur2,entryy]
-
-
 
     def main( self, longueur = 1300, hauteur = 800 )->None:
         _resizeWindow( self.window, longueur, hauteur )
@@ -168,3 +170,7 @@ class GameParamView(View):
         
     def close( self ):
         _deleteChilds( self.window )
+
+    def setConfAttr( self, event, index, attribute ):
+        val: str = event.widget.get()
+        self.paramController.setConfigAttribute( index - 1, attribute, val )

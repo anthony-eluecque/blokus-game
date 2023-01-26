@@ -5,6 +5,7 @@ from utils.game_utils import coordsBlocs, validPlacement, playerCanPlay
 from utils.leaderboard_utils import makeClassement, writeInJson, updateClassementFromPlay
 from testmap import MAP1
 from utils.controller_utils import _openController
+from utils.config_utils import Configuration
 
 class GameController(Controller):
     """ 
@@ -13,6 +14,7 @@ class GameController(Controller):
     """
     
     def __init__(self, window):
+        self.config = Configuration.getConfig()
         self.joueurs = [Player("Bleu"), Player("Jaune"), Player("Vert"), Player("Rouge")]
         self.window = window
         self.index = 0
