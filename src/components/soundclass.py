@@ -15,7 +15,7 @@ class Sound:
         # Son
         self.sound = sound.lower()
         # Vérification si le son existe
-        assert self.sound in SOUND_LIST, "Sound does not exist"
+        assert self.sound in SOUND_LIST, "Le son n'existe pas"
         # Volume
         self.volume: int|float
 

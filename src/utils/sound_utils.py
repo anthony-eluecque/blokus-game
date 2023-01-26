@@ -14,7 +14,7 @@ def _editValue(sound: str, volume: int|float) -> None:
         sound (str): Le son dont il faut modifier le volume
         volume (int | float): Le volume qu'il faut attribuer au son
     """
-    assert sound in list(SOUND_VOLUME.keys()), f"'{sound}' is not a value whose sound can be modified"
+    assert sound in list(SOUND_VOLUME.keys()), f"'{sound}' n'est pas une valeur dont le son peut être modifié"
 
     SOUND_VOLUME[sound] = volume
 
