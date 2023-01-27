@@ -98,6 +98,17 @@ class GameController(Controller):
 
         self.actualPlayer = joueur
 
+
+        # GESTION DES IA 
+        # A MODIFIER POUR QUE CA SOIT + OPTIMISER ET RAPIDE
+        # J'ai fais ça pour test
+        self.joueursIA = []
+        for player in Configuration.getConfig():
+            if player["niveau_difficulte"]!=0:
+                self.joueursIA.append(player["couleur"])
+        if self.actualPlayer.getCouleur() in self.joueursIA:
+            self.IA()
+
         if not playable:
             print("terminé")
             makeClassement(self.joueurs)
@@ -124,6 +135,12 @@ class GameController(Controller):
             self.index = (self.index + 1) % 4
         self.gameView.update(self.actualPlayer, self.index)
         # self.nextPlayer()
+    
+    def startGame(self):
+        for player in Configuration.getConfig():
+            if player["niveau_difficulte"]!=0 and player["couleur"]=="Bleu":
+                self.IA()
+       
 
     def _newGame(self):
         _openController(self.gameView, "Game", self.window)
@@ -132,5 +149,13 @@ class GameController(Controller):
         _openController(self.gameView, "Home", self.window)
 
     def main(self):
+        self.startGame()    
         self.gameView.main()
+        self.gameView.update(self.actualPlayer, self.index)
         #self.loadMap()
+
+    def IA(self):
+        print("Oui bonjour c'est moi benjamin")
+        
+
+        self.nextPlayer()
