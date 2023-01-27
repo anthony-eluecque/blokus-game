@@ -13,7 +13,8 @@ def hasAllPieces(player: Player) -> bool:
     Returns:
         bool: Vrai => Il a pas encore joué 
     """
-    return True if player.getNbPieces()==MAX_PIECES else False
+    # print(len(player.pieces.pieces_joueurs))
+    return True if len(player.pieces.pieces_joueurs)==MAX_PIECES else False
 
 def isPositionDepart(cube_traite, player: Player) -> bool:
     """Fonction permettant de vérifier si le joueur place 
@@ -136,6 +137,7 @@ def validPlacement(bloc: list[int], row: int, col: int, plateau: Plateau, player
     Returns:
         bool: le bloc peut être ajouté au tableau
     """
+
     playerColor: str = player.getCouleur()[0]
     new_bloc: list = coordsBlocs(bloc, col, row)
     allPieces: bool = hasAllPieces(player)
@@ -146,7 +148,9 @@ def validPlacement(bloc: list[int], row: int, col: int, plateau: Plateau, player
     for each_cube in new_bloc:
         if allPieces:
             if isPositionDepart(each_cube, player):
+                # print("Position départ")
                 if verifTotal:
+                    # print("vérif Total")
                     return True
         # Les cas généraux 
         else:
