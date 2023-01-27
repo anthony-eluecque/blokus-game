@@ -118,7 +118,7 @@ class GameParamView(View):
         label2.configure(font=('Roboto Bold', 25))
         label2.place(x=self.posWidgetsPlayer[index]["couleur_joueur"][0],y=self.posWidgetsPlayer[index]["couleur_joueur"][1])
 
-        selecteur = Combobox(self.window,values=["Blue","Rouge","Vert","Jaune"])
+        selecteur = Combobox(self.window,values=["Bleu","Rouge","Vert","Jaune"])
         selecteur.configure(width=10,height=10,font=('Roboto Bold', 20))
         selecteur.place(x=self.posWidgetsPlayer[index]["choix_couleur"][0],y=self.posWidgetsPlayer[index]["choix_couleur"][1])
 
@@ -141,7 +141,7 @@ class GameParamView(View):
         label2.config(font=('Roboto Bold', 20))
         label2.place(x=self.posWidgetsIA[index]["couleur_IA"][0],y=self.posWidgetsIA[index]["couleur_IA"][1])
 
-        selecteur = Combobox(self.window,values=["Blue","Rouge","Vert","Jaune"])
+        selecteur = Combobox(self.window,values=["Bleu","Rouge","Vert","Jaune"])
         selecteur.config(width=10,height=10,font=('Roboto Bold', 20))
         selecteur.place(x=self.posWidgetsIA[index]["choix_couleur"][0],y=self.posWidgetsIA[index]["choix_couleur"][1])
 

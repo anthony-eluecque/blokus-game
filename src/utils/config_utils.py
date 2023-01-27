@@ -10,7 +10,7 @@ class Configuration:
     def validConfig( config: list ) -> bool:
         # { "nom": "", "couleur": "", "diff": estIa and "" or "joueur" }
         
-        CHECKIF_PLAYERS = ["Rouge","Blue","Vert","Jaune"]
+        CHECKIF_PLAYERS = ["Rouge","Bleu","Vert","Jaune"]
 
         temp = []
         for player in config:
@@ -24,7 +24,7 @@ class Configuration:
 
     @staticmethod    
     def saveConfig( config: list ) -> bool:
-        print(config)
+
         if not Configuration.validConfig( config ): return False
         configJSON: str = dumps( config, indent=4 )
 
@@ -37,3 +37,11 @@ class Configuration:
     def getConfig() -> list:
         with open( "gameconfig.json", "r" ) as f:
             return loads( f.read() )
+
+    @staticmethod
+    def getColorsOrder() -> list:
+        config = Configuration.getConfig() 
+        temp = []
+        for player in config:
+            temp.append(player["couleur"])
+        return temp     
