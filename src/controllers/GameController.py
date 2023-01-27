@@ -6,6 +6,7 @@ from utils.leaderboard_utils import makeClassement, writeInJson, updateClassemen
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
+from utils.automates_utils import easy_automate
 
 class GameController(Controller):
     """ 
@@ -155,39 +156,6 @@ class GameController(Controller):
         #self.loadMap()
 
     def IA(self):
-        
-        from random import randint
-        # print("Oui bonjour c'est moi benjamin")
-        done = False
-        grille = self.plateau.getTab()
-        for i,elem in enumerate(self.plateau.getTab()):
-            for j,case in enumerate(elem):
-                if case == self.index:
-                    done = True
-
-        # Partie du début de game
-        if not done:
-        
-            x,y = self.actualPlayer.getPositionDepart()
-
-            indicePiece = randint(0,20)
-            piece = self.actualPlayer.jouerPiece(indicePiece)
-            pieceBlokus = coordsBlocs(piece,x,y)
-
-            print(pieceBlokus)
-
-            while not validPlacement(piece,y,x,self.plateau,self.actualPlayer):   
-                indicePiece = randint(0,20)
-                piece = self.actualPlayer.jouerPiece(indicePiece)
-                pieceBlokus = coordsBlocs(piece,x,y)
-
-            # Classement
-            cheminFichierPiece = "./media/pieces/" + self.actualPlayer.getCouleur().upper()[0] + "/1.png"
-
-            for ypos,xpos in pieceBlokus:
-                self.gameView._addToGrid(cheminFichierPiece,xpos,ypos)
-                self.plateau.setColorOfCase(ypos,xpos,self.index)
-
-            self.actualPlayer.hasPlayedPiece(indicePiece)
-
+        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
+        print(self.plateau)
         self.nextPlayer()
