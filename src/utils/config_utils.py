@@ -7,21 +7,31 @@ class Configuration:
     """
     
     @staticmethod
-    def validConfig( config: list ) -> True:
-        { "nom": "", "couleur": "", "diff": estIa and "" or "joueur" }
+    def validConfig( config: list ) -> bool:
+        # { "nom": "", "couleur": "", "diff": estIa and "" or "joueur" }
+        
+        CHECKIF_PLAYERS = ["Rouge","Blue","Vert","Jaune"]
+
+        temp = []
         for player in config:
-            for col in player:
-                if player[ col ] == "":
-                    return False
+            temp.append(player["couleur"])
+            if player["couleur"] not in CHECKIF_PLAYERS:
+                return False
+        if len(set(temp)) != len(temp):
+            return False
         return True
 
+
     @staticmethod    
-    def saveConfig( config: list ) -> None:
-        if not Configuration.validConfig( config ): return
+    def saveConfig( config: list ) -> bool:
+        print(config)
+        if not Configuration.validConfig( config ): return False
         configJSON: str = dumps( config, indent=4 )
 
         with open( "gameconfig.json", "w" ) as f:
             f.write( configJSON )
+
+        return True
 
     @staticmethod
     def getConfig() -> list:
