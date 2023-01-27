@@ -1,12 +1,12 @@
 [
     {
         "nom": "",
-        "couleur": "Blue",
-        "niveau_difficulte": 0
+        "couleur": "Bleu",
+        "niveau_difficulte": "Moyen"
     },
     {
         "nom": "",
-        "couleur": "Jaune",
+        "couleur": "Rouge",
         "niveau_difficulte": 0
     },
     {
@@ -16,7 +16,7 @@
     },
     {
         "nom": "",
-        "couleur": "Rouge",
+        "couleur": "Jaune",
         "niveau_difficulte": 0
     }
 ]
