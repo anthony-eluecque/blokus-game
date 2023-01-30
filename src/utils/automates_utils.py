@@ -2,7 +2,7 @@ from random import randint
 from models.Player import Player
 from models.Plateau import Plateau
 from utils.game_utils import validPlacement,coordsBlocs,getDiagonals,getAdjacents
-
+from copy import deepcopy
 
 def pickPiece(joueur:Player)->int:
     index = 100
@@ -11,20 +11,35 @@ def pickPiece(joueur:Player)->int:
     return index
 
 
-def managePiece(joueur:Player,plateau:Plateau,x:int,y:int):
+def managePiece(joueur:Player,plateau:Plateau,positions:list):
+
+    choix = 0
+    if len(positions) > 1:
+        choix = randint(0,len(positions)-1)
+    x,y = positions[choix]
 
     checkIf = False
     idPiece = 0
     piece = []
     print(f"Ce qui arrive en x : {x} et y : {y}")
 
-    
+    copyPieces = deepcopy(joueur.pieces.pieces_joueurs)
+    # print(copyPieces)
 
     while not checkIf: 
         idPiece =  pickPiece(joueur)
-        piece = joueur.jouerPiece(idPiece)
-        # checkIf = True
-        checkIf = validPlacement(piece,x,y,plateau,joueur)
+        print(idPiece in copyPieces)
+        if idPiece in copyPieces:
+            copyPieces.remove(idPiece)
+            print(copyPieces)
+            piece = joueur.jouerPiece(idPiece)
+            checkIf = validPlacement(piece,x,y,plateau,joueur)
+        if not len(copyPieces):
+            choix = 0
+            if len(positions) > 1:
+                choix = randint(0,len(positions)-1)
+            x,y = positions[choix] 
+            copyPieces = deepcopy(joueur.pieces.pieces_joueurs)
 
     joueur.hasPlayedPiece(idPiece)
     return coordsBlocs(piece,y,x)
@@ -70,15 +85,10 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
 
     possibilities = getPossibilities(index,plateau,joueurActuel)
 
-    choix = 0
-    if len(possibilities) > 1:
-        choix = randint(0,len(possibilities)-1)
-    x,y = possibilities[choix]
-
     print("-------->",possibilities)
-    print("-------->",x,y)
+    # print("-------->",x,y)
 
-    pieceBlokus = managePiece(joueurActuel,plateau,x,y)
+    pieceBlokus = managePiece(joueurActuel,plateau,possibilities)
 
     for xpos,ypos in pieceBlokus:
         view._addToGrid(cheminFichierPiece,ypos,xpos)
