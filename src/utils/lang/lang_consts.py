@@ -96,4 +96,3 @@ LANG_CONTENT: dict[str, dict[str | int, str | list[str]]] = {
         "playerTurn" : "Player " # Text
     }
 }
-
