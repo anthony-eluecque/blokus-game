@@ -33,7 +33,7 @@ class HomeView(View):
 
         self.leaveButton: Bouton = Bouton(self.window, self, 165, 510, width=370, heigth=49, file="./media/assets/button_leave.png", son="button", command=self.window.destroy)
                 
-        self.testButton : Bouton = Bouton(self.window, self, 85, 560, width=50, heigth=50, file="./media/assets/settings.png", son="button", command=self.homeController.btnSettings)
+        self.settingsButton : Bouton = Bouton(self.window, self, 85, 560, width=50, heigth=50, file="./media/assets/settings.png", son="button", command=self.homeController.btnSettings)
 
         self.backgroundImage = Image.open(os.path.join("./media/assets/carre.png"))
         self.background = ImageTk.PhotoImage(self.backgroundImage)
