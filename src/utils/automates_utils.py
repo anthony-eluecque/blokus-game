@@ -19,6 +19,7 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list):
     x,y = positions[choix]
 
     checkIf = False
+    cannotPlay = False
     idPiece = 0
     piece = []
     print(f"Ce qui arrive en x : {x} et y : {y}")
@@ -26,23 +27,27 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list):
     copyPieces = deepcopy(joueur.pieces.pieces_joueurs)
     # print(copyPieces)
 
-    while not checkIf: 
+    while not checkIf and not cannotPlay: 
         idPiece =  pickPiece(joueur)
-        print(idPiece in copyPieces)
+        
         if idPiece in copyPieces:
             copyPieces.remove(idPiece)
-            print(copyPieces)
             piece = joueur.jouerPiece(idPiece)
             checkIf = validPlacement(piece,x,y,plateau,joueur)
+
         if not len(copyPieces):
             choix = 0
             if len(positions) > 1:
                 choix = randint(0,len(positions)-1)
-            x,y = positions[choix] 
-            copyPieces = deepcopy(joueur.pieces.pieces_joueurs)
+                x,y = positions[choix]
+                positions.remove( positions[ choix ] )
+                copyPieces = deepcopy(joueur.pieces.pieces_joueurs)
+            else: cannotPlay = True
 
-    joueur.hasPlayedPiece(idPiece)
-    return coordsBlocs(piece,y,x)
+    if checkIf and not cannotPlay:
+        joueur.hasPlayedPiece(idPiece)
+        return coordsBlocs(piece,y,x)
+    else: return [ -1, -1 ]
 
 def adjacents(x,y,plateau:Plateau,indexJoueur:int)->list:
     adjs = [[x-1,y],[x,y-1],[x,y+1],[x+1,y]]
@@ -86,9 +91,10 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
     possibilities = getPossibilities(index,plateau,joueurActuel)
     pieceBlokus = managePiece(joueurActuel,plateau,possibilities)
 
-    for xpos,ypos in pieceBlokus:
-        view._addToGrid(cheminFichierPiece,ypos,xpos)
-        plateau.setColorOfCase(xpos,ypos,index)
+    if pieceBlokus[ 0 ] != -1:
+        for xpos,ypos in pieceBlokus:
+            view._addToGrid(cheminFichierPiece,ypos,xpos)
+            plateau.setColorOfCase(xpos,ypos,index)
 
 
 
