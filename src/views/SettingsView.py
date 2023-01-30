@@ -6,7 +6,7 @@ from typing_extensions import Self
 from utils.window_utils import _resizeWindow, _deleteChilds, _createFrame
 from components.bouton import Bouton
 from components.soundclass import Sound
-from utils.sound_utils import _editValue, _getValues
+from utils.sounds.sound_utils import _editValue, _getValues
 
 
 class SettingsView(View):

@@ -1,6 +1,6 @@
 from json import load, dump
 
-with open("./src/utils/soundVolume.json", 'r') as f:
+with open("./src/utils/sounds/soundVolume.json", 'r') as f:
     SOUND_VOLUME: dict[str, float | int] = load(f)
 
 # print(SOUND_VOLUME)
@@ -18,7 +18,7 @@ def _editValue(sound: str, volume: int|float) -> None:
 
     SOUND_VOLUME[sound] = volume
 
-    with open("./src/utils/soundVolume.json", 'w') as d:
+    with open("./src/utils/sounds/soundVolume.json", 'w') as d:
         dump(SOUND_VOLUME, d)
 
 def _getValues() -> dict[str, float|int]:

@@ -2,7 +2,7 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # Retire l'alerte de pygame dans le terminal
 from pygame import mixer
-from utils.sound_utils import SOUND_VOLUME
+from utils.sounds.sound_utils import SOUND_VOLUME
 from constants import SOUND_LIST
 
 class Sound:
