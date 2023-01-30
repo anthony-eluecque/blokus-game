@@ -11,7 +11,7 @@ class Main:
             _resizeWindow(window, 700, 700)
             window.title("Blokus")
             window.iconbitmap(r'media\Icon\icon.ico')
-            app = Core.openController("Settings", window)
+            app = Core.openController("Home", window)
             app.main()
             window.mainloop()
         except Exception as e:
