@@ -3,10 +3,6 @@ from json import load, dump
 with open("./src/utils/sounds/soundVolume.json", 'r') as f:
     SOUND_VOLUME: dict[str, float | int] = load(f)
 
-# print(SOUND_VOLUME)
-# print(list(SOUND_VOLUME.keys()))
-# print(SOUND_VOLUME["music"])
-
 def _editValue(sound: str, volume: int|float) -> None:
     """Permet de modifier le volume d'un son de manière à récupérer cette valeur modifiée dans tout le programme (passée dans un json)
 
