@@ -10,30 +10,23 @@ def pickPiece(joueur:Player)->int:
         index = randint(0,20)
     return index
 
-def firstPlacement(plateau:Plateau,indiceJoueur):
-    for i,ligne in enumerate(plateau.getTab()):
-        for j,col in enumerate(ligne):
-            if plateau.getTab()[i][j] == indiceJoueur:
-                return False
-    return True
 
 def managePiece(joueur:Player,plateau:Plateau,x:int,y:int):
 
     checkIf = False
     idPiece = 0
-    pieceBlokus = []
+    piece = []
 
     while not checkIf: 
         idPiece =  pickPiece(joueur)
         piece = joueur.jouerPiece(idPiece)
-        pieceBlokus = coordsBlocs(piece,x,y)
-        checkIf = True
-        # checkIf = validPlacement(piece,y,x,plateau,joueur)
+        # checkIf = True
+        checkIf = validPlacement(piece,y,x,plateau,joueur)
 
     joueur.hasPlayedPiece(idPiece)
-    return pieceBlokus
+    return coordsBlocs(piece,x,y)
 
-def adjacents(x,y,plateau:Plateau,indexJoueur:int):
+def adjacents(x,y,plateau:Plateau,indexJoueur:int)->list:
     adjs = [[x-1,y],[x,y-1],[x,y+1],[x+1,y]]
 
     possibilites = []
@@ -52,53 +45,41 @@ def adjacents(x,y,plateau:Plateau,indexJoueur:int):
     if grille[adjs[3][0]][adjs[3][1]] != indexJoueur and grille[adjs[2][0]][adjs[2][1]] != indexJoueur:
         possibilites.append([adjs[3][0],adjs[2][1]])
     
-    return list(filter(lambda coords : 0<=coords[0]<=19 and 0<=coords[1]<=20,possibilites))
+    return list(filter(lambda coords : 0<=coords[0]<=19 and 0<=coords[1]<=20 and grille[coords[0]][coords[1]]!=indexJoueur,possibilites))
 
-
-
-def getSquare(x,y):
-    square =  [ 
-        [[x-1,y-1],[x,y-1],[x-1,y]],    # Diagonale en haut à gauche
-        [[x+1,y-1],[x,y-1],[x+1,y]],    # Diagonale en bas à gauche
-        [[x+1,y+1],[x+1,y],[x,y+1]],    # Diagonale en bas à droite
-        [[x-1,y+1],[x-1,y],[x,y+1]]     # Diagonale en haut à droite
-    ]
-    return square
+def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
+    p = []
+    grille = plateau.getTab()
+    for i,ligne in enumerate(grille):
+        for j,col in enumerate(ligne):
+            if col == indexJoueur:
+                possibilities = adjacents(i,j,plateau,indexJoueur)
+                if len(possibilities):
+                    for _pos in possibilities:
+                        p.append(_pos)
+    if not len(p):
+        return [joueur.getPositionDepart()]
+    return p
 
 def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
 
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
-    possibilities = []
+    possibilities = getPossibilities(index,plateau,joueurActuel)
 
-    if firstPlacement(plateau,index):
-        x,y = joueurActuel.getPositionDepart()
-    # else:
-    #     placement  = availableCorners(index,plateau)
+    choix = 0
+    if len(possibilities) > 1:
+        choix = randint(0,len(possibilities)-1)
+    x,y = possibilities[choix]
 
-    #     x,y = placement[0]
-    #     if len(placement) > 1:
-    #         x,y = placement[randint(0,len(placement)-1)]
+    print("-------->",possibilities)
+    print("-------->",x,y)
 
     pieceBlokus = managePiece(joueurActuel,plateau,x,y)
 
-    coords = []
     for ypos,xpos in pieceBlokus:
-
-        coords.append([ypos,xpos])
-
         view._addToGrid(cheminFichierPiece,xpos,ypos)
         plateau.setColorOfCase(ypos,xpos,index)
-
-    
-    for x,y in coords:
-        temp = adjacents(x,y,plateau,index)
-        if len(temp):
-            possibilities.append(temp)
-
-    print(possibilities)
-
-    
 
 
 
