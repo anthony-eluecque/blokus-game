@@ -1,4 +1,4 @@
-from components.soundclass import Sound
+from components.sound import Sound
 from tkinter import Button
 from customtkinter import CTk
 from tkinter import PhotoImage

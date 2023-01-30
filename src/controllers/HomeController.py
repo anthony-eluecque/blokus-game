@@ -1,7 +1,7 @@
 # -*- encoding:utf-8 -*-
 from core.Controller import Controller
 from utils.controller_utils import _openController
-from components.soundclass import Sound
+from components.sound import Sound
 
 class HomeController(Controller,Sound):
     """ 
