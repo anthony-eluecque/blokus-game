@@ -16,15 +16,18 @@ def managePiece(joueur:Player,plateau:Plateau,x:int,y:int):
     checkIf = False
     idPiece = 0
     piece = []
+    print(f"Ce qui arrive en x : {x} et y : {y}")
+
+    
 
     while not checkIf: 
         idPiece =  pickPiece(joueur)
         piece = joueur.jouerPiece(idPiece)
         # checkIf = True
-        checkIf = validPlacement(piece,y,x,plateau,joueur)
+        checkIf = validPlacement(piece,x,y,plateau,joueur)
 
     joueur.hasPlayedPiece(idPiece)
-    return coordsBlocs(piece,x,y)
+    return coordsBlocs(piece,y,x)
 
 def adjacents(x,y,plateau:Plateau,indexJoueur:int)->list:
     adjs = [[x-1,y],[x,y-1],[x,y+1],[x+1,y]]
@@ -77,9 +80,9 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
 
     pieceBlokus = managePiece(joueurActuel,plateau,x,y)
 
-    for ypos,xpos in pieceBlokus:
-        view._addToGrid(cheminFichierPiece,xpos,ypos)
-        plateau.setColorOfCase(ypos,xpos,index)
+    for xpos,ypos in pieceBlokus:
+        view._addToGrid(cheminFichierPiece,ypos,xpos)
+        plateau.setColorOfCase(xpos,ypos,index)
 
 
 
