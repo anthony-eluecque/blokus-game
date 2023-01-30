@@ -84,10 +84,6 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
     possibilities = getPossibilities(index,plateau,joueurActuel)
-
-    print("-------->",possibilities)
-    # print("-------->",x,y)
-
     pieceBlokus = managePiece(joueurActuel,plateau,possibilities)
 
     for xpos,ypos in pieceBlokus:
