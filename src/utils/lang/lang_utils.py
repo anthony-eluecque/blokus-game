@@ -1,5 +1,5 @@
 from json import load, dump
-from lang_consts import LANGUAGES, LANG_CONTENT
+from utils.lang.lang_consts import LANGUAGES, LANG_CONTENT
 
 with open("./src/utils/lang/lang.json", 'r') as f:
     LANG: dict[str, str] = load(f)
