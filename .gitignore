@@ -1,4 +1,4 @@
 __pycache__/plateau.cpython-310.pyc
 *.pyc
-src/utils/soundVolume.json
+src/utils/sounds/soundVolume.json
 src/utils/lang/lang.json
