@@ -7,6 +7,7 @@ from utils.window_utils import _resizeWindow, _deleteChilds, _createFrame
 from components.bouton import Bouton
 from components.sound import Sound
 from utils.sounds.sound_utils import _editValue, _getValues
+from utils.lang.lang_utils import _getValue
 
 
 class SettingsView(View):
@@ -32,8 +33,8 @@ class SettingsView(View):
 
     # Parts
     def _makeTitle(self):
-        self.settingsTitle: CTkLabel = CTkLabel(master = self.mainFrame, text="Settings", fg_color="white", font = CTkFont(family="Roboto Medium", size=40), text_color="black")
-
+        self.settingsTitle: CTkLabel = CTkLabel(master = self.mainFrame, text="Settings", fg_color="white", font = CTkFont(family="Roboto Medium", size=40), text_color="black")# type: ignore
+    
     def _makeMusicPart(self):
         self.musicBar: CTkSlider = CTkSlider(master = self.mainFrame, width=300, height=20, orientation="horizontal", from_=0, to=100, number_of_steps=100, variable=IntVar(value=50), bg_color="white", fg_color="lightgray", button_color="grey", button_hover_color="grey", progress_color="yellow", command=self._callbackMusicValue)
         self.musicBar.bind("<ButtonRelease-1>", self._playMusicSound)
@@ -48,8 +49,8 @@ class SettingsView(View):
 
     def _makeLanguagesPart(self):
         self.languageTitle: CTkLabel = CTkLabel(master = self.mainFrame, text="Languages", fg_color="white", font = CTkFont(family="Roboto Medium", size=35), text_color="black")
-        self.frenchButton: Bouton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/settings_french.png", son="button")
-        self.englishButton: Bouton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/english_settings.png", son="button")
+        self.frenchButton: Bouton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/settings_french.png", son="button", command=self.settingsController._setLangFR)
+        self.englishButton: Bouton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/english_settings.png", son="button", command=self.settingsController._setLangEN)
 
     def _makeButtonApply(self):
         self.backSettings: Bouton = Bouton(self.window, self, 378, 500, width=225, heigth=60, file="./media/assets/apply_settings.png", son="button", command=self.settingsController.btn_clear)
