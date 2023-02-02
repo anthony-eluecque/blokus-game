@@ -10,44 +10,39 @@ def pickPiece(joueur:Player)->int:
         index = randint(0,20)
     return index
 
+def managePiece(joueur:Player,plateau:Plateau,positions:list )->list:
+    if len( positions ) < 1:
+        return [ -1, -1 ]
 
-def managePiece(joueur:Player,plateau:Plateau,positions:list):
+    score: int = joueur.score
 
-    choix = 0
-    if len(positions) > 1:
-        choix = randint(0,len(positions)-1)
-    x,y = positions[choix]
+    pieces: list = joueur.pieces.pieces_joueurs
 
-    checkIf = False
-    cannotPlay = False
-    idPiece = 0
-    piece = []
-    print(f"Ce qui arrive en x : {x} et y : {y}")
+    possibilites: list = []
 
-    copyPieces = deepcopy(joueur.pieces.pieces_joueurs)
-    # print(copyPieces)
+    for pos in positions:
+        for pieceID in pieces:
+            piece: list = joueur.jouerPiece( pieceID )
+            canPlace = validPlacement( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
 
-    while not checkIf and not cannotPlay: 
-        idPiece =  pickPiece(joueur)
-        
-        if idPiece in copyPieces:
-            copyPieces.remove(idPiece)
-            piece = joueur.jouerPiece(idPiece)
-            checkIf = validPlacement(piece,x,y,plateau,joueur)
+            if canPlace:
+                valPiece: int = 0
 
-        if not len(copyPieces):
-            choix = 0
-            if len(positions) > 1:
-                choix = randint(0,len(positions)-1)
-                x,y = positions[choix]
-                positions.remove( positions[ choix ] )
-                copyPieces = deepcopy(joueur.pieces.pieces_joueurs)
-            else: cannotPlay = True
+                for row in piece:
+                    valPiece += row.count( 1 )
 
-    if checkIf and not cannotPlay:
-        joueur.hasPlayedPiece(idPiece)
-        return coordsBlocs(piece,y,x)
-    else: return [ -1, -1 ]
+                possibilites.append( { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID } )
+
+    if len( possibilites ) < 1:
+        return [ -1, -1 ]
+    else:
+        choix: dict = max( possibilites, key = lambda x: x[ 'score' ] )
+        idPiece: int = choix[ 'pieceID' ]
+        x: int = choix[ 'x' ]
+        y: int = choix[ 'y' ]
+
+        joueur.hasPlayedPiece( idPiece )
+        return coordsBlocs( joueur.jouerPiece( idPiece ), y, x )
 
 def adjacents(x,y,plateau:Plateau,indexJoueur:int)->list:
     adjs = [[x-1,y],[x,y-1],[x,y+1],[x+1,y]]
@@ -95,6 +90,3 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
         for xpos,ypos in pieceBlokus:
             view._addToGrid(cheminFichierPiece,ypos,xpos)
             plateau.setColorOfCase(xpos,ypos,index)
-
-
-

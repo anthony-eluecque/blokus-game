@@ -65,7 +65,7 @@ class GameController(Controller):
             else:
                 self.classement = makeClassement(self.joueurs)
                 writeInJson(self.classement)  
-            print(self.classement)
+                
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)
