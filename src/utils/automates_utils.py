@@ -4,22 +4,15 @@ from models.Plateau import Plateau
 from utils.game_utils import validPlacement,coordsBlocs,getDiagonals,getAdjacents
 from copy import deepcopy
 
-def pickPiece(joueur:Player)->int:
-    index = 100
-    while index not in joueur.pieces.pieces_joueurs:
-        index = randint(0,20)
-    return index
-
 def managePiece(joueur:Player,plateau:Plateau,positions:list )->list:
     if len( positions ) < 1:
         return [ -1, -1 ]
 
     score: int = joueur.score
-
     pieces: list = joueur.pieces.pieces_joueurs
 
-    possibilites: list = []
-
+    possMin: dict = { 'score': 0 }
+    
     for pos in positions:
         for pieceID in pieces:
             piece: list = joueur.jouerPiece( pieceID )
@@ -31,15 +24,15 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list )->list:
                 for row in piece:
                     valPiece += row.count( 1 )
 
-                possibilites.append( { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID } )
+                if possMin[ "score" ] < abs( score + valPiece ):
+                    possMin = { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID }
 
-    if len( possibilites ) < 1:
+    if len( possMin ) == 1:
         return [ -1, -1 ]
     else:
-        choix: dict = max( possibilites, key = lambda x: x[ 'score' ] )
-        idPiece: int = choix[ 'pieceID' ]
-        x: int = choix[ 'x' ]
-        y: int = choix[ 'y' ]
+        idPiece: int = possMin[ 'pieceID' ]
+        x: int = possMin[ 'x' ]
+        y: int = possMin[ 'y' ]
 
         joueur.hasPlayedPiece( idPiece )
         return coordsBlocs( joueur.jouerPiece( idPiece ), y, x )
