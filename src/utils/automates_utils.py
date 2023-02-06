@@ -52,26 +52,26 @@ def adjacents( x, y, plateau: Plateau, indexJoueur: int ) -> list:
     possibilites = []
     grille = plateau.getTab()
     lg_grille: int = len( grille )
-
-    if adjs[ 0 ][ 0 ] < lg_grille and adjs[ 0 ][ 1 ] < lg_grille:
-        if adjs[ 1 ][ 0 ] < lg_grille and adjs[ 1 ][ 1 ] < lg_grille:
+    
+    if adjs[ 0 ][ 0 ] <= lg_grille and adjs[ 0 ][ 1 ] <= lg_grille and adjs[ 0 ][ 0 ] >= 0 and adjs[ 0 ][ 1 ] > 0:
+        if adjs[ 1 ][ 0 ] <= lg_grille and adjs[ 1 ][ 1 ] <= lg_grille and adjs[ 1 ][ 0 ] >= 0 and adjs[ 1 ][ 1 ] >= 0:
             if grille[ adjs[ 0 ][ 0 ] ][ adjs[ 0 ][ 1 ] ] != indexJoueur and grille[ adjs[ 1 ][ 0 ] ][ adjs[ 1 ][ 1 ] ] != indexJoueur:
                 possibilites.append( [ adjs[ 0 ][ 0 ], adjs[ 1 ][ 1 ] ] )
         
-        if adjs[ 0 ][ 0 ] < lg_grille and adjs[ 1 ][ 1 ] < lg_grille:
+        if adjs[ 0 ][ 0 ] <= lg_grille and adjs[ 1 ][ 1 ] <= lg_grille and adjs[ 0 ][ 0 ] >= 0 and adjs[ 1 ][ 1 ] >= 0:
             if grille[ adjs[ 0 ][ 0 ] ][ adjs[ 2 ][ 1 ] ] != indexJoueur and grille[ adjs[ 2 ][ 0 ] ][ adjs[ 2 ][ 1 ] ] != indexJoueur:
                 possibilites.append( [ adjs[ 0 ][ 0 ], adjs[ 2 ][ 1 ] ] )
 
-    if adjs[ 3 ][ 0 ] < lg_grille and adjs[ 3 ][ 1 ] < lg_grille:
-        if adjs[ 1 ][ 0 ] < lg_grille and adjs[ 1 ][ 1 ] < lg_grille:
+    if adjs[ 3 ][ 0 ] <= lg_grille and adjs[ 3 ][ 1 ] <= lg_grille and adjs[ 3 ][ 0 ] >= 0 and adjs[ 3 ][ 1 ] >= 0:
+        if adjs[ 1 ][ 0 ] <= lg_grille and adjs[ 1 ][ 1 ] <= lg_grille and adjs[ 1 ][ 0 ] >= 0 and adjs[ 1 ][ 1 ] >= 0:
             if grille[ adjs[ 3 ][ 0 ] ][ adjs[ 3 ][ 1 ] ] != indexJoueur and grille[ adjs[ 1 ][ 0 ] ][ adjs[ 1 ][ 1 ] ] != indexJoueur:
                 possibilites.append( [ adjs[ 3 ][ 0 ], adjs[ 1 ][ 1 ] ] )
  
-        if adjs[ 2 ][ 0 ] < lg_grille and adjs[ 2 ][ 1 ] < lg_grille:
+        if adjs[ 2 ][ 0 ] <= lg_grille and adjs[ 2 ][ 1 ] <= lg_grille and adjs[ 2 ][ 0 ] >= 0 and adjs[ 2 ][ 1 ] >= 0:
             if grille[ adjs[ 3 ][ 0 ] ][ adjs[ 3 ][ 1 ] ] != indexJoueur and grille[ adjs[ 2 ][ 0 ] ][ adjs[ 2 ][ 1 ] ] != indexJoueur:
                 possibilites.append( [ adjs[ 3 ][ 0 ], adjs[ 2 ][ 1 ] ] )
-    
-    return list(filter(lambda coords : 0<=coords[0]<=19 and 0<=coords[1]<=20 and grille[coords[0]][coords[1]]!=indexJoueur,possibilites))
+
+    return list( filter( lambda coords: grille[ coords[ 0 ] ][ coords[ 1 ] ] != indexJoueur, possibilites ) )
 
 def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
     p = []
