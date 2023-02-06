@@ -6,7 +6,7 @@ from copy import deepcopy
 
 def managePiece(joueur:Player,plateau:Plateau,positions:list )->list:
     if len( positions ) < 1:
-        return [ -1, -1 ]
+        return -1
 
     score: int = joueur.score
     pieces: list = joueur.pieces.pieces_joueurs
@@ -14,47 +14,62 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list )->list:
     possMin: dict = { 'score': 0 }
     
     for pos in positions:
-        for pieceID in pieces:
-            piece: list = joueur.jouerPiece( pieceID )
-            canPlace = validPlacement( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
+        for pieceID in pieces:            
+            for i in range( 4 ):
+                joueur.pieces.rotate( pieceID )
 
-            if canPlace:
-                valPiece: int = 0
+                for j in range( 2 ):
+                    joueur.pieces.reverse( pieceID )
+                    piece: list = joueur.jouerPiece( pieceID )
+                    canPlace = validPlacement( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
 
-                for row in piece:
-                    valPiece += row.count( 1 )
+                    if canPlace:
+                        valPiece: int = 0
 
-                if possMin[ "score" ] < abs( score + valPiece ):
-                    possMin = { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID }
+                        for row in piece:
+                            valPiece += row.count( 1 )
+
+                        if possMin[ "score" ] < abs( score + valPiece ):
+                            possMin = { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID }
+                            
+                        break
+                    joueur.pieces.resetRotation( pieceID )
 
     if len( possMin ) == 1:
-        return [ -1, -1 ]
+        return -1
     else:
         idPiece: int = possMin[ 'pieceID' ]
         x: int = possMin[ 'x' ]
         y: int = possMin[ 'y' ]
 
         joueur.hasPlayedPiece( idPiece )
+        joueur.pieces.resetRotation( idPiece )
         return coordsBlocs( joueur.jouerPiece( idPiece ), y, x )
 
-def adjacents(x,y,plateau:Plateau,indexJoueur:int)->list:
-    adjs = [[x-1,y],[x,y-1],[x,y+1],[x+1,y]]
+def adjacents( x, y, plateau: Plateau, indexJoueur: int ) -> list:
+    adjs = [ [ x - 1, y ], [ x, y - 1 ], [ x, y + 1 ], [ x + 1, y ] ]
 
     possibilites = []
     grille = plateau.getTab()
+    lg_grille: int = len( grille )
 
+    if adjs[ 0 ][ 0 ] < lg_grille and adjs[ 0 ][ 1 ] < lg_grille:
+        if adjs[ 1 ][ 0 ] < lg_grille and adjs[ 1 ][ 1 ] < lg_grille:
+            if grille[ adjs[ 0 ][ 0 ] ][ adjs[ 0 ][ 1 ] ] != indexJoueur and grille[ adjs[ 1 ][ 0 ] ][ adjs[ 1 ][ 1 ] ] != indexJoueur:
+                possibilites.append( [ adjs[ 0 ][ 0 ], adjs[ 1 ][ 1 ] ] )
         
-    if grille[adjs[0][0]][adjs[0][1]] != indexJoueur and grille[adjs[1][0]][adjs[1][1]] != indexJoueur:
-        possibilites.append([adjs[0][0],adjs[1][1]])
-    
-    if grille[adjs[0][0]][adjs[0][1]] != indexJoueur and grille[adjs[2][0]][adjs[2][1]] != indexJoueur:
-        possibilites.append([adjs[0][0],adjs[2][1]])
-    
-    if grille[adjs[3][0]][adjs[3][1]] != indexJoueur and grille[adjs[1][0]][adjs[1][1]] != indexJoueur:
-        possibilites.append([adjs[3][0],adjs[1][1]])
-    
-    if grille[adjs[3][0]][adjs[3][1]] != indexJoueur and grille[adjs[2][0]][adjs[2][1]] != indexJoueur:
-        possibilites.append([adjs[3][0],adjs[2][1]])
+        if adjs[ 0 ][ 0 ] < lg_grille and adjs[ 1 ][ 1 ] < lg_grille:
+            if grille[ adjs[ 0 ][ 0 ] ][ adjs[ 2 ][ 1 ] ] != indexJoueur and grille[ adjs[ 2 ][ 0 ] ][ adjs[ 2 ][ 1 ] ] != indexJoueur:
+                possibilites.append( [ adjs[ 0 ][ 0 ], adjs[ 2 ][ 1 ] ] )
+
+    if adjs[ 3 ][ 0 ] < lg_grille and adjs[ 3 ][ 1 ] < lg_grille:
+        if adjs[ 1 ][ 0 ] < lg_grille and adjs[ 1 ][ 1 ] < lg_grille:
+            if grille[ adjs[ 3 ][ 0 ] ][ adjs[ 3 ][ 1 ] ] != indexJoueur and grille[ adjs[ 1 ][ 0 ] ][ adjs[ 1 ][ 1 ] ] != indexJoueur:
+                possibilites.append( [ adjs[ 3 ][ 0 ], adjs[ 1 ][ 1 ] ] )
+ 
+        if adjs[ 2 ][ 0 ] < lg_grille and adjs[ 2 ][ 1 ] < lg_grille:
+            if grille[ adjs[ 3 ][ 0 ] ][ adjs[ 3 ][ 1 ] ] != indexJoueur and grille[ adjs[ 2 ][ 0 ] ][ adjs[ 2 ][ 1 ] ] != indexJoueur:
+                possibilites.append( [ adjs[ 3 ][ 0 ], adjs[ 2 ][ 1 ] ] )
     
     return list(filter(lambda coords : 0<=coords[0]<=19 and 0<=coords[1]<=20 and grille[coords[0]][coords[1]]!=indexJoueur,possibilites))
 
@@ -79,7 +94,7 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
     possibilities = getPossibilities(index,plateau,joueurActuel)
     pieceBlokus = managePiece(joueurActuel,plateau,possibilities)
 
-    if pieceBlokus[ 0 ] != -1:
+    if pieceBlokus != -1:
         for xpos,ypos in pieceBlokus:
             view._addToGrid(cheminFichierPiece,ypos,xpos)
             plateau.setColorOfCase(xpos,ypos,index)
