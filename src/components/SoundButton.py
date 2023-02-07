@@ -19,7 +19,7 @@ class SoundButton(Bouton, Sound):
         """
         Fonction permettant la création du Bouton
         """
-        self.bgButton = PhotoImage(file = "./media/assets/sound_off.png")
+        self.bgButton = PhotoImage(file = "./media/assets/same/button/button_sound_off.png")
         self.img: int = 0 # Current img
         self.button = Button(master = self.window, image = self.bgButton, text="", bg='white', highlightthickness=0, bd=0, border=0, command=self.changeStatus, width=50, height=50)
 
@@ -39,12 +39,12 @@ class SoundButton(Bouton, Sound):
         OFF -> ON
         """
         if(self.img==1):
-            self.bgButton = PhotoImage(file="./media/assets/sound_off.png")
+            self.bgButton = PhotoImage(file="./media/assets/same/button/button_sound_off.png")
             self.button.configure(image=self.bgButton)
             self.img=0
             super().setVolume(0)
         else:
-            self.bgButton = PhotoImage(file = "./media/assets/sound_on.png")
+            self.bgButton = PhotoImage(file = "./media/assets/same/button/button_sound_on.png")
             self.button.configure(image = self.bgButton)
             self.img=1
             super().setVolume(0.3)

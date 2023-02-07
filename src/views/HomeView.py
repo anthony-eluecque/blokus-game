@@ -26,15 +26,15 @@ class HomeView(View):
         self.label.place(x = 0,y = 0)  
 
     def _UI(self : Self):
-        self.playButton: Bouton = Bouton(self.window, self, 165, 315, width=370, heigth=49, file="./media/assets/button_play.png", son="button", command=self.homeController.btnPlay)
+        self.playButton: Bouton = Bouton(self.window, self, 165, 315, width=370, heigth=49, file="./media/assets/FR/button/button_play.png", son="button", command=self.homeController.btnPlay)
 
-        self.rulesButton: Bouton = Bouton(self.window, self, 165, 380, width=370, heigth=49, file="./media/assets/button_rules.png", son="button", command=self.homeController.btnRules)
+        self.rulesButton: Bouton = Bouton(self.window, self, 165, 380, width=370, heigth=49, file="./media/assets/FR/button/button_rules.png", son="button", command=self.homeController.btnRules)
         
-        self.statsButton: Bouton = Bouton(self.window, self, 165, 445, width=370, heigth=49, file="./media/assets/button_stats.png", son="button", command=self.homeController.btnStats)
+        self.statsButton: Bouton = Bouton(self.window, self, 165, 445, width=370, heigth=49, file="./media/assets/FR/button/button_stats.png", son="button", command=self.homeController.btnStats)
 
-        self.leaveButton: Bouton = Bouton(self.window, self, 165, 510, width=370, heigth=49, file="./media/assets/button_leave.png", son="button", command=self.window.destroy)
+        self.leaveButton: Bouton = Bouton(self.window, self, 165, 510, width=370, heigth=49, file="./media/assets/FR/button/button_leave.png", son="button", command=self.window.destroy)
                 
-        self.backgroundImage = Image.open(os.path.join("./media/assets/carre.png"))
+        self.backgroundImage = Image.open(os.path.join("./media/assets/FR/background/background_menu.png"))
         self.background = ImageTk.PhotoImage(self.backgroundImage)
         self.label = Label(self.mainFrame, image = self.background, bd = 0)   
 

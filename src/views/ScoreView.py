@@ -23,7 +23,7 @@ class ScoreView(View):
         self.mainFrame = _createFrame(self.window, 914, 606)
 
     def _makeBackground(self):
-        img = Image.open("./media/assets/bg_score.png")
+        img = Image.open("./media/assets/same/background/background_score.png")
         self.img = ImageTk.PhotoImage(img)
         self.bgImg = Label(self.mainFrame, image=self.img, text="", bd=0)
         self.bgImg.place(x=0,y=0,anchor="nw")
@@ -50,7 +50,7 @@ class ScoreView(View):
         self.scoreController._backToHome()
 
     def _makeBackButton(self):
-        self.backButton: Bouton = Bouton(self.window, self, 354, 500,  width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self._leaveGame)
+        self.backButton: Bouton = Bouton(self.window, self, 354, 500,  width=206, heigth=49, file="./media/assets/FR/button/buttun_rules_return.png", son="button", command=self._leaveGame)
 
     def main(self, longueur=914, hauteur=606):
         classement = list(openJson()).pop()

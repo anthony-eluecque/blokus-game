@@ -32,7 +32,7 @@ class RulesView(View):
         self.mainFrame = _createFrame(self.window,1000,1000)
 
     def _makeWindow(self):
-        self.backgroundImage = Image.open("./media/assets/background_rules.png")
+        self.backgroundImage = Image.open("./media/assets/same/background/background_rules.png")
         self.background = ImageTk.PhotoImage(self.backgroundImage)
         self.bgRules = Label(self.mainFrame, text="", image = self.background, bd = 0)
 
@@ -47,7 +47,7 @@ class RulesView(View):
             self.rulesBox.insert("end", rule)
 
     def _makeButtonRules(self):
-        self.backRules: Bouton = Bouton(self.window, self, 378, 500, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.rulesController.btn_clear)
+        self.backRules: Bouton = Bouton(self.window, self, 378, 500, width=206, heigth=49, file="./media/assets/FR/button/button_rules_return.png", son="button", command=self.rulesController.btn_clear)
 
     def _configWidget(self):
         self.bgRules.place(x = 0,y = 0)

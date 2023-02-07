@@ -36,11 +36,11 @@ class GameView(View):
         
     def __createButtons(self):
 
-        self.newGameButton: Bouton = Bouton(self.window, self, 710, 690, width=180, heigth=60, file="./media/assets/Button_new_game.png", son="button", command=self._newGame)
-        self.leaveButton: Bouton = Bouton(self.window, self, 1060, 690, width=180, heigth=60, file="./media/assets/button_leave_game.png", son="button", command=self._leaveGame)
+        self.newGameButton: Bouton = Bouton(self.window, self, 710, 690, width=180, heigth=60, file="./media/assets/FR/button/button_new_game.png", son="button", command=self._newGame)
+        self.leaveButton: Bouton = Bouton(self.window, self, 1060, 690, width=180, heigth=60, file="./media/assets/FR/button/button_leave_game.png", son="button", command=self._leaveGame)
 
     def _makeBackground(self):
-        self.bgImage = CTkImage(Image.open("./media/assets/background_game.png"), size=(1300, 800))
+        self.bgImage = CTkImage(Image.open("./media/assets/same/background/background_game.png"), size=(1300, 800))
         self.bg = CTkLabel(self.window, text="", image = self.bgImage)
 
     def _makePopup(self , player : Player):
