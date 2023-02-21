@@ -1,16 +1,35 @@
-import socket
-ClientMultiSocket = socket.socket()
-host = '127.0.0.1'
-port = 2004
-print('Waiting for connection response')
-try:
-    ClientMultiSocket.connect((host, port))
-except socket.error as e:
-    print(str(e))
-res = ClientMultiSocket.recv(1024)
-while True:
-    Input = input('Hey there: ')
-    ClientMultiSocket.send(str.encode(Input))
-    res = ClientMultiSocket.recv(1024)
-    print(res.decode('utf-8'))
-ClientMultiSocket.close()
+from tkinter import *
+from socket import *
+from threading import *
+from tkinter.scrolledtext import ScrolledText
+class Receive():
+  def __init__(self, server, gettext):
+
+    while 1:
+      try:
+        text = server.recv(1024)
+        if not text: break
+        gettext.configure(state='normal')
+        gettext.insert(END,'Server >> %s\n'%text)
+        gettext.configure(state='disabled')
+        gettext.see(END)
+      except:
+        break
+    
+class App(Thread):
+  client = socket()
+  client.connect(('localhost', 3000))
+
+  def __init__(self, master):
+    Thread.__init__(self)
+    self.master = master
+
+  def run(self):
+    text = self.client.recv(1024)
+    if text.decode('utf-8') == "start":
+        self.client.send(("text").encode('utf-8'))
+
+
+root = Tk()
+root.title('Client Chat')
+app = App(root).start()
