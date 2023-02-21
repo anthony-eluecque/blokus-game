@@ -2,21 +2,10 @@ from tkinter import *
 from socket import *
 from threading import *
 from tkinter.scrolledtext import ScrolledText
-class Receive():
-  def __init__(self, server, gettext):
-
-    while 1:
-      try:
-        text = server.recv(1024)
-        if not text: break
-        gettext.configure(state='normal')
-        gettext.insert(END,'Server >> %s\n'%text)
-        gettext.configure(state='disabled')
-        gettext.see(END)
-      except:
-        break
+from Main import Main
     
 class App(Thread):
+
   client = socket()
   client.connect(('localhost', 3000))
 
@@ -24,10 +13,11 @@ class App(Thread):
     Thread.__init__(self)
     self.master = master
 
+  # Activité du thread
   def run(self):
-    text = self.client.recv(1024)
-    if text.decode('utf-8') == "start":
-        self.client.send(("text").encode('utf-8'))
+    # Créez ici l'interraction server / client
+    pass
+
 
 
 root = Tk()

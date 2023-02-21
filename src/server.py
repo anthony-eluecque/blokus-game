@@ -6,32 +6,27 @@ from tkinter import scrolledtext
     
 class App(Thread):
 
-  def __init__(self):
-    Thread.__init__(self)
-    server = socket()
-    server.bind(('0.0.0.0', 3000))
-    server.listen(5)
-    counter = 0
-    self.joueurs = []
+    def __init__(self):
+        
+        Thread.__init__(self)
+        server = socket()
+        server.bind(('0.0.0.0', 3000))
+        server.listen(5)
+        counter = 0
+        self.joueurs = []
 
-    while counter<2:
-        self.client,self.addr = server.accept()
-        self.joueurs.append([self.client,self.addr])
-        counter+=1
+        print("En attente de la connection de 2 joueurs..\n")
+        while counter<2:
+            self.client,self.addr = server.accept()
+            self.joueurs.append([self.client,self.addr,counter])
+            counter+=1
+            print(f"Il y a {counter} joueur(s) connectés")
 
-    print("c tipar")
-    for client in self.joueurs:
-        print(client)
-        # text = "start"
-        # client[0].send(text.encode('utf-8'))
+        print("\nLancement de la partie...\n")
 
-    # self.clienttext="start"
-
-    while 1:
-        try:
-            text = server.recv(1024)
-            if not text: break
-        except:
-            break
+    # Activité du thread
+    def run(self):
+        # Créez ici l'interraction server / client
+        pass
 
 app = App().start()
