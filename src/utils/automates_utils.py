@@ -3,6 +3,9 @@ from models.Player import Player
 from models.Plateau import Plateau
 from utils.game_utils import validPlacement,coordsBlocs,getDiagonals,getAdjacents
 from copy import deepcopy
+from utils.tree import Tree
+from utils.tree import evaluateGame
+
 
 def pickPiece(joueur:Player)->int:
     index = 100
@@ -95,6 +98,18 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
         for xpos,ypos in pieceBlokus:
             view._addToGrid(cheminFichierPiece,ypos,xpos)
             plateau.setColorOfCase(xpos,ypos,index)
+
+
+def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
+
+
+    cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
+    possibilities = getPossibilities(index,plateau,joueurActuel)
+
+    print(possibilities)
+
+
+
 
 
 

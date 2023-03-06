@@ -6,7 +6,7 @@ from utils.leaderboard_utils import makeClassement, writeInJson, updateClassemen
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
-from utils.automates_utils import easy_automate
+from utils.automates_utils import easy_automate,medium_automate
 
 class GameController(Controller):
     """ 
@@ -156,6 +156,6 @@ class GameController(Controller):
         #self.loadMap()
 
     def IA(self):
-        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
-        print(self.plateau)
+        # easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
+        medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
         self.nextPlayer()
