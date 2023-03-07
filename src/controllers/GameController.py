@@ -28,12 +28,6 @@ class GameController(Controller):
         self.nePeutPlusJouer = []
 
         self.db = dataGame()
-        print(self.db.data)
-
-
-
-
-
 
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
@@ -75,13 +69,6 @@ class GameController(Controller):
             self.db.addPoints(self.actualPlayer.couleur,len(pieceBlokus))
             self.db.addToHistoriquePlayer(self.actualPlayer.couleur,y//30,x//30,numPiece-1)
 
-            # if self.debut == False:
-            #     self.classement = updateClassementFromPlay(self.actualPlayer, numPiece)
-            # else:
-            #     self.classement = makeClassement(self.joueurs)
-                # writeInJson(self.classement)  
-            # print(self.classement)
-            print(f"taille de la pièce : {len(pieceBlokus)}")
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)
