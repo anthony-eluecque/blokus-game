@@ -4,18 +4,22 @@
             "date":"",
             "heure":"",
             "bleu":{
+                "pseudo":"",
                 "score":0,
                 "historique_placement":[]
             },
             "rouge":{
+                "pseudo":"",
                 "score":0,
                 "historique_placement":[]
             },
             "vert":{
+                "pseudo":"",
                 "score":0,
                 "historique_placement":[]
             },            
             "jaune":{
+                "pseudo":"",
                 "score":0,
                 "historique_placement":[]
             }
