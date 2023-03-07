@@ -1,6 +1,8 @@
 {
-    "partie":{
+    "parties":{
         "1":{
+            "date":"",
+            "heure":"",
             "bleu":{
                 "score":0,
                 "historique_placement":[]
@@ -17,9 +19,6 @@
                 "score":0,
                 "historique_placement":[]
             }
-        },
-        "2":{
-            
         }
     },
     "overall":{
