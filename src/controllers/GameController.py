@@ -73,6 +73,8 @@ class GameController(Controller):
             self.actualPlayer.removePiece(numPiece-1)
 
             self.db.addPoints(self.actualPlayer.couleur,len(pieceBlokus))
+            self.db.addToHistoriquePlayer(self.actualPlayer.couleur,y//30,x//30,numPiece-1)
+
             # if self.debut == False:
             #     self.classement = updateClassementFromPlay(self.actualPlayer, numPiece)
             # else:
