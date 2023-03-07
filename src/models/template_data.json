@@ -1,0 +1,43 @@
+{
+    "partie":{
+        "1":{
+            "bleu":{
+                "score":0,
+                "historique_placement":[]
+            },
+            "rouge":{
+                "score":0,
+                "historique_placement":[]
+            },
+            "vert":{
+                "score":0,
+                "historique_placement":[]
+            },            
+            "jaune":{
+                "score":0,
+                "historique_placement":[]
+            }
+        },
+        "2":{
+            
+        }
+    },
+    "overall":{
+        "bleu":{
+            "victoires":0,
+            "defaites":0
+        },
+        "rouge":{
+            "victoires":0,
+            "defaites":0
+        },
+        "vert":{
+            "victoires":0,
+            "defaites":0
+        },            
+        "jaune":{
+            "victoires":0,
+            "defaites":0
+        }
+    }
+}
