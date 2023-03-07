@@ -43,5 +43,8 @@ class dataGame():
         self.data["parties"][self.id][couleur.lower()]["score"]+=taillePiece
         jsonManager.writeJson(self.data)
 
-
+    def addToHistoriquePlayer(self,couleur,ligne,colonne,numPiece)->None:
+        self.data = jsonManager.readJson()
+        self.data["parties"][self.id][couleur.lower()]["historique_placement"].append([[ligne,colonne],numPiece])
+        jsonManager.writeJson(self.data)
 
