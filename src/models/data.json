@@ -1,0 +1,66 @@
+{
+    "parties": {
+        "1": {
+            "date": "7-3-2023",
+            "heure": "22h23",
+            "bleu": {
+                "score": 0,
+                "historique_placement": []
+            },
+            "rouge": {
+                "score": 5,
+                "historique_placement": [
+                    [
+                        [
+                            17,
+                            17
+                        ],
+                        15
+                    ]
+                ]
+            },
+            "vert": {
+                "score": 4,
+                "historique_placement": [
+                    [
+                        [
+                            17,
+                            0
+                        ],
+                        5
+                    ]
+                ]
+            },
+            "jaune": {
+                "score": 4,
+                "historique_placement": [
+                    [
+                        [
+                            0,
+                            18
+                        ],
+                        7
+                    ]
+                ]
+            }
+        }
+    },
+    "overall": {
+        "bleu": {
+            "victoires": 0,
+            "defaites": 0
+        },
+        "rouge": {
+            "victoires": 0,
+            "defaites": 0
+        },
+        "vert": {
+            "victoires": 0,
+            "defaites": 0
+        },
+        "jaune": {
+            "victoires": 0,
+            "defaites": 0
+        }
+    }
+}
