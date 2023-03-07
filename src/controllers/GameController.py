@@ -5,6 +5,8 @@ from utils.game_utils import coordsBlocs, validPlacement, playerCanPlay
 from utils.leaderboard_utils import makeClassement, writeInJson, updateClassementFromPlay
 from testmap import MAP1
 from utils.controller_utils import _openController
+from utils.config_utils import Configuration
+from utils.automates_utils import easy_automate
 
 class GameController(Controller):
     """ 
@@ -13,6 +15,7 @@ class GameController(Controller):
     """
     
     def __init__(self, window):
+        self.config = Configuration.getConfig()
         self.joueurs = [Player("Bleu"), Player("Jaune"), Player("Vert"), Player("Rouge")]
         self.window = window
         self.index = 0
@@ -96,6 +99,17 @@ class GameController(Controller):
 
         self.actualPlayer = joueur
 
+
+        # GESTION DES IA 
+        # A MODIFIER POUR QUE CA SOIT + OPTIMISER ET RAPIDE
+        # J'ai fais ça pour test
+        self.joueursIA = []
+        for player in Configuration.getConfig():
+            if player["niveau_difficulte"]!=0:
+                self.joueursIA.append(player["couleur"])
+        if self.actualPlayer.getCouleur() in self.joueursIA:
+            self.IA()
+
         if not playable:
             print("terminé")
             makeClassement(self.joueurs)
@@ -122,6 +136,12 @@ class GameController(Controller):
             self.index = (self.index + 1) % 4
         self.gameView.update(self.actualPlayer, self.index)
         # self.nextPlayer()
+    
+    def startGame(self):
+        for player in Configuration.getConfig():
+            if player["niveau_difficulte"]!=0 and player["couleur"]=="Bleu":
+                self.IA()
+       
 
     def _newGame(self):
         _openController(self.gameView, "Game", self.window)
@@ -131,4 +151,11 @@ class GameController(Controller):
 
     def main(self):
         self.gameView.main()
+        self.startGame()    
+        self.gameView.update(self.actualPlayer, self.index)
         #self.loadMap()
+
+    def IA(self):
+        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
+        print(self.plateau)
+        self.nextPlayer()

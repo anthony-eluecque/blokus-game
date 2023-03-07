@@ -11,7 +11,8 @@ class Main:
             _resizeWindow(window, 700, 700)
             window.title("Blokus")
             window.iconbitmap(r'media\Icon\icon.ico')
-            app = Core.openController("Home", window)
+            # Changer ici par home (pour menu) 
+            app = Core.openController("Game", window)
             app.main()
             window.mainloop()
         except Exception as e:
