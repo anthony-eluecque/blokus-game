@@ -7,6 +7,8 @@ from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
 from utils.automates_utils import easy_automate
+from utils.data_utils import dataGame
+
 
 class GameController(Controller):
     """ 
@@ -24,6 +26,15 @@ class GameController(Controller):
         self.plateau = Plateau(20,20)
         self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
+
+        self.db = dataGame()
+        print(self.db.data)
+
+
+
+
+
+
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
         """
@@ -60,6 +71,7 @@ class GameController(Controller):
         if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
             canvas.destroy()
             self.actualPlayer.removePiece(numPiece-1)
+
             if self.debut == False:
                 self.classement = updateClassementFromPlay(self.actualPlayer, numPiece)
             else:
@@ -157,5 +169,5 @@ class GameController(Controller):
 
     def IA(self):
         easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
-        print(self.plateau)
+        # print(self.plateau)
         self.nextPlayer()
