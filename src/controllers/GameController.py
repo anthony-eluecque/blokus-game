@@ -115,7 +115,7 @@ class GameController(Controller):
 
         if not playable:
             print("terminé")
-            makeClassement(self.joueurs)
+            # makeClassement(self.joueurs)
             _openController(self.gameView, "Score", self.window)
 
     def loadMap(self):
@@ -156,7 +156,7 @@ class GameController(Controller):
         self.gameView.main()
         self.startGame()    
         self.gameView.update(self.actualPlayer, self.index)
-        #self.loadMap()
+        # self.loadMap()
 
     def IA(self):
         easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
