@@ -46,8 +46,8 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list):
 
     if checkIf and not cannotPlay:
         joueur.hasPlayedPiece(idPiece)
-        return coordsBlocs(piece,y,x)
-    else: return [ -1, -1 ]
+        return coordsBlocs(piece,y,x),idPiece
+    else: return [ -1, -1 ],idPiece
 
 def adjacents(x,y,plateau:Plateau,indexJoueur:int)->list:
     adjs = [[x-1,y],[x,y-1],[x,y+1],[x+1,y]]
@@ -84,17 +84,19 @@ def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
         return [joueur.getPositionDepart()]
     return p
 
-def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
+def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view,db):
 
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
     possibilities = getPossibilities(index,plateau,joueurActuel)
-    pieceBlokus = managePiece(joueurActuel,plateau,possibilities)
+    pieceBlokus,idPiece = managePiece(joueurActuel,plateau,possibilities)
 
     if pieceBlokus[ 0 ] != -1:
         for xpos,ypos in pieceBlokus:
             view._addToGrid(cheminFichierPiece,ypos,xpos)
             plateau.setColorOfCase(xpos,ypos,index)
 
+        db.addPoints(joueurActuel.couleur,len(pieceBlokus))
+        db.addToHistoriquePlayer(joueurActuel.couleur,pieceBlokus[0][0],pieceBlokus[0][1],idPiece)
 
 
