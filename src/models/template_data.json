@@ -3,6 +3,7 @@
         "1":{
             "date":"",
             "heure":"",
+            "gagnant":"",
             "bleu":{
                 "pseudo":"",
                 "score":0,
