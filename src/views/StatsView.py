@@ -51,9 +51,25 @@ class StatsView(View):
             banner = self.makeBanner(("./media/assets/banner"+color+".png"),xpos=50,ypos=y)
             self.banners.append(banner)
             y+=110
+
+        PARTIE = self.data["parties"][idPartie]
+        self.labelWidgets = []
+        y_joueur = 160
+        for color in colors:
+            pseudo = self.data["parties"][idPartie][color]["pseudo"]
+            if not pseudo:
+                pseudo = color[0].upper() + color[1:]
+            score = self.data["parties"][idPartie][color]["score"]
+            widget = Label(self.window,text=f"Pseudo du joueur : {pseudo} | Score : {score}",bg='white')
+            widget.config(font=('Roboto Bold',15))
+            widget.place(x=50,y=y_joueur)
+            y_joueur+=110
+            self.labelWidgets.append(widget)
+        # for color in colors:
+        #     PARTIE[color]
+
+
         self.backStats: Bouton = Bouton(self.window, self, 150, 540, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.statsController.backToStats)
-
-
 
 
     def makeBanner(self,file,xpos,ypos):
