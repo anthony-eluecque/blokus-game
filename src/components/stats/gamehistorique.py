@@ -24,7 +24,7 @@ class gameHistorique():
         self.labelWinner = CTkLabel(self.window,text=self.partie["gagnant"],bg_color="white",text_color="black")
         self.labelWinner.place(x=xcoord+270,y=ycoord+10)
 
-        self.button = Bouton(self.window,view=self.view,file="./media/assets/afficher.png",xpos=xcoord+480,ypos=ycoord,width=100,heigth=48,command=command,son="button")
+        self.button = Bouton(self.window,view=self.view,file="./media/assets/afficher.png",xpos=xcoord+480,ypos=ycoord,width=100,heigth=48,command= lambda : command(self.id),son="button")
 
 
 
