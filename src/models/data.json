@@ -3,6 +3,7 @@
         "1": {
             "date": "7-3-2023",
             "heure": "22h23",
+            "gagnant": "Bleu",
             "bleu": {
                 "score": 0,
                 "historique_placement": []
@@ -42,6 +43,35 @@
                         7
                     ]
                 ]
+            }
+        },
+        "2": {
+            "date": "11-3-2023",
+            "heure": "14h34",
+            "gagnant": "Bleu",
+            "bleu": {
+                "score": 5,
+                "historique_placement": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        9
+                    ]
+                ]
+            },
+            "rouge": {
+                "score": 0,
+                "historique_placement": []
+            },
+            "vert": {
+                "score": 0,
+                "historique_placement": []
+            },
+            "jaune": {
+                "score": 0,
+                "historique_placement": []
             }
         }
     },
