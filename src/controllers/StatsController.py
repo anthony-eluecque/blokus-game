@@ -12,15 +12,18 @@ class StatsController(Controller):
         self.statsView = self.loadView("Stats",self.window)
         self.core : Core = Core()
 
-    def backToMenu(self):
+    def backToMenu(self)->None:
         self.statsView.close()
         c = Core.openController("home",self.window)
         c.main()
     
-    def showWidget(self):
-        self.statsView.close()
-        c = Core.openController("DetailGame",self.window)
-        c.main()
+    def showWidget(self,idPartie)->None:
+        self.statsView.openDetailGame(idPartie)
 
-    def main(self):
+    def backToStats(self)->None:
+        self.statsView.close()
+        c = Core.openController("stats",self.window)
+        c.main()        
+
+    def main(self)->None:
         self.statsView.main()
