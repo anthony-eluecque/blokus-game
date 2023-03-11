@@ -28,24 +28,14 @@ class StatsView(View):
     def createWidgets(self)->None:
         self.data = jsonManager.readJson()
 
+        self.widgets = []
+        xpos = 80
+        ypos = 180
+
         for idPartie in self.data["parties"]:
-            print(idPartie)
-            # gameHistorique(self.statsController.showWidget)
-            
-            
-            bgImage = CTkImage(Image.open("./media/assets/bg_histo.png"), size=(600, 55))
-            self.bg = CTkLabel(self.window, text="", image = bgImage)
-            self.bg.place(x = 80, y = 180)
-
-            self.labelTime = CTkLabel(self.window,text=self.data["parties"][idPartie]["date"] + " | " + self.data["parties"][idPartie]["heure"], bg_color='white' ,text_color="black")
-            self.labelTime.place(x=120,y=190)
-
-            self.labelWinner = CTkLabel(self.window,text=self.data["parties"][idPartie]["gagnant"],bg_color="white",text_color="black")
-            self.labelWinner.place(x=350,y=190)
-
-            self.button = Bouton(self.window,view=self,xpos=560,ypos=180,width=100,heigth=45,file="./media/assets/afficher.png",command=self.statsController.showWidget)
-
-
+            widget = gameHistorique(self.window,self,xcoord=xpos,ycoord=ypos,idPartie=idPartie,dictPartie=self.data["parties"][idPartie],command=self.statsController.showWidget)
+            self.widgets.append(widget)
+            ypos += 100
 
 
     def main(self,width=1300,heigth=800)->None:
