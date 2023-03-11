@@ -28,7 +28,7 @@ class dataGame():
         if os.path.exists('./src/models/data.json'):
             self.data = jsonManager.readJson()
             self.id = str(int(list(self.data["parties"].keys())[-1]) + 1)
-            self.data["parties"][self.id] = {'date': date, 'heure': heure, 'bleu': {'score': 0, 'historique_placement': []}, 'rouge': {'score': 0, 'historique_placement': []}, 'vert': {'score': 0, 'historique_placement': []}, 'jaune': {'score': 0, 'historique_placement': []}}
+            self.data["parties"][self.id] = {'date': date, 'heure': heure,'gagnant':"", 'bleu': {'score': 0, 'historique_placement': []}, 'rouge': {'score': 0, 'historique_placement': []}, 'vert': {'score': 0, 'historique_placement': []}, 'jaune': {'score': 0, 'historique_placement': []}}
             jsonManager.writeJson(self.data)
         else:
             jsonManager.writeJson(jsonManager.readJson("./src/models/template_data.json"))
