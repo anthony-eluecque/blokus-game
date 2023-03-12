@@ -36,6 +36,9 @@ class StatsView(View):
             widget = gameHistorique(self.window,self,xcoord=xpos,ycoord=ypos,idPartie=idPartie,dictPartie=self.data["parties"][idPartie],command=self.statsController.showWidget)
             self.widgets.append(widget)
             ypos += 65
+    
+    def backToHomeButton(self)-> None:
+        self.backStats: Bouton = Bouton(self.window, self, 560, 700, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self._leaveStatsMenu)
 
     
     def openDetailGame(self,idPartie) -> None:
@@ -60,8 +63,8 @@ class StatsView(View):
             if not pseudo:
                 pseudo = color[0].upper() + color[1:]
             score = self.data["parties"][idPartie][color]["score"]
-            widget = Label(self.window,text=f"Pseudo du joueur : {pseudo} | Score : {score}",bg='white')
-            widget.config(font=('Roboto Bold',15))
+            widget = CTkLabel(self.window,text=f"Pseudo du joueur : {pseudo} | Score : {score}", bg_color="white", fg_color="white")
+            widget.configure(font=('Roboto Bold',15))
             widget.place(x=50,y=y_joueur)
             y_joueur+=110
             self.labelWidgets.append(widget)
@@ -74,18 +77,20 @@ class StatsView(View):
 
     def makeBanner(self,file,xpos,ypos):
         self.img = CTkImage(Image.open(file),size=(400,40))
-        label = CTkLabel(master=self.window,text="",image=self.img)
+        label = CTkLabel(master=self.window,text="",image=self.img, fg_color="white", bg_color="white")
         label.place(x=xpos,y=ypos)
         return label
-        
-        
-
+    
+    def _leaveStatsMenu(self):
+        self.close()
+        self.statsController.backToMenu()
 
     def main(self, width=1300, height=800) -> None:
         _resizeWindow(self.window, width, height)
         self._makeFrame(width,height)
         self._makeBackground(1300,800)
         self.createWidgets()
+        self.backToHomeButton()
 
 
     def close(self) -> None:

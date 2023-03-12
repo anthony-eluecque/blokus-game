@@ -1,6 +1,7 @@
 from core.Controller import Controller
 from core.Core import Core
 from customtkinter import CTk
+from utils.controller_utils import _openController
 
 
 class StatsController(Controller):
@@ -23,7 +24,7 @@ class StatsController(Controller):
     def backToStats(self)->None:
         self.statsView.close()
         c = Core.openController("stats",self.window)
-        c.main()        
+        c.main()
 
     def main(self)->None:
         self.statsView.main()
