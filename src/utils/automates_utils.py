@@ -15,25 +15,21 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list )->list:
     
     for pos in positions:
         for pieceID in pieces:            
-            for i in range( 4 ):
+            for i in range( 3 ):
                 joueur.pieces.rotate( pieceID )
+                piece: list = joueur.jouerPiece( pieceID )
+                canPlace = validPlacement( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
 
-                for j in range( 2 ):
-                    joueur.pieces.reverse( pieceID )
-                    piece: list = joueur.jouerPiece( pieceID )
-                    canPlace = validPlacement( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
+                if canPlace:
+                    valPiece: int = 0
 
-                    if canPlace:
-                        valPiece: int = 0
+                    for row in piece:
+                        valPiece += row.count( 1 )
 
-                        for row in piece:
-                            valPiece += row.count( 1 )
-
-                        if possMin[ "score" ] < abs( score + valPiece ):
-                            possMin = { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID }
-                            
-                        break
-                    joueur.pieces.resetRotation( pieceID )
+                    if possMin[ "score" ] < abs( score + valPiece ):
+                        possMin = { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': i }
+                        
+                joueur.pieces.resetRotation( pieceID )
 
     if len( possMin ) == 1:
         return -1
@@ -41,6 +37,10 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list )->list:
         idPiece: int = possMin[ 'pieceID' ]
         x: int = possMin[ 'x' ]
         y: int = possMin[ 'y' ]
+
+        for _ in range( possMin[ "nbRota" ] ):
+            joueur.pieces.rotate( idPiece )
+
 
         joueur.hasPlayedPiece( idPiece )
         joueur.pieces.resetRotation( idPiece )
