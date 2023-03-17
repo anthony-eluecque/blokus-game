@@ -4,32 +4,47 @@ from models.Plateau import Plateau
 from utils.game_utils import validPlacement,coordsBlocs,getDiagonals,getAdjacents
 from copy import deepcopy
 
-def managePiece(joueur:Player,plateau:Plateau,positions:list )->list:
-    if len( positions ) < 1:
-        return -1
-
-    score: int = joueur.score
+def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int ):
+    poses: list = []
     pieces: list = joueur.pieces.pieces_joueurs
-
-    possMin: dict = { 'score': 0 }
     
     for pos in positions:
-        for pieceID in pieces:            
-            for i in range( 3 ):
-                joueur.pieces.rotate( pieceID )
-                piece: list = joueur.jouerPiece( pieceID )
-                canPlace = validPlacement( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
+        for pieceID in pieces:         
+            #for i in range( 3 ):
+                #joueur.pieces.rotate( pieceID )
+            piece: list = joueur.jouerPiece( pieceID )
+            canPlace = validPlacement( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
 
-                if canPlace:
-                    valPiece: int = 0
+            if canPlace:
+                valPiece: int = 0
 
-                    for row in piece:
-                        valPiece += row.count( 1 )
+                for row in piece:
+                    valPiece += row.count( 1 )
 
-                    if possMin[ "score" ] < abs( score + valPiece ):
-                        possMin = { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': i }
+                poses.append( { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': 0 } )
                         
-                joueur.pieces.resetRotation( pieceID )
+                #joueur.pieces.resetRotation( pieceID )
+    return poses
+
+def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list:
+    if len( positions ) < 1:
+        return -1
+    
+    secTourPossibilities: list[ list[ dict ] ] = []
+    possibilities: list[ dict ] = getSolutions( positions, joueur, plateau, 0 )
+
+    for pose in sorted( possibilities, key = lambda x: x[ "score" ] ):
+        pl: Plateau = deepcopy( plateau )
+        possibilities = getPossibilities( index, plateau, joueur )
+        pieceBlokus = coordsBlocs( joueur.jouerPiece( pose[ "idPiece" ] ), pose[ "y" ], pose[ "x" ] )
+
+        if pieceBlokus != -1:
+            for xpos,ypos in pieceBlokus:
+                pl.setColorOfCase( xpos, ypos, index )
+
+        secTourPossibilities.append( getSolutions( possibilities, joueur, pl, pose[ "score" ] ) )
+
+    possMin: dict = sorted( secTourPossibilities, key = lambda x: x[ "score" ] )[ 0 ]
 
     if len( possMin ) == 1:
         return -1
@@ -43,7 +58,7 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list )->list:
 
 
         joueur.hasPlayedPiece( idPiece )
-        joueur.pieces.resetRotation( idPiece )
+        #joueur.pieces.resetRotation( idPiece )
         return coordsBlocs( joueur.jouerPiece( idPiece ), y, x )
 
 def adjacents( x, y, plateau: Plateau, indexJoueur: int ) -> list:
@@ -92,7 +107,7 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
     possibilities = getPossibilities(index,plateau,joueurActuel)
-    pieceBlokus = managePiece(joueurActuel,plateau,possibilities)
+    pieceBlokus = managePiece(joueurActuel,plateau,possibilities, index )
 
     if pieceBlokus != -1:
         for xpos,ypos in pieceBlokus:
