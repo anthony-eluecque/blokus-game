@@ -4,9 +4,29 @@ from models.Plateau import Plateau
 from utils.game_utils import validPlacement,coordsBlocs,getDiagonals,getAdjacents
 from copy import deepcopy
 
-def getPosScore( joueur: Player, plateau: Plateau, positions: list, pieceID: list, score: int, valPiece: int ) -> list[ dict ]:
+def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
+    p = []
+    grille = plateau.getTab()
+    for i,ligne in enumerate(grille):
+        for j,col in enumerate(ligne):
+            if col == indexJoueur:
+                possibilities = adjacents(i,j,plateau,indexJoueur)
+                if len(possibilities):
+                    for _pos in possibilities:
+                        p.append(_pos)
+    if not len(p):
+        return [joueur.getPositionDepart()]
+    return p
+
+def getPosScore( joueur: Player, plateau: Plateau, pieceID: list, score: int, valPiece: int, index: int, positions: list ) -> list[ dict ]:
     #for i in range( 3 ):
     #joueur.pieces.rotate( pieceID )
+
+    positions = positions == [] and getPossibilities( index, plateau, joueur ) or positions
+    
+    if len( positions ) < 1:
+        return [ { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': valPiece, 'nbRota': 0, 'pieceID': pieceID } ]
+
     newPositions: list[ dict ] = []
 
     for pos in positions:
@@ -16,7 +36,7 @@ def getPosScore( joueur: Player, plateau: Plateau, positions: list, pieceID: lis
         if canPlace:
             if score > 0 and score < valPiece: newPositions[ "score" ] += valPiece
             else:
-                newPositions.append( { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': valPiece, 'nbRota': 0, 'pieceID': pieceID } )
+                newPositions += getPosScore( joueur, plateau, pieceID, score, valPiece, index )
                     
             #joueur.pieces.resetRotation( pieceID )
 
@@ -35,16 +55,7 @@ def predictPieces( joueur: Player, plateau: Plateau, positions: list, index: int
         for row in joueur.jouerPiece( pieceID ):
             valPiece += row.count( 1 )
 
-        pl: Plateau = deepcopy( plateau )
-
-        for i in range( 3 ):
-            if not len( pieceScore ):
-                positions: list = getPossibilities( index, pl, joueur )
-
-                for pieceSc in [ x for x in pieceScore if x.pieceID == pieceID ]:
-                    pieceSc
-            else:
-                pieceScore.append( getPosScore( joueur, pl, positions, pieceID, 0, valPiece ) )
+        pieceScore.append( getPosScore( joueur, plateau, pieceID, 0, valPiece, index, positions ) )
 
         for piecesPoss in pieceScore[ pieceID ]:
             if not possMin or possMin[ "score" ] > abs( score + piecesPoss[ "score" ] ):
@@ -100,20 +111,6 @@ def adjacents( x, y, plateau: Plateau, indexJoueur: int ) -> list:
                 possibilites.append( [ adjs[ 3 ][ 0 ], adjs[ 2 ][ 1 ] ] )
 
     return list( filter( lambda coords: grille[ coords[ 0 ] ][ coords[ 1 ] ] != indexJoueur, possibilites ) )
-
-def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
-    p = []
-    grille = plateau.getTab()
-    for i,ligne in enumerate(grille):
-        for j,col in enumerate(ligne):
-            if col == indexJoueur:
-                possibilities = adjacents(i,j,plateau,indexJoueur)
-                if len(possibilities):
-                    for _pos in possibilities:
-                        p.append(_pos)
-    if not len(p):
-        return [joueur.getPositionDepart()]
-    return p
 
 def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
 
