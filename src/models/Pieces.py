@@ -55,8 +55,8 @@ class Pieces:
         """
         self.liste_pieces[num_piece] = [list(row) for row in zip(*reversed(self.getPiece(num_piece)))]
 
-    def resetRotation(self, num_piece : int )->None:
-        self.liste_pieces[num_piece] = self.liste_pieces_copy[num_piece]
+    def resetRotation( self, num_piece : int ) -> None:
+        self.liste_pieces[ num_piece ] = deepcopy( self.liste_pieces_copy[ num_piece ] )
 
     def afficherPiece(self , num_piece: int) -> None:
         """Affiche une pièce
