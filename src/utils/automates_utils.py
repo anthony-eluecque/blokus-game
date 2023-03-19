@@ -67,7 +67,8 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
 
 def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
 
-    result = gameManager.playGame(plateau,joueurActuel,index)
+    tree = Leaf(index,joueurActuel,plateau)
+    result = tree.playGame()
     print(result)
 
 class Position:
@@ -81,9 +82,31 @@ class Position:
 
 class Leaf():
     
-    def __init__(self,plateau:Plateau,parent=None) -> None:
-        self.parent = parent
-        self.plateau = plateau
+    def __init__(self,indexJoueur,joueur,plateau:Plateau,parent=None) -> None:
+        
+        self.parent : Leaf|None = parent
+        self.plateau : Plateau = plateau
+        self.indexJoueur : int = indexJoueur
+        self.joueur : Player = joueur
+
+    
+    def playGame(self,depth = 2):
+        if depth == 0:
+            return self.plateau.getTab()
+        
+        pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
+        for piece in self.joueur.pieces.pieces_joueurs:
+            for i in range (len(pos)):
+                check = gameManager.canPlacePiece(piece,self.plateau,pos[i][0],pos[i][1],self.joueur)
+                if check[0]!=-1:
+                    new_plat = deepcopy(self.plateau)
+                    x,y = pos[i]
+                    pieceBlokus = coordsBlocs(self.joueur.jouerPiece(piece),x,y)
+                    for xpos,ypos in pieceBlokus:
+                        new_plat.setColorOfCase(xpos,ypos,self.indexJoueur)
+                    print("test")
+                    self.l = Leaf(self.indexJoueur,self.joueur,new_plat,self.parent)
+                    self.l.playGame(depth-1)
 
 
 TAILLE = 20
@@ -100,7 +123,7 @@ class gameManager:
         for i in range(len(plateau.getTab())):
             for j in range(len(plateau.getTab()[0])):
                 if plateau.getTab()[i][j] == indexJoueur:
-                    yield plateau.getTab()[i][j]
+                    yield i,j
 
     @staticmethod
     def getBestPossibilities(plateau:Plateau, indexJoueur:int, joueur:Player):
@@ -110,7 +133,7 @@ class gameManager:
             return [startPos]
         
         possibilites = []
-        for cell in gameManager.iterateGrid(plateau):
+        for cell in gameManager.iterateGrid(plateau,indexJoueur):
             state = gameManager.getAdjacents(cell[0],cell[1],plateau,indexJoueur)
             if len(state):
                 for pos in state:
@@ -130,29 +153,7 @@ class gameManager:
         if checkIf:
             return coordsBlocs(piece,x,y)
         return [-1, -1]
-
-
-    @staticmethod
-    def playGame(plateau:Plateau,joueurActuel:Player,indexJoueur:int,depth = 2,origine=None):
-        if depth == 0:
-            return plateau.getTab()
-        
-        pos = gameManager.getBestPossibilities(plateau,indexJoueur,joueurActuel)
-        for piece in joueurActuel.pieces.pieces_joueurs:
-            for i in range (len(pos)):
-                check = gameManager.canPlacePiece(piece,plateau,pos[i][0],pos[i][1],joueurActuel)
-                if check[0]!=-1:
-                    new_plat = deepcopy(plateau)
-                    x,y = pos[i]
-                    pieceBlokus = coordsBlocs(joueurActuel.jouerPiece(piece),x,y)
-                    for xpos,ypos in pieceBlokus:
-                        new_plat.setColorOfCase(xpos,ypos,indexJoueur)
-                    leaf = Leaf(new_plat,parent=origine)
-                    gameManager.playGame(plateau,joueurActuel,indexJoueur,depth-1,origine=leaf)
-
-    
-
-                
+               
 
 
     @staticmethod
