@@ -52,64 +52,130 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list):
         return coordsBlocs(piece,y,x)
     else: return [ -1, -1 ]
 
-def adjacents(x,y,plateau:Plateau,indexJoueur:int)->list:
-    adjs = [[x-1,y],[x,y-1],[x,y+1],[x+1,y]]
-
-    possibilites = []
-    grille = plateau.getTab()
-
-        
-    if grille[adjs[0][0]][adjs[0][1]] != indexJoueur and grille[adjs[1][0]][adjs[1][1]] != indexJoueur:
-        possibilites.append([adjs[0][0],adjs[1][1]])
-    
-    if grille[adjs[0][0]][adjs[0][1]] != indexJoueur and grille[adjs[2][0]][adjs[2][1]] != indexJoueur:
-        possibilites.append([adjs[0][0],adjs[2][1]])
-    
-    if grille[adjs[3][0]][adjs[3][1]] != indexJoueur and grille[adjs[1][0]][adjs[1][1]] != indexJoueur:
-        possibilites.append([adjs[3][0],adjs[1][1]])
-    
-    if grille[adjs[3][0]][adjs[3][1]] != indexJoueur and grille[adjs[2][0]][adjs[2][1]] != indexJoueur:
-        possibilites.append([adjs[3][0],adjs[2][1]])
-    
-    return list(filter(lambda coords : 0<=coords[0]<=19 and 0<=coords[1]<=20 and grille[coords[0]][coords[1]]!=indexJoueur,possibilites))
-
-def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
-    p = []
-    grille = plateau.getTab()
-    for i,ligne in enumerate(grille):
-        for j,col in enumerate(ligne):
-            if col == indexJoueur:
-                possibilities = adjacents(i,j,plateau,indexJoueur)
-                if len(possibilities):
-                    for _pos in possibilities:
-                        p.append(_pos)
-    if not len(p):
-        return [joueur.getPositionDepart()]
-    return p
-
 def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
+    pass
+    # cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
-    cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
+    # possibilities = getPossibilities(index,plateau,joueurActuel)
+    # pieceBlokus = managePiece(joueurActuel,plateau,possibilities)
 
-    possibilities = getPossibilities(index,plateau,joueurActuel)
-    pieceBlokus = managePiece(joueurActuel,plateau,possibilities)
-
-    if pieceBlokus[ 0 ] != -1:
-        for xpos,ypos in pieceBlokus:
-            view._addToGrid(cheminFichierPiece,ypos,xpos)
-            plateau.setColorOfCase(xpos,ypos,index)
+    # if pieceBlokus[ 0 ] != -1:
+    #     for xpos,ypos in pieceBlokus:
+    #         view._addToGrid(cheminFichierPiece,ypos,xpos)
+    #         plateau.setColorOfCase(xpos,ypos,index)
 
 
 def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
 
+    result = gameManager.playGame(plateau,joueurActuel,index)
+    print(result)
 
-    cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
-    possibilities = getPossibilities(index,plateau,joueurActuel)
+class Position:
 
-    print(possibilities)
+    def __init__(self,x,y) -> None:
+        self.left = [x,y-1]
+        self.right = [x,y+1]
+        self.top = [x-1,y]
+        self.bottom = [x+1,y]
 
 
+class Leaf():
+    
+    def __init__(self,plateau:Plateau,parent=None) -> None:
+        self.parent = parent
+        self.plateau = plateau
 
 
+TAILLE = 20
+class gameManager:
+
+    @staticmethod
+    def isInGrid(side:list)->bool:
+        if side[0] <= TAILLE and side[1] <= TAILLE and side[0] >= 0 and side[1] >= 0:
+            return True
+        return False
+    
+    @staticmethod
+    def iterateGrid(plateau:Plateau,indexJoueur:int):
+        for i in range(len(plateau.getTab())):
+            for j in range(len(plateau.getTab()[0])):
+                if plateau.getTab()[i][j] == indexJoueur:
+                    yield plateau.getTab()[i][j]
+
+    @staticmethod
+    def getBestPossibilities(plateau:Plateau, indexJoueur:int, joueur:Player):
+        startPos = joueur.getPositionDepart()
+        grid = plateau.getTab()
+        if grid[startPos[0]][startPos[1]]!=indexJoueur:
+            return [startPos]
+        
+        possibilites = []
+        for cell in gameManager.iterateGrid(plateau):
+            state = gameManager.getAdjacents(cell[0],cell[1],plateau,indexJoueur)
+            if len(state):
+                for pos in state:
+                    possibilites.append(pos)
+        return possibilites
+
+    @staticmethod
+    def evaluateGame(): ...
 
 
+    @staticmethod
+    def canPlacePiece(numPiece:int, plateau:Plateau, x, y, joueur:Player) -> bool:
+
+        piece = joueur.jouerPiece(numPiece)
+        checkIf = validPlacement(piece,x,y,plateau,joueur)
+
+        if checkIf:
+            return coordsBlocs(piece,x,y)
+        return [-1, -1]
+
+
+    @staticmethod
+    def playGame(plateau:Plateau,joueurActuel:Player,indexJoueur:int,depth = 2,origine=None):
+        if depth == 0:
+            return plateau.getTab()
+        
+        pos = gameManager.getBestPossibilities(plateau,indexJoueur,joueurActuel)
+        for piece in joueurActuel.pieces.pieces_joueurs:
+            for i in range (len(pos)):
+                check = gameManager.canPlacePiece(piece,plateau,pos[i][0],pos[i][1],joueurActuel)
+                if check[0]!=-1:
+                    new_plat = deepcopy(plateau)
+                    x,y = pos[i]
+                    pieceBlokus = coordsBlocs(joueurActuel.jouerPiece(piece),x,y)
+                    for xpos,ypos in pieceBlokus:
+                        new_plat.setColorOfCase(xpos,ypos,indexJoueur)
+                    leaf = Leaf(new_plat,parent=origine)
+                    gameManager.playGame(plateau,joueurActuel,indexJoueur,depth-1,origine=leaf)
+
+    
+
+                
+
+
+    @staticmethod
+    def getAdjacents(x:int , y:int, plateau:Plateau, indexJoueur:int) ->list:
+        possibilites = []
+        grid = plateau.getTab()
+        pos = Position(x,y)
+
+        if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.top):
+            if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
+                possibilites.append([pos.left[0], pos.top[1]])
+
+        if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.right):
+            if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
+                possibilites.append([pos.left[0], pos.right[1]])
+
+        if gameManager.isInGrid(pos.bottom) and gameManager.isInGrid(pos.top):
+            if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
+                possibilites.append([pos.bottom[0], pos.top[1]])
+    
+        if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.bottom):
+            if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
+                possibilites.append([pos.bottom[0],pos.right[1]])
+
+        return list( filter( lambda coords: grid[coords[0]][coords[1]] != indexJoueur, possibilites ) )
+    
