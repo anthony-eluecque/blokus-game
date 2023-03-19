@@ -9,8 +9,8 @@ from utils.tree import evaluateGame
 def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
 
     tree = Leaf(index,joueurActuel,plateau)
-    result = tree.playGame()
-    print(result)
+    print("L'origine : ",tree)
+    tree.playGame()
 
 class Position:
 
@@ -20,36 +20,45 @@ class Position:
         self.top = [x-1,y]
         self.bottom = [x+1,y]
 
-
 class Leaf():
     
     def __init__(self,indexJoueur,joueur,plateau:Plateau,parent=None) -> None:
-        
         self.parent : Leaf|None = parent
         self.plateau : Plateau = plateau
         self.indexJoueur : int = indexJoueur
         self.joueur : Player = joueur
 
-    
+        print(self.parent)
+
+
+
     def playGame(self,depth = 2):
         if depth != 0:
+            leaves : list[Leaf] = []
+
             pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
+
             for piece in self.joueur.pieces.pieces_joueurs:
                 for i in range (len(pos)):
                     check = gameManager.canPlacePiece(piece,self.plateau,pos[i][0],pos[i][1],self.joueur)
                     if check[0]!=-1:
+                        print(piece,depth)
                         new_plat = deepcopy(self.plateau)
                         x,y = pos[i]
                         pieceBlokus = coordsBlocs(self.joueur.jouerPiece(piece),x,y)
                         for xpos,ypos in pieceBlokus:
                             new_plat.setColorOfCase(xpos,ypos,self.indexJoueur)
                         
-                        print(new_plat)
 
-                        self.l = Leaf(self.indexJoueur,self.joueur,new_plat,self.parent)
-                        self.l.joueur.hasPlayedPiece(piece)
-                        self.l.joueur.removePiece(piece)
-                        self.l.playGame(depth=depth-1)
+                        l = Leaf(self.indexJoueur,self.joueur,new_plat,parent= self)
+                        l.joueur.hasPlayedPiece(piece)
+                        l.joueur.removePiece(piece)
+                        leaves.append(l)
+
+                        # print(new_plat)
+
+            for leaf in leaves:
+                leaf.playGame(depth=depth-1)
 
 
 TAILLE = 20
