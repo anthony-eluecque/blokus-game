@@ -63,7 +63,7 @@ class StatsView(View):
             if not pseudo:
                 pseudo = color[0].upper() + color[1:]
             score = self.data["parties"][idPartie][color]["score"]
-            widget = CTkLabel(self.window,text=f"Pseudo du joueur : {pseudo} | Score : {score}", bg_color="white", fg_color="white")
+            widget = CTkLabel(self.window,text=f"Pseudo du joueur : {pseudo} | Score : {score}", bg_color="white",fg_color="white",text_color="black")
             widget.configure(font=('Roboto Bold',15))
             widget.place(x=50,y=y_joueur)
             y_joueur+=110
