@@ -6,65 +6,6 @@ from copy import deepcopy
 from utils.tree import Tree
 from utils.tree import evaluateGame
 
-
-def pickPiece(joueur:Player)->int:
-    index = 100
-    while index not in joueur.pieces.pieces_joueurs:
-        index = randint(0,20)
-    return index
-
-
-def managePiece(joueur:Player,plateau:Plateau,positions:list):
-
-    choix = 0
-    if len(positions) > 1:
-        choix = randint(0,len(positions)-1)
-    x,y = positions[choix]
-
-    checkIf = False
-    cannotPlay = False
-    idPiece = 0
-    piece = []
-    print(f"Ce qui arrive en x : {x} et y : {y}")
-
-    copyPieces = deepcopy(joueur.pieces.pieces_joueurs)
-    # print(copyPieces)
-
-    while not checkIf and not cannotPlay: 
-        idPiece =  pickPiece(joueur)
-        
-        if idPiece in copyPieces:
-            copyPieces.remove(idPiece)
-            piece = joueur.jouerPiece(idPiece)
-            checkIf = validPlacement(piece,x,y,plateau,joueur)
-
-        if not len(copyPieces):
-            choix = 0
-            if len(positions) > 1:
-                choix = randint(0,len(positions)-1)
-                x,y = positions[choix]
-                positions.remove( positions[ choix ] )
-                copyPieces = deepcopy(joueur.pieces.pieces_joueurs)
-            else: cannotPlay = True
-
-    if checkIf and not cannotPlay:
-        joueur.hasPlayedPiece(idPiece)
-        return coordsBlocs(piece,y,x)
-    else: return [ -1, -1 ]
-
-def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
-    pass
-    # cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
-
-    # possibilities = getPossibilities(index,plateau,joueurActuel)
-    # pieceBlokus = managePiece(joueurActuel,plateau,possibilities)
-
-    # if pieceBlokus[ 0 ] != -1:
-    #     for xpos,ypos in pieceBlokus:
-    #         view._addToGrid(cheminFichierPiece,ypos,xpos)
-    #         plateau.setColorOfCase(xpos,ypos,index)
-
-
 def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
 
     tree = Leaf(index,joueurActuel,plateau)
@@ -91,22 +32,24 @@ class Leaf():
 
     
     def playGame(self,depth = 2):
-        if depth == 0:
-            return self.plateau.getTab()
-        
-        pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
-        for piece in self.joueur.pieces.pieces_joueurs:
-            for i in range (len(pos)):
-                check = gameManager.canPlacePiece(piece,self.plateau,pos[i][0],pos[i][1],self.joueur)
-                if check[0]!=-1:
-                    new_plat = deepcopy(self.plateau)
-                    x,y = pos[i]
-                    pieceBlokus = coordsBlocs(self.joueur.jouerPiece(piece),x,y)
-                    for xpos,ypos in pieceBlokus:
-                        new_plat.setColorOfCase(xpos,ypos,self.indexJoueur)
-                    print("test")
-                    self.l = Leaf(self.indexJoueur,self.joueur,new_plat,self.parent)
-                    self.l.playGame(depth-1)
+        if depth != 0:
+            pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
+            for piece in self.joueur.pieces.pieces_joueurs:
+                for i in range (len(pos)):
+                    check = gameManager.canPlacePiece(piece,self.plateau,pos[i][0],pos[i][1],self.joueur)
+                    if check[0]!=-1:
+                        new_plat = deepcopy(self.plateau)
+                        x,y = pos[i]
+                        pieceBlokus = coordsBlocs(self.joueur.jouerPiece(piece),x,y)
+                        for xpos,ypos in pieceBlokus:
+                            new_plat.setColorOfCase(xpos,ypos,self.indexJoueur)
+                        
+                        print(new_plat)
+
+                        self.l = Leaf(self.indexJoueur,self.joueur,new_plat,self.parent)
+                        self.l.joueur.hasPlayedPiece(piece)
+                        self.l.joueur.removePiece(piece)
+                        self.l.playGame(depth=depth-1)
 
 
 TAILLE = 20
