@@ -10,7 +10,7 @@ def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view)
 
     tree = Leaf(index,joueurActuel,plateau)
     print("L'origine : ",tree)
-    tree.playGame()
+    print("Nombre d'itération : ",tree.playGame())
 
 class Position:
 
@@ -28,38 +28,41 @@ class Leaf():
         self.indexJoueur : int = indexJoueur
         self.joueur : Player = joueur
 
-        print(self.parent)
 
 
 
     def playGame(self,depth = 2):
+        leaf_count = 0
         if depth != 0:
             leaves : list[Leaf] = []
 
             pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
 
             for piece in self.joueur.pieces.pieces_joueurs:
+                
                 for i in range (len(pos)):
+                    
                     check = gameManager.canPlacePiece(piece,self.plateau,pos[i][0],pos[i][1],self.joueur)
                     if check[0]!=-1:
-                        print(piece,depth)
+
                         new_plat = deepcopy(self.plateau)
                         x,y = pos[i]
                         pieceBlokus = coordsBlocs(self.joueur.jouerPiece(piece),x,y)
                         for xpos,ypos in pieceBlokus:
                             new_plat.setColorOfCase(xpos,ypos,self.indexJoueur)
                         
-
-                        l = Leaf(self.indexJoueur,self.joueur,new_plat,parent= self)
+                        l = Leaf(self.indexJoueur,deepcopy(self.joueur),new_plat,parent= self)
                         l.joueur.hasPlayedPiece(piece)
                         l.joueur.removePiece(piece)
                         leaves.append(l)
 
-                        # print(new_plat)
+                        print(l.plateau)
+
 
             for leaf in leaves:
-                leaf.playGame(depth=depth-1)
+                leaf_count += leaf.playGame(depth=depth-1) +1
 
+        return leaf_count
 
 TAILLE = 20
 class gameManager:
@@ -93,11 +96,20 @@ class gameManager:
         return possibilites
 
     @staticmethod
-    def evaluateGame(): ...
+    def evaluateGame(plateau:Plateau,indexJoueur:int):
+        grid = plateau.getTab()
+        score = 0
+        for row in grid:
+            for cell in row:
+                if cell == indexJoueur:
+                    score += 1
+        return score
 
+
+        
 
     @staticmethod
-    def canPlacePiece(numPiece:int, plateau:Plateau, x, y, joueur:Player) -> bool:
+    def canPlacePiece(numPiece:int, plateau:Plateau, x, y, joueur:Player) -> list:
 
         piece = joueur.jouerPiece(numPiece)
         checkIf = validPlacement(piece,x,y,plateau,joueur)
