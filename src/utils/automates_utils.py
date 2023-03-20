@@ -10,7 +10,6 @@ def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view)
 
     tree = Leaf(index,joueurActuel,plateau)
     print("L'origine : ",tree)
-    print("Nombre d'itération : ",tree.playGame())
 
 class Position:
 
@@ -27,21 +26,14 @@ class Leaf():
         self.plateau : Plateau = plateau
         self.indexJoueur : int = indexJoueur
         self.joueur : Player = joueur
-
-
-
+        self.score = gameManager.evaluateGame(self.plateau, self.indexJoueur)
 
     def playGame(self,depth = 2):
-        leaf_count = 0
         if depth != 0:
             leaves : list[Leaf] = []
-
             pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
-
             for piece in self.joueur.pieces.pieces_joueurs:
-                
                 for i in range (len(pos)):
-                    
                     check = gameManager.canPlacePiece(piece,self.plateau,pos[i][0],pos[i][1],self.joueur)
                     if check[0]!=-1:
 
@@ -56,13 +48,9 @@ class Leaf():
                         l.joueur.removePiece(piece)
                         leaves.append(l)
 
-                        print(l.plateau)
-
-
             for leaf in leaves:
-                leaf_count += leaf.playGame(depth=depth-1) +1
+                leaf.playGame(depth=depth-1)
 
-        return leaf_count
 
 TAILLE = 20
 class gameManager:
@@ -97,6 +85,7 @@ class gameManager:
 
     @staticmethod
     def evaluateGame(plateau:Plateau,indexJoueur:int):
+        # Voir pour l'évaluation
         grid = plateau.getTab()
         score = 0
         for row in grid:
@@ -105,8 +94,6 @@ class gameManager:
                     score += 1
         return score
 
-
-        
 
     @staticmethod
     def canPlacePiece(numPiece:int, plateau:Plateau, x, y, joueur:Player) -> list:
