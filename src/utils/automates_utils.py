@@ -5,11 +5,12 @@ from utils.game_utils import validPlacement,coordsBlocs,getDiagonals,getAdjacent
 from copy import deepcopy
 from utils.tree import Tree
 from utils.tree import evaluateGame
+import math
 
 def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
 
     tree = Leaf(index,joueurActuel,plateau)
-    print("L'origine : ",tree)
+    tree.makeMove(view)
 
 class Position:
 
@@ -24,35 +25,80 @@ class Leaf():
     def __init__(self,indexJoueur,joueur,plateau:Plateau,parent=None) -> None:
         self.parent : Leaf|None = parent
         self.plateau : Plateau = plateau
-        self.indexJoueur : int = indexJoueur
+        self.indexJoueur : int = indexJoueur 
         self.joueur : Player = joueur
         self.score = gameManager.evaluateGame(self.plateau, self.indexJoueur)
 
-    def playGame(self,depth = 2):
-        if depth != 0:
-            leaves : list[Leaf] = []
-            pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
-            for piece in self.joueur.pieces.pieces_joueurs:
-                for i in range (len(pos)):
-                    check = gameManager.canPlacePiece(piece,self.plateau,pos[i][0],pos[i][1],self.joueur)
-                    if check[0]!=-1:
+        # print(self,self.parent,self.score)
 
-                        new_plat = deepcopy(self.plateau)
-                        x,y = pos[i]
-                        pieceBlokus = coordsBlocs(self.joueur.jouerPiece(piece),x,y)
-                        for xpos,ypos in pieceBlokus:
-                            new_plat.setColorOfCase(xpos,ypos,self.indexJoueur)
+    def makeMove(self,view):
+
+        bestScore = -math.inf
+        bestMove = None
+        pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
+        for i in range(len(pos)):
+            plateau = deepcopy(self.plateau)
+            # index = deepcopy(self.indexJoueur)
+            joueur = deepcopy(self.joueur)
+            score = self.minmax(False,plateau,joueur)
+            if score>bestScore:
+                bestScore=score
+                bestMove = pos[i]
+                
+
+        print("Meilleur position à jouer : ",bestMove)
+        cheminFichierPiece = "./media/pieces/" + self.joueur.getCouleur().upper()[0] + "/1.png"
+        for xpos,ypos in bestMove:
+            plateau.setColorOfCase(xpos,ypos,self.indexJoueur)
+            self.view._addToGrid(cheminFichierPiece,ypos, xpos)
+
+
+
+    def minmax(self,isMaxTurn,plateau:Plateau,joueur:Player,depth=0,maxDepth=2):
+
+        if depth>maxDepth:
+            return gameManager.evaluateGame(plateau,self.indexJoueur)
+        
+        scores = []
+        pos = gameManager.getBestPossibilities(plateau,self.indexJoueur,joueur)
+        for piece in joueur.pieces.pieces_joueurs:
+            for i in range(len(pos)):
+                check = gameManager.canPlacePiece(piece,plateau,pos[i][0],pos[i][1],joueur)
+                if check[0]!=-1:
+                    x,y = pos[i]
+                    pieceBlokus = coordsBlocs(joueur.jouerPiece(piece),x,y)
+                    for xpos,ypos in pieceBlokus:
+                        plateau.setColorOfCase(xpos,ypos,self.indexJoueur)
+                
+                scores.append(self.minmax(not isMaxTurn,plateau,joueur,depth+1,maxDepth))
+
+        return max(scores) if isMaxTurn else min(scores)       
+
+    # def playGame(self,depth = 2):
+    #     if depth != 0:
+    #         leaves : list[Leaf] = []
+    #         pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
+    #         for piece in self.joueur.pieces.pieces_joueurs:
+    #             for i in range (len(pos)):
+    #                 check = gameManager.canPlacePiece(piece,self.plateau,pos[i][0],pos[i][1],self.joueur)
+    #                 if check[0]!=-1:
+
+    #                     new_plat = deepcopy(self.plateau)
+    #                     x,y = pos[i]
+    #                     pieceBlokus = coordsBlocs(self.joueur.jouerPiece(piece),x,y)
+    #                     for xpos,ypos in pieceBlokus:
+    #                         new_plat.setColorOfCase(xpos,ypos,self.indexJoueur)
                         
-                        l = Leaf(self.indexJoueur,deepcopy(self.joueur),new_plat,parent= self)
-                        l.joueur.hasPlayedPiece(piece)
-                        l.joueur.removePiece(piece)
-                        leaves.append(l)
+    #                     l = Leaf(self.indexJoueur,deepcopy(self.joueur),new_plat,parent= self)
+    #                     l.joueur.hasPlayedPiece(piece)
+    #                     l.joueur.removePiece(piece)
+    #                     leaves.append(l)
 
-            for leaf in leaves:
-                leaf.playGame(depth=depth-1)
+    #         for leaf in leaves:
+    #             leaf.playGame(depth=depth-1)
 
 
-TAILLE = 20
+TAILLE = 19
 class gameManager:
 
     @staticmethod
