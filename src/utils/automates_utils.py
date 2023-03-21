@@ -27,7 +27,7 @@ class Leaf():
         self.plateau : Plateau = plateau
         self.indexJoueur : int = indexJoueur 
         self.joueur : Player = joueur
-        self.score = gameManager.evaluateGame(self.plateau, self.indexJoueur)
+        # self.score = gameManager.evaluateGame(self.plateau, self.indexJoueur,self.plateau)
 
 
         # print(self,self.parent,self.score)
@@ -37,8 +37,8 @@ class Leaf():
         bestScore = -math.inf
         bestMove = None
         pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
-        print(self.plateau)
         print('Possibilité ----> ',pos)
+
         for i in range(len(pos)):
             # plateau = deepcopy(self.plateau)
             # index = deepcopy(self.indexJoueur)
@@ -62,7 +62,7 @@ class Leaf():
     def minmax(self,isMaxTurn,plateau:Plateau,joueur:Player,depth=0,maxDepth=2):
 
         if depth>maxDepth:
-            return gameManager.evaluateGame(plateau,self.indexJoueur)
+            return gameManager.evaluateGame(plateau,self.indexJoueur,joueur)
         
         scores = []
         pos = gameManager.getBestPossibilities(plateau,self.indexJoueur,joueur)
@@ -135,18 +135,20 @@ class gameManager:
         return possibilites
 
     @staticmethod
-    def evaluateGame(plateau:Plateau,indexJoueur:int):
+    def evaluateGame(plateau:Plateau,indexJoueur:int,joueur:Player):
 
         def iterateGrid(grid):
             for row in grid:
                 for cell in row:
                     yield cell
+
         grid = plateau.getTab()
         score = 0
         for cell in iterateGrid(grid):
             if cell == indexJoueur:
                 score += 1
-        return score
+        # print("------> Evaluation : ", score + len(gameManager.getBestPossibilities(plateau,indexJoueur,joueur)))
+        return score + len(gameManager.getBestPossibilities(plateau,indexJoueur,joueur))
 
 
     @staticmethod
