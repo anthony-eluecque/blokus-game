@@ -78,31 +78,7 @@ class Leaf():
                 scores.append(self.minmax(not isMaxTurn,plateau,joueur,depth+1,maxDepth))
 
         return max(scores) if isMaxTurn else min(scores)       
-
-    # def playGame(self,depth = 2):
-    #     if depth != 0:
-    #         leaves : list[Leaf] = []
-    #         pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
-    #         for piece in self.joueur.pieces.pieces_joueurs:
-    #             for i in range (len(pos)):
-    #                 check = gameManager.canPlacePiece(piece,self.plateau,pos[i][0],pos[i][1],self.joueur)
-    #                 if check[0]!=-1:
-
-    #                     new_plat = deepcopy(self.plateau)
-    #                     x,y = pos[i]
-    #                     pieceBlokus = coordsBlocs(self.joueur.jouerPiece(piece),x,y)
-    #                     for xpos,ypos in pieceBlokus:
-    #                         new_plat.setColorOfCase(xpos,ypos,self.indexJoueur)
-                        
-    #                     l = Leaf(self.indexJoueur,deepcopy(self.joueur),new_plat,parent= self)
-    #                     l.joueur.hasPlayedPiece(piece)
-    #                     l.joueur.removePiece(piece)
-    #                     leaves.append(l)
-
-    #         for leaf in leaves:
-    #             leaf.playGame(depth=depth-1)
-
-
+    
 TAILLE = 19
 class gameManager:
 
