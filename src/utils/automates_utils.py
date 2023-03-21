@@ -29,6 +29,7 @@ class Leaf():
         self.joueur : Player = joueur
         self.score = gameManager.evaluateGame(self.plateau, self.indexJoueur)
 
+
         # print(self,self.parent,self.score)
 
     def makeMove(self,view):
@@ -36,21 +37,25 @@ class Leaf():
         bestScore = -math.inf
         bestMove = None
         pos = gameManager.getBestPossibilities(self.plateau,self.indexJoueur,self.joueur)
+        print(self.plateau)
+        print('Possibilité ----> ',pos)
         for i in range(len(pos)):
-            plateau = deepcopy(self.plateau)
+            # plateau = deepcopy(self.plateau)
             # index = deepcopy(self.indexJoueur)
             joueur = deepcopy(self.joueur)
-            score = self.minmax(False,plateau,joueur)
+            score = self.minmax(False,self.plateau,joueur)
             if score>bestScore:
                 bestScore=score
                 bestMove = pos[i]
-                
-
+        
+        print(bestScore)
         print("Meilleur position à jouer : ",bestMove)
         cheminFichierPiece = "./media/pieces/" + self.joueur.getCouleur().upper()[0] + "/1.png"
-        for xpos,ypos in bestMove:
-            plateau.setColorOfCase(xpos,ypos,self.indexJoueur)
-            self.view._addToGrid(cheminFichierPiece,ypos, xpos)
+        
+        # for xpos,ypos in bestMove:
+        xpos,ypos= bestMove
+        self.plateau.setColorOfCase(xpos,ypos,self.indexJoueur)
+        view._addToGrid(cheminFichierPiece,ypos, xpos)
 
 
 
@@ -68,8 +73,8 @@ class Leaf():
                     x,y = pos[i]
                     pieceBlokus = coordsBlocs(joueur.jouerPiece(piece),x,y)
                     for xpos,ypos in pieceBlokus:
-                        plateau.setColorOfCase(xpos,ypos,self.indexJoueur)
-                
+                        plateau.setColorOfCase(xpos,ypos,self.indexJoueur)               
+                    plateau.undoMove()   
                 scores.append(self.minmax(not isMaxTurn,plateau,joueur,depth+1,maxDepth))
 
         return max(scores) if isMaxTurn else min(scores)       
@@ -131,13 +136,16 @@ class gameManager:
 
     @staticmethod
     def evaluateGame(plateau:Plateau,indexJoueur:int):
-        # Voir pour l'évaluation
+
+        def iterateGrid(grid):
+            for row in grid:
+                for cell in row:
+                    yield cell
         grid = plateau.getTab()
         score = 0
-        for row in grid:
-            for cell in row:
-                if cell == indexJoueur:
-                    score += 1
+        for cell in iterateGrid(grid):
+            if cell == indexJoueur:
+                score += 1
         return score
 
 
@@ -161,15 +169,15 @@ class gameManager:
 
         if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.top):
             if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
-                possibilites.append([pos.left[0], pos.top[1]])
+                possibilites.append([pos.top[0],pos.left[1]])
 
-        if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.right):
-            if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
-                possibilites.append([pos.left[0], pos.right[1]])
+        if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.bottom):
+            if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur:
+                possibilites.append([pos.bottom[0], pos.left[1]])
 
-        if gameManager.isInGrid(pos.bottom) and gameManager.isInGrid(pos.top):
-            if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
-                possibilites.append([pos.bottom[0], pos.top[1]])
+        if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.top):
+            if grid[pos.right[0]][pos.right[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
+                possibilites.append([pos.top[0], pos.right[1]])
     
         if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.bottom):
             if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
