@@ -7,6 +7,7 @@ from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
 from utils.automates_utils import easy_automate
+from config import APP_PATH
 
 class GameController(Controller):
     """ 
@@ -55,7 +56,8 @@ class GameController(Controller):
             piece = self.actualPlayer.jouerPiece(numPiece-1)
             print(piece)
         pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
-        cheminFichierPiece = "./media/pieces/" + couleurJoueur.upper()[0] + "/1.png"
+        cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + "/1.png"
+        # cheminFichierPiece = PIECES_IMAGES_URL[couleurJoueur.upper()[0]][0]
 
         if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
             canvas.destroy()
@@ -120,7 +122,8 @@ class GameController(Controller):
         Procédure permettant de chager une grille avec des pièces déjà placées.
         """
         for couleur, pieces in MAP1.items():
-            cheminFichierPiece = "./media/pieces/" + couleur.upper()[0] + "/1.png"
+            cheminFichierPiece = APP_PATH + r"/../media/pieces/" + couleur.upper()[0] + "/1.png"
+            # cheminFichierPiece = PIECES_IMAGES_URL[couleur.upper()[0]][0]
             
             for piece in pieces :
                 p = self.joueurs[self.index].jouerPiece(piece[0]) 
