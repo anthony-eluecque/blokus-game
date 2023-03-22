@@ -37,7 +37,6 @@ class GameController(Controller):
             inversion (int) : nombre d'inversion
             canvas : l'affichage de la pièce
         """
-        print("test")
         numPiece = int(file.split("/")[4].split(".")[0])
         
         piece = self.actualPlayer.jouerPiece(numPiece-1)
@@ -53,7 +52,7 @@ class GameController(Controller):
         if inversion %2 != 0:
             self.actualPlayer.pieces.reverse(numPiece-1)
             piece = self.actualPlayer.jouerPiece(numPiece-1)
-            print(piece)
+
         pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
         cheminFichierPiece = "./media/pieces/" + couleurJoueur.upper()[0] + "/1.png"
 
