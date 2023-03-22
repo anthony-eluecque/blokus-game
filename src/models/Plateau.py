@@ -78,6 +78,12 @@ class Plateau():
     def __str__(self: Self) -> str:
         affichage_tab = ""
         for line in self.tab:
-            affichage_tab+=str(line)+"\n"
-
+            toString = ""
+            for elem in line : 
+                if elem == 'X':
+                    elem = '-'
+                toString += " " +str(elem) + " "
+             
+            affichage_tab+=toString+"\n"
+            toString = ""
         return affichage_tab
