@@ -1,4 +1,5 @@
 from json import dumps, loads
+from config import APP_PATH
 
 class Configuration:
     """
@@ -28,14 +29,14 @@ class Configuration:
         if not Configuration.validConfig(config): return False
         configJSON: str = dumps(config, indent=4)
 
-        with open("gameconfig.json", "w") as f:
+        with open(APP_PATH + r"\..\gameconfig.json", "w") as f:
             f.write(configJSON)
 
         return True
 
     @staticmethod
     def getConfig() -> list:
-        with open("gameconfig.json", "r") as f:
+        with open(APP_PATH + r"\..\gameconfig.json", "r") as f:
             return loads(f.read())
 
     @staticmethod
