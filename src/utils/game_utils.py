@@ -146,21 +146,15 @@ def validPlacement(bloc: list[int], row: int, col: int, plateau: Plateau, player
     
     #  Cas ou le joueur n'a pas encore joué, et il va jouer sa première pièce
     for each_cube in new_bloc:
-        if allPieces:
-            if isPositionDepart(each_cube, player):
-                # print("Position départ")
-                if verifTotal:
-                    # print("vérif Total")
-                    return True
+        # if allPieces:
+        if isPositionDepart(each_cube, player):
+            if verifTotal:
+                return True
         # Les cas généraux 
         else:
-            # print("Cas général")
             if expectedPlayerInDiagonals(each_cube, plateau, playerColor):
-                # print("Joueur diagonale")
                 if notBelow:
-                    # print("Pas de pièce en dessous")
                     if verifTotal:
-                        # print("Vérif total pièces")
                         return True
     return False
     
