@@ -4,22 +4,29 @@ from threading import *
 from tkinter.scrolledtext import ScrolledText
 from Main import Main
     
-class App(Thread):
-
-  client = socket()
-  client.connect(('localhost', 3000))
-
-  def __init__(self, master):
+class Client(Thread):
+  def __init__(self):
     Thread.__init__(self)
-    self.master = master
+    # self.conn = conn
+    self.fin = False
+    self.lancement = False
 
   # Activité du thread
   def run(self):
-    # Créez ici l'interraction server / client
-    pass
+    self.client = socket()
+    try:
+      self.client.connect(('localhost', 3000))
+      # self.client.listen(5)
+      print("client connecté !")
+      while True:
+        message = self.client.recv(1024).decode(encoding="utf8")
+        if message == "lancement":
+          Main.run()
+      print("coucou")
+    except ConnectionRefusedError:
+      print("Connexion au serveur échouée")
+    finally: 
+      self.client.close()
 
-
-
-root = Tk()
-root.title('Client Chat')
-app = App(root).start()
+app = Client().start()
+    
