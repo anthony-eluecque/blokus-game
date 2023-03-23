@@ -10,9 +10,9 @@ def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int,
     
     for pos in positions:
         for pieceID in pieces:         
-            for i in range( 4 ):
+            for i in range( 1 ):
+                #if i > 0: joueur.pieces.rotate( pieceID )
                 piece: list = joueur.jouerPiece( pieceID )
-                if i > 0: joueur.pieces.rotate( pieceID )
                 canPlace = validPlacement( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
                 
                 if canPlace:
@@ -23,7 +23,7 @@ def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int,
 
                     poses.append( { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': i, 'firstX': x == -1 and pos[ 0 ] or x, 'firstY': y == -1 and pos[ 1 ] or y, 'firstPID': firstPID == -1 and pieceID or firstPID, 'firstRota': firstRota == -1 and i or firstRota } )
                             
-            joueur.pieces.resetRotation( pieceID )
+            #joueur.pieces.resetRotation( pieceID )
     return poses
 
 def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list:
@@ -36,27 +36,23 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list
         predictedPlate: Plateau = deepcopy( plateau )
         pieceBlokus = coordsBlocs( joueur.jouerPiece( pose[ "pieceID" ] ), pose[ "y" ], pose[ "x" ] )
 
-        for _ in range( pose[ "nbRota" ] ):
-            joueur.pieces.rotate( pose[ "pieceID" ] ) 
-
         if pieceBlokus != -1:
             for xpos,ypos in pieceBlokus:
                 predictedPlate.setColorOfCase( xpos, ypos, index )
-
+        print( joueur.pieces.pieces_joueurs )
         joueur.pieces.pieces_joueurs.remove( pose[ "pieceID" ] )
         joueur.nb_piece -= 1
 
         possibilities = getPossibilities( index, predictedPlate, joueur )
         predictedFoundSoluces: list[ dict ] = getSolutions( possibilities, joueur, predictedPlate, pose[ "score" ], pose[ "x" ], pose[ "y" ], pose[ "pieceID" ], pose[ "nbRota" ] )
-        
-        joueur.pieces.resetRotation( pose[ "pieceID" ] )
+
         joueur.pieces.pieces_joueurs.append( pose[ "pieceID" ] )
         joueur.nb_piece += 1
 
         if len( predictedFoundSoluces ) > 0: secTourPossibilities += predictedFoundSoluces
 
     possMin: dict = sorted( secTourPossibilities, key = lambda x: x[ "score" ], reverse = True )
-
+    print( possMin )
     if len( possMin ) == 0: return -1
     possMin = possMin[ 0 ]
 
@@ -72,10 +68,14 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list
     rota: int = possMin[ "firstRota" ]
     if rota < 0: rota = possMin[ "nbRota" ]
 
+    print( x, y, rota, idPiece )
+
     for _ in range( rota ):
         joueur.pieces.rotate( idPiece )
 
+
     joueur.hasPlayedPiece( idPiece )
+    #joueur.pieces.resetRotation( idPiece )
     return coordsBlocs( joueur.jouerPiece( idPiece ), y, x )
 
 def adjacents( x, y, plateau: Plateau, indexJoueur: int ) -> list:
