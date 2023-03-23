@@ -2,12 +2,12 @@ from tkinter import *
 from socket import *
 from threading import *
 from tkinter.scrolledtext import ScrolledText
-from Main import Main
+from MainRes import Main
     
 class Client(Thread):
   def __init__(self):
     Thread.__init__(self)
-    # self.conn = conn
+    self.game : Main
     self.fin = False
     self.lancement = False
 
@@ -21,8 +21,7 @@ class Client(Thread):
       while True:
         message = self.client.recv(1024).decode(encoding="utf8")
         if message == "lancement":
-          Main.run()
-      print("coucou")
+          self.game = Main()
     except ConnectionRefusedError:
       print("Connexion au serveur échouée")
     finally: 

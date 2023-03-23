@@ -2,8 +2,9 @@ from tkinter import *
 from socket import *
 from threading import *
 from tkinter import scrolledtext
-from Main import Main
+from MainRes import Main
 from controllers.GameController import GameController
+from random import choice
 
     
 class Server(Thread):
@@ -12,15 +13,21 @@ class Server(Thread):
         
         Thread.__init__(self)
         self.server = socket()
+        self.game : Main
         self.server.bind(('0.0.0.0', 3000))
         self.server.listen(5)
         self.counter = 0
-        self.joueurs = []
+        self.players = []
+        self.couleurs = ["Bleu", "Jaune", "Vert", "Rouge"]
+        self.myColor : str
+
 
     def sendAllPeople(self, mess):
         for joueur in self.joueurs:
             joueur[0].send(bytes(mess, encoding="utf8"))
-
+    
+    def send(self, joueur, mess):
+        joueur.send(bytes(mess, encoding="utf8"))
 
     # Activité du thread
     def run(self):
@@ -28,13 +35,13 @@ class Server(Thread):
         print("En attente de la connection de 2 joueurs..\n")
         while self.counter < 2:
             self.client,self.addr = self.server.accept()
-            self.joueurs.append([self.client, self.addr, self.counter])
+            couleur = self.couleurs.pop(choice(self.couleurs))
+            self.players.append([self.client, self.addr, self.counter, couleur])
             self.counter+=1
             print(f"Il y a {self.counter} joueur(s) connectés")
         print("\nLancement de la partie...\n")
         self.sendAllPeople("lancement")
-        Main.run()
-        GameController.IA()
+        self.game = Main()
 
 
 app = Server().start()

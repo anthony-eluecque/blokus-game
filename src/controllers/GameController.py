@@ -38,9 +38,10 @@ class GameController(Controller):
             inversion (int) : nombre d'inversion
             canvas : l'affichage de la pièce
         """
-        print("test")
-        numPiece = int(file.split("/")[4].split(".")[0])
-        
+        file = file.replace(chr(92), "/") #chr(92) = \
+        if "/src/.." in file:
+            file = file.replace("/src/..", "")
+        numPiece = int(file.split("/")[8].split(".")[0])
         piece = self.actualPlayer.jouerPiece(numPiece-1)
         couleurJoueur = self.actualPlayer.getCouleur()
         indexJoueur = self.joueurs.index(self.actualPlayer)
@@ -56,7 +57,7 @@ class GameController(Controller):
             piece = self.actualPlayer.jouerPiece(numPiece-1)
             print(piece)
         pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
-        cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + "/1.png"
+        cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + r"/1.png"
         # cheminFichierPiece = PIECES_IMAGES_URL[couleurJoueur.upper()[0]][0]
 
         if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
@@ -122,7 +123,7 @@ class GameController(Controller):
         Procédure permettant de chager une grille avec des pièces déjà placées.
         """
         for couleur, pieces in MAP1.items():
-            cheminFichierPiece = APP_PATH + r"/../media/pieces/" + couleur.upper()[0] + "/1.png"
+            cheminFichierPiece = APP_PATH + r"/../media/pieces/" + couleur.upper()[0] + r"/1.png"
             # cheminFichierPiece = PIECES_IMAGES_URL[couleur.upper()[0]][0]
             
             for piece in pieces :
