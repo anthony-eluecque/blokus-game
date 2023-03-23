@@ -42,13 +42,12 @@ class Plateau():
         """
         # self.tab[row][col] = self.colors[statement]
         self.tab[row][col] = statement
-        if statement!='X':
-            self.oldMove.append([row,col])
+        # if statement!='X':
+        #     self.oldMove.append([row,col])
 
     def undoMove(self):
-        for i in range(len(self.oldMove)):
-            self.setColorOfCase(self.oldMove[i][0],self.oldMove[i][1],'X')
-        self.oldMove.clear()
+        x,y = self.oldMove[-1]
+        self.setColorOfCase(x,y,'X')
 
     def isEmpty(self: Self, row: int, col: int ) -> bool:
         """Retourne si une case spécifiée du plateau est vide ou non
