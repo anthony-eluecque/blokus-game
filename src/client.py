@@ -7,21 +7,26 @@ from MainRes import Main
 class Client(Thread):
   def __init__(self):
     Thread.__init__(self)
-    self.game : Main
+    self.myGame : Main
+    self.gameParam = self.myGame.game
     self.fin = False
     self.lancement = False
+    self.myColor : str
 
   # Activité du thread
   def run(self):
     self.client = socket()
     try:
+
       self.client.connect(('localhost', 3000))
-      # self.client.listen(5)
       print("client connecté !")
-      while True:
-        message = self.client.recv(1024).decode(encoding="utf8")
-        if message == "lancement":
-          self.game = Main()
+      colorMessage = self.client.recv(1024).decode(encoding="utf8")
+      self.myColor = colorMessage
+      launchMessage = self.client.recv(1024).decode(encoding="utf8") 
+      if launchMessage == "Launch":
+        self.myGame = Main()
+        
+
     except ConnectionRefusedError:
       print("Connexion au serveur échouée")
     finally: 

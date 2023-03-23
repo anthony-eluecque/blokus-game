@@ -13,12 +13,13 @@ class Server(Thread):
         
         Thread.__init__(self)
         self.server = socket()
-        self.game : Main
+        self.myGame : Main
+        self.gameParam = self.myGame.game
         self.server.bind(('0.0.0.0', 3000))
         self.server.listen(5)
         self.counter = 0
         self.players = []
-        self.couleurs = ["Bleu", "Jaune", "Vert", "Rouge"]
+        self.colors = ["Bleu", "Jaune", "Vert", "Rouge"]
         self.myColor : str
 
 
@@ -32,16 +33,25 @@ class Server(Thread):
     # Activité du thread
     def run(self):
         # Créez ici l'interraction server / client
-        print("En attente de la connection de 2 joueurs..\n")
-        while self.counter < 2:
-            self.client,self.addr = self.server.accept()
-            couleur = self.couleurs.pop(choice(self.couleurs))
-            self.players.append([self.client, self.addr, self.counter, couleur])
+        print("Waiting for 3 persons...\n")
+        while self.counter < 3:
+            client,addr = self.server.accept()
+            couleur = self.colors.pop(choice(self.colors))
+            self.send(client, couleur)
+            self.players.append([client, addr, self.counter, couleur])
             self.counter+=1
-            print(f"Il y a {self.counter} joueur(s) connectés")
-        print("\nLancement de la partie...\n")
-        self.sendAllPeople("lancement")
-        self.game = Main()
+            print(f"{self.counter} Connected")
+        print("\nLaunching game !\n")
+
+        self.myColor = self.colors.pop()
+
+        self.sendAllPeople("Launch")
+        self.myGame = Main()
+
+        while self.gameParam.nePeutPlusJouer:
+            if self.gameParam.actualPlayer == self.myColor:
+                pass
+
 
 
 app = Server().start()
