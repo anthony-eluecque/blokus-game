@@ -78,24 +78,38 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list
     joueur.hasPlayedPiece( idPiece )
     return coordsBlocs( joueur.jouerPiece( idPiece ), y, x )
 
+TAILLE = 19
+
+def isInGrid(side:list)->bool:
+    if side[0] <= TAILLE and side[1] <= TAILLE and side[0] >= 0 and side[1] >= 0:
+        return True
+    return False
+
+class Position:
+    def __init__( self, x, y ) -> None:
+        self.left = [ x, y - 1 ]
+        self.right = [ x, y + 1 ]
+        self.top = [ x - 1, y ]
+        self.bottom = [ x + 1, y ]
+
 def adjacents(x:int , y:int, plateau:Plateau, indexJoueur:int) ->list:
     possibilites = []
     grid = plateau.getTab()
-    pos = Position(x,y)
+    pos = Position( x, y )
 
-    if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.top):
+    if isInGrid(pos.left) and isInGrid(pos.top):
         if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
             possibilites.append([pos.top[0],pos.left[1]])
 
-    if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.bottom):
+    if isInGrid(pos.left) and isInGrid(pos.bottom):
         if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur:
             possibilites.append([pos.bottom[0], pos.left[1]])
 
-    if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.top):
+    if isInGrid(pos.right) and isInGrid(pos.top):
         if grid[pos.right[0]][pos.right[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
             possibilites.append([pos.top[0], pos.right[1]])
 
-    if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.bottom):
+    if isInGrid(pos.right) and isInGrid(pos.bottom):
         if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
             possibilites.append([pos.bottom[0],pos.right[1]])
 
