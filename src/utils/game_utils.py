@@ -236,10 +236,10 @@ def playerCanPlay(player: Player, plateau: Plateau) -> bool:
         for i in range(0, 20):
             for j in range(0, 20):
                 if validPlacement(player.pieces.liste_pieces[indice_piece], i, j, plateau, player):
-                    print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j}")
+                    # print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j}")
                     return True
                 if validPlacementRotation(indice_piece, i, j, plateau, player):
-                    print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j} en étant rotate")
+                    # print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j} en étant rotate")
                     return True
                     
     player.canplay = False

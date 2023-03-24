@@ -16,15 +16,18 @@ def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view)
     numPiece = bestMove['piece']
     [x,y] = bestMove['position']
 
+    # print(joueurActuel.logPieces)
+
+    joueurActuel.logPieces.append(numPiece)
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
     piece = joueurActuel.jouerPiece(numPiece)
-    piece = coordsBlocs(piece,x,y)
+    piece = coordsBlocs(piece,y,x)
     for x,y in piece:
         plateau.setColorOfCase(x,y,index)
         view._addToGrid(cheminFichierPiece,y,x)
 
-    print(plateau)
+    # print(plateau)
 
 
 class Position:
@@ -42,6 +45,7 @@ def getBestMove(joueur:Player,plateau:Plateau,indexJoueur:int):
     bestMove = None
 
     possibilities = gameManager.getBestPossibilities(plateau,indexJoueur,joueur)
+    print("--------------->",possibilities)
     for possibility in possibilities:
         for numPiece in joueur.pieces.pieces_joueurs:
             x,y = possibility
