@@ -78,39 +78,28 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list
     joueur.hasPlayedPiece( idPiece )
     return coordsBlocs( joueur.jouerPiece( idPiece ), y, x )
 
-def adjacents( x, y, plateau: Plateau, indexJoueur: int ) -> list:
-    adjs = [[x - 1, y], [x, y - 1], [x, y + 1], [x + 1, y]]
-            # Top , Left , Right, Bottom
+def adjacents(x:int , y:int, plateau:Plateau, indexJoueur:int) ->list:
     possibilites = []
-    grille = plateau.getTab()
+    grid = plateau.getTab()
+    pos = Position(x,y)
 
-    left = adjs[0];top = adjs[1]
-    right = adjs[2];bottom = adjs[3]
-    TAILLE : int = len(grille)
+    if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.top):
+        if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
+            possibilites.append([pos.top[0],pos.left[1]])
 
-    def inGrid(side:list):
-        if side[0] <= TAILLE and side[1] <= TAILLE and side[0] >= 0 and side[1] >= 0:
-            return True
-        return False
-        
-    
-    if inGrid(left) and inGrid(top):
-        if grille[left[0]][left[1]] != indexJoueur and grille[top[0]][top[1]] != indexJoueur:
-            possibilites.append([left[0], top[1]])
+    if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.bottom):
+        if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur:
+            possibilites.append([pos.bottom[0], pos.left[1]])
 
-    if inGrid(left) and inGrid(right):
-        if grille[left[0]][left[1]] != indexJoueur and grille[right[0]][right[1]] != indexJoueur:
-            possibilites.append([left[0], right[1]])
+    if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.top):
+        if grid[pos.right[0]][pos.right[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
+            possibilites.append([pos.top[0], pos.right[1]])
 
-    if inGrid(bottom) and inGrid(top):
-        if grille[bottom[0]][bottom[1]] != indexJoueur and grille[top[0]][top[1]] != indexJoueur:
-            possibilites.append([bottom[0], top[1]])
- 
-    if inGrid(right) and inGrid(bottom):
-        if grille[bottom[0]][bottom[1]] != indexJoueur and grille[right[0]][right[1]] != indexJoueur:
-            possibilites.append([bottom[0],right[1]])
+    if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.bottom):
+        if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
+            possibilites.append([pos.bottom[0],pos.right[1]])
 
-    return list( filter( lambda coords: grille[coords[0]][coords[1]] != indexJoueur, possibilites ) )
+    return list( filter( lambda coords: grid[coords[0]][coords[1]] != indexJoueur, possibilites ) )
 
 def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
     p = []
