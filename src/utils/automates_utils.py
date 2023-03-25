@@ -3,7 +3,7 @@ from random import randint
 import threading
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import isValidMove, validPlacement,coordsBlocs,getDiagonals,getAdjacents
+from utils.game_utils import hasAdjacentSameSquare, isInGrid, isValidMove, validPlacement,coordsBlocs,getDiagonals,getAdjacents
 from copy import deepcopy
 from utils.tree import Tree
 from utils.tree import evaluateGame
@@ -12,6 +12,7 @@ from time import sleep
 import asyncio
 import time
 from concurrent.futures.thread import ThreadPoolExecutor
+import itertools
 
 async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
 
@@ -87,6 +88,7 @@ async def getBestMove(joueur:Player,plateau:Plateau,indexJoueur:int):
 
     possibilities = gameManager.getBestPossibilities(plateau,indexJoueur,joueur)
     print("--------------->",possibilities)
+    print("------------> NB POSSIBILITES", len(possibilities))
 
     from multiprocessing import Queue,Process
 
@@ -178,8 +180,10 @@ class gameManager:
         
         possibilites = []
         for cell in gameManager.iterateGrid(plateau,indexJoueur):
-            possibilites += gameManager.getAdjacents(cell[0],cell[1],plateau,indexJoueur)
-        return possibilites
+            possibilites += gameManager.getAdjacents(cell[0],cell[1],plateau,joueur)
+        possibilites.sort()
+        return list(possibilites for possibilites,_ in itertools.groupby(possibilites))
+        # return possibilites
 
     @staticmethod
     def evaluateGame(plateau:Plateau,indexJoueur:int,joueur:Player):
@@ -200,26 +204,29 @@ class gameManager:
         return isValidMove(piece,x,y,plateau,joueur)
                
     @staticmethod
-    def getAdjacents(x:int , y:int, plateau:Plateau, indexJoueur:int) ->list:
+    def getAdjacents(y:int , x:int, plateau:Plateau, joueur:Player) ->list:
         possibilites = []
-        grid = plateau.getTab()
-        pos = Position(x,y)
 
-        if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.top):
-            if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
-                possibilites.append([pos.top[0],pos.left[1]])
+        # 1 : Récupérer les diagonales qui existent
+        # 2 : Pour chaque diagonale => enlever si elle a un adjacent de même couleur
+        # 3 : return ça
+        # 4 : Dans bestPossibilities, enlever tous les doubles
+        
+        if isInGrid(y - 1, x - 1):
+            if not hasAdjacentSameSquare(plateau, joueur, x - 1, y - 1):
+                possibilites.append([y - 1, x - 1])
 
-        if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.bottom):
-            if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur:
-                possibilites.append([pos.bottom[0], pos.left[1]])
+        if isInGrid(y + 1, x - 1):
+            if not hasAdjacentSameSquare(plateau, joueur, x - 1, y + 1):
+                possibilites.append([y + 1 , x - 1])
 
-        if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.top):
-            if grid[pos.right[0]][pos.right[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
-                possibilites.append([pos.top[0], pos.right[1]])
+        if isInGrid(y - 1, x + 1):
+            if not hasAdjacentSameSquare(plateau, joueur, x + 1, y - 1):
+                possibilites.append([y - 1 , x + 1])
     
-        if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.bottom):
-            if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
-                possibilites.append([pos.bottom[0],pos.right[1]])
+        if isInGrid(y + 1, x + 1):
+            if not hasAdjacentSameSquare(plateau, joueur, x + 1, y + 1):
+                possibilites.append([y + 1, x + 1])
 
-        return list( filter( lambda coords: grid[coords[0]][coords[1]] != indexJoueur, possibilites ) )
+        return possibilites
     
