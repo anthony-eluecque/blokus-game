@@ -22,8 +22,6 @@ async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int,
     numPiece = bestMove['piece']
     [x,y] = bestMove['position']
 
-    # print(joueurActuel.logPieces)
-
     joueurActuel.logPieces.append(numPiece)
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
@@ -34,16 +32,6 @@ async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int,
         view._addToGrid(cheminFichierPiece,y,x)
 
     return -1
-    # print(plateau)
-
-
-class Position:
-
-    def __init__(self,x,y) -> None:
-        self.left = [x,y-1]
-        self.right = [x,y+1]
-        self.top = [x-1,y]
-        self.bottom = [x+1,y]
 
 def doMinmax(numPiece: int, plateau: Plateau, possibility:list[int,int], joueur: Player, indexJoueur:int,results):
 
@@ -116,10 +104,7 @@ async def getBestMove(joueur:Player,plateau:Plateau,indexJoueur:int):
     print("Temps de calcul : ",end-start_time)
     return {'piece':bestNumPiece,'position':bestMove}
 
-
-    # tasks[0].result()
-
-def minmax(joueur:Player,plateau:Plateau,indexJoueur,depth=0,maxDepth=2):
+def minmax(joueur:Player,plateau:Plateau,indexJoueur,depth=0,maxDepth=3):
     maxScore = -math.inf
     if depth >= maxDepth:
         return gameManager.evaluateGame(plateau,indexJoueur,joueur) 
@@ -206,11 +191,6 @@ class gameManager:
     @staticmethod
     def getAdjacents(y:int , x:int, plateau:Plateau, joueur:Player) ->list:
         possibilites = []
-
-        # 1 : Récupérer les diagonales qui existent
-        # 2 : Pour chaque diagonale => enlever si elle a un adjacent de même couleur
-        # 3 : return ça
-        # 4 : Dans bestPossibilities, enlever tous les doubles
         
         if isInGrid(y - 1, x - 1):
             if not hasAdjacentSameSquare(plateau, joueur, x - 1, y - 1):
