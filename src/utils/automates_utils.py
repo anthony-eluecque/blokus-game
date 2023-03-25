@@ -1,16 +1,21 @@
+import multiprocessing
 from random import randint
+import threading
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import validPlacement,coordsBlocs,getDiagonals,getAdjacents
+from utils.game_utils import isValidMove, validPlacement,coordsBlocs,getDiagonals,getAdjacents
 from copy import deepcopy
 from utils.tree import Tree
 from utils.tree import evaluateGame
 import math
 from time import sleep
+import asyncio
+import time
+from concurrent.futures.thread import ThreadPoolExecutor
 
-def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
+async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
 
-    bestMove = getBestMove(joueurActuel,plateau,index)
+    bestMove = await getBestMove(joueurActuel,plateau,index)
 
     print(bestMove)
     numPiece = bestMove['piece']
@@ -27,6 +32,7 @@ def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view)
         plateau.setColorOfCase(x,y,index)
         view._addToGrid(cheminFichierPiece,y,x)
 
+    return -1
     # print(plateau)
 
 
@@ -38,47 +44,80 @@ class Position:
         self.top = [x-1,y]
         self.bottom = [x+1,y]
 
+def doMinmax(numPiece: int, plateau: Plateau, possibility:list[int,int], joueur: Player, indexJoueur:int,results):
 
-def getBestMove(joueur:Player,plateau:Plateau,indexJoueur:int):
+    x,y = possibility
+    check = gameManager.canPlacePiece(numPiece,plateau,x,y,joueur)
+
+    if not check:
+        # print(numPiece)
+        return None
+
+    if numPiece in joueur.logPieces:
+        # print(numPiece)
+        return None
+
+    joueur.logPieces.append(numPiece)
+
+    pieceBlokus = coordsBlocs(joueur.jouerPiece(numPiece),y,x)
+    for xpos,ypos in pieceBlokus:
+        plateau.setColorOfCase(xpos,ypos,indexJoueur)
+
+    score = minmax(joueur,plateau,indexJoueur)
+
+    for xpos,ypos in pieceBlokus:
+        plateau.setColorOfCase(xpos,ypos,'X')
+
+    # plateau.undoMove()
+    joueur.logPieces.pop()
+
+    # print(numPiece)
+    # asyncio.sleep(.5)
+    results.put((score,possibility,numPiece))
+    return score, possibility, numPiece
+
+
+async def getBestMove(joueur:Player,plateau:Plateau,indexJoueur:int):
     
     maxScore = -math.inf
     bestMove = None
+    bestNumPiece = None
+
+    start_time = time.time()
 
     possibilities = gameManager.getBestPossibilities(plateau,indexJoueur,joueur)
     print("--------------->",possibilities)
+
+    from multiprocessing import Queue,Process
+
+    results = Queue()
+    processes = []
     for possibility in possibilities:
         for numPiece in joueur.pieces.pieces_joueurs:
-            x,y = possibility
-            check = gameManager.canPlacePiece(numPiece,plateau,x,y,joueur)
+            p = Process(target=doMinmax,args=(numPiece,deepcopy(plateau),possibility,deepcopy(joueur),indexJoueur,results))
+            processes.append(p)
+            p.start()
+    for p in processes:
+        p.join()
+        
+    while not results.empty():
+        result = results.get()
+        if not result:
+            continue
+        (score,position,numPiece) = result
+        if score > maxScore:
+            maxScore = score
+            bestMove = position
+            bestNumPiece = numPiece
+    
+    end = time.time()
+    print("Temps de calcul : ",end-start_time)
+    return {'piece':bestNumPiece,'position':bestMove}
 
-            if not check:
-                continue
 
-            if numPiece in joueur.logPieces:
-                continue
-
-            joueur.logPieces.append(numPiece)
-
-            pieceBlokus = coordsBlocs(joueur.jouerPiece(numPiece),y,x)
-            for xpos,ypos in pieceBlokus:
-                plateau.setColorOfCase(xpos,ypos,indexJoueur)
-
-            score = minmax(joueur,plateau,indexJoueur)
-
-            for xpos,ypos in pieceBlokus:
-                plateau.setColorOfCase(xpos,ypos,'X')
-
-            if score > maxScore:
-                maxScore = score 
-                bestMove = {"piece":numPiece,"position":[x,y]}
-            # plateau.undoMove()
-            joueur.logPieces.pop()
-
-    return bestMove
-
+    # tasks[0].result()
 
 def minmax(joueur:Player,plateau:Plateau,indexJoueur,depth=0,maxDepth=2):
-
     maxScore = -math.inf
     if depth >= maxDepth:
         return gameManager.evaluateGame(plateau,indexJoueur,joueur) 
@@ -139,24 +178,17 @@ class gameManager:
         
         possibilites = []
         for cell in gameManager.iterateGrid(plateau,indexJoueur):
-            state = gameManager.getAdjacents(cell[0],cell[1],plateau,indexJoueur)
-            if len(state):
-                for pos in state:
-                    possibilites.append(pos)
+            possibilites += gameManager.getAdjacents(cell[0],cell[1],plateau,indexJoueur)
         return possibilites
 
     @staticmethod
     def evaluateGame(plateau:Plateau,indexJoueur:int,joueur:Player):
-        # print(plateau)
-        def iterateGrid(grid):
-            for row in grid:
-                for cell in row:
-                    yield cell
 
         grid = plateau.getTab()
         score = 0
-        for cell in iterateGrid(grid):
-            if cell == indexJoueur:
+        for row in grid:
+            for cell in row:
+              if cell == indexJoueur:
                 score += 1
         return score + len(gameManager.getBestPossibilities(plateau,indexJoueur,joueur))
 
@@ -165,10 +197,7 @@ class gameManager:
     def canPlacePiece(numPiece:int, plateau:Plateau, x, y, joueur:Player) -> bool:
 
         piece = joueur.jouerPiece(numPiece)
-        checkIf = validPlacement(piece,x,y,plateau,joueur)
-        if checkIf:
-            return True
-        return False
+        return isValidMove(piece,x,y,plateau,joueur)
                
     @staticmethod
     def getAdjacents(x:int , y:int, plateau:Plateau, indexJoueur:int) ->list:
