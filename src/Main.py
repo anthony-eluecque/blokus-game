@@ -6,7 +6,7 @@ from utils.window_utils import _resizeWindow
 class Main:
     @staticmethod    
     def run():
-        # try:
+        try:
             window = CTk()
             _resizeWindow(window, 700, 700)
             window.title("Blokus")
@@ -14,8 +14,8 @@ class Main:
             app = Core.openController("Home", window)
             app.main()
             window.mainloop()
-        # except Exception as e:
-            # print(str(e))
+        except Exception as e:
+            print(str(e))
 
 if __name__ == '__main__':
     Main.run()

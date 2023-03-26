@@ -6,7 +6,7 @@ from utils.leaderboard_utils import makeClassement, writeInJson, updateClassemen
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
-from utils.automates_utils import medium_automate
+from utils.minmaxIA import medium_automate
 import asyncio
 
 class GameController(Controller):
