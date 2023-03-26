@@ -7,6 +7,7 @@ from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
 from utils.minmaxIA import medium_automate
+from utils.automates_utils import easy_automate
 import asyncio
 
 class GameController(Controller):
