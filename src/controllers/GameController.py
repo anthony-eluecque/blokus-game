@@ -161,5 +161,5 @@ class GameController(Controller):
 
     async def IA(self):
         # easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
-        result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
+        result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
         self.nextPlayer()
