@@ -18,7 +18,6 @@ async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int,
 
     bestMove = await getBestMove(joueurActuel,plateau,index)
 
-    print(bestMove)
     numPiece = bestMove['piece']
     [x,y] = bestMove['position']
 
@@ -39,11 +38,9 @@ def doMinmax(numPiece: int, plateau: Plateau, possibility:list[int,int], joueur:
     check = gameManager.canPlacePiece(numPiece,plateau,x,y,joueur)
 
     if not check:
-        # print(numPiece)
         return None
 
     if numPiece in joueur.logPieces:
-        # print(numPiece)
         return None
 
     joueur.logPieces.append(numPiece)
@@ -52,16 +49,13 @@ def doMinmax(numPiece: int, plateau: Plateau, possibility:list[int,int], joueur:
     for xpos,ypos in pieceBlokus:
         plateau.setColorOfCase(xpos,ypos,indexJoueur)
 
+    starttime = time.time()
     score = minmax(joueur,plateau,indexJoueur)
-
     for xpos,ypos in pieceBlokus:
         plateau.setColorOfCase(xpos,ypos,'X')
 
-    # plateau.undoMove()
     joueur.logPieces.pop()
 
-    # print(numPiece)
-    # asyncio.sleep(.5)
     results.put((score,possibility,numPiece))
     return score, possibility, numPiece
 
@@ -87,9 +81,10 @@ async def getBestMove(joueur:Player,plateau:Plateau,indexJoueur:int):
             p = Process(target=doMinmax,args=(numPiece,deepcopy(plateau),possibility,deepcopy(joueur),indexJoueur,results))
             processes.append(p)
             p.start()
+
     for p in processes:
         p.join()
-        
+
     while not results.empty():
         result = results.get()
         if not result:
@@ -99,12 +94,12 @@ async def getBestMove(joueur:Player,plateau:Plateau,indexJoueur:int):
             maxScore = score
             bestMove = position
             bestNumPiece = numPiece
-    
-    end = time.time()
-    print("Temps de calcul : ",end-start_time)
+
+    print("Temps de calcul TOTAL : ",time.time()-start_time)
+    # end = time.time()
     return {'piece':bestNumPiece,'position':bestMove}
 
-def minmax(joueur:Player,plateau:Plateau,indexJoueur,depth=0,maxDepth=3):
+def minmax(joueur:Player,plateau:Plateau,indexJoueur,depth=0,maxDepth=2):
     maxScore = -math.inf
     if depth >= maxDepth:
         return gameManager.evaluateGame(plateau,indexJoueur,joueur) 
