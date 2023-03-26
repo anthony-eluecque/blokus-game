@@ -10,7 +10,7 @@ class Main:
             window = CTk()
             _resizeWindow(window, 700, 700)
             window.title("Blokus")
-            window.iconbitmap(r'media\Icon\icon.ico') 
+            window.iconbitmap(r'media\Icon\icon.ico')
             app = Core.openController("Home", window)
             app.main()
             window.mainloop()
