@@ -7,6 +7,7 @@ from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
 from utils.automates_utils import easy_automate
+from views.GameView import GameView
 from config import APP_PATH
 
 class GameController(Controller):
@@ -23,7 +24,8 @@ class GameController(Controller):
         self.debut = True
         self.actualPlayer: Player = self.joueurs[self.index]
         self.plateau = Plateau(20,20)
-        self.gameView = self.loadView("Game",window)
+        self.gameView = GameView(self, self.window)
+        # self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
@@ -99,7 +101,6 @@ class GameController(Controller):
                 if joueur.getCouleur() not in self.nePeutPlusJouer:
                     self.nePeutPlusJouer.append(joueur.getCouleur())
                     self.gameView._makePopup(joueur)
-
         self.actualPlayer = joueur
 
 
