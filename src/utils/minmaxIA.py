@@ -14,7 +14,7 @@ import time
 from concurrent.futures.thread import ThreadPoolExecutor
 import itertools
 
-async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view):
+async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view,db):
 
     bestMove = await getBestMove(joueurActuel,plateau,index)
 
@@ -30,6 +30,8 @@ async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int,
         plateau.setColorOfCase(x,y,index)
         view._addToGrid(cheminFichierPiece,y,x)
 
+    db.addPoints(joueurActuel.couleur,len(piece))
+    db.addToHistoriquePlayer(joueurActuel.couleur,bestMove['position'][0],bestMove['position'][1],numPiece)
     return -1
 
 def doMinmax(numPiece: int, plateau: Plateau, possibility:list[int,int], joueur: Player, indexJoueur:int,results):
