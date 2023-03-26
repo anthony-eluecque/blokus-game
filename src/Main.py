@@ -11,7 +11,6 @@ class Main:
             _resizeWindow(window, 700, 700)
             window.title("Blokus")
             window.iconbitmap(r'media\Icon\icon.ico')
-            # Changer ici par home (pour menu) 
             app = Core.openController("Home", window)
             app.main()
             window.mainloop()

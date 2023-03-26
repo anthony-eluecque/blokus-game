@@ -1,0 +1,41 @@
+
+
+
+
+
+def minmax(depth,maxDepth):
+
+    maxScore = -inf
+
+    if depth>maxDepth:
+        return evaluation
+    
+    --> Récupération des possibilitées
+
+    Pour chaque possibilitees   
+        Pour chaque pièce 
+            Si il peut pas la jouer:
+                continuer
+            
+            ----> Joue la pièce
+            ----> coordsBlocs
+            ----> Pour chaque position dans coords :
+                    tab[i][j] = pos
+
+            score = minmax(depth+1,maxDepth)
+
+            si score > maxScore : 
+                maxScore = score
+                bestLog = { "piece" : piece, "position" : pos }
+
+
+            plateau.undoMoves()
+
+
+
+
+                
+
+
+
+
