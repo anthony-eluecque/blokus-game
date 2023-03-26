@@ -1,0 +1,154 @@
+{
+    "parties": {
+        "1": {
+            "date": "11-3-2023",
+            "heure": "17h17",
+            "gagnant": "",
+            "bleu": {
+                "pseudo": "",
+                "score": 5,
+                "historique_placement": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        16
+                    ]
+                ]
+            },
+            "rouge": {
+                "pseudo": "",
+                "score": 0,
+                "historique_placement": []
+            },
+            "vert": {
+                "pseudo": "",
+                "score": 0,
+                "historique_placement": []
+            },
+            "jaune": {
+                "pseudo": "",
+                "score": 0,
+                "historique_placement": []
+            }
+        },
+        "2": {
+            "date": "11-3-2023",
+            "heure": "17h17",
+            "gagnant": "",
+            "bleu": {
+                "score": 3,
+                "pseudo": "",
+                "historique_placement": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        2
+                    ]
+                ]
+            },
+            "rouge": {
+                "score": 0,
+                "pseudo": "",
+                "historique_placement": []
+            },
+            "vert": {
+                "score": 0,
+                "pseudo": "",
+                "historique_placement": []
+            },
+            "jaune": {
+                "score": 0,
+                "pseudo": "",
+                "historique_placement": []
+            }
+        },
+        "3": {
+            "date": "11-3-2023",
+            "heure": "17h18",
+            "gagnant": "",
+            "bleu": {
+                "score": 3,
+                "pseudo": "",
+                "historique_placement": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        2
+                    ]
+                ]
+            },
+            "rouge": {
+                "score": 0,
+                "pseudo": "",
+                "historique_placement": []
+            },
+            "vert": {
+                "score": 0,
+                "pseudo": "",
+                "historique_placement": []
+            },
+            "jaune": {
+                "score": 0,
+                "pseudo": "",
+                "historique_placement": []
+            }
+        },
+        "4": {
+            "date": "12-3-2023",
+            "heure": "18h15",
+            "gagnant": "",
+            "bleu": {
+                "score": 5,
+                "pseudo": "",
+                "historique_placement": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        14
+                    ]
+                ]
+            },
+            "rouge": {
+                "score": 0,
+                "pseudo": "",
+                "historique_placement": []
+            },
+            "vert": {
+                "score": 0,
+                "pseudo": "",
+                "historique_placement": []
+            },
+            "jaune": {
+                "score": 0,
+                "pseudo": "",
+                "historique_placement": []
+            }
+        }
+    },
+    "overall": {
+        "bleu": {
+            "victoires": 0,
+            "defaites": 0
+        },
+        "rouge": {
+            "victoires": 0,
+            "defaites": 0
+        },
+        "vert": {
+            "victoires": 0,
+            "defaites": 0
+        },
+        "jaune": {
+            "victoires": 0,
+            "defaites": 0
+        }
+    }
+}

@@ -6,6 +6,8 @@ from utils.leaderboard_utils import openJson
 from customtkinter import CTk
 from components.bouton import Bouton
 
+from utils.data_utils import dataGame,jsonManager
+
 class ScoreView(View):
     """
     Classe qui gère la partie graphique du ScoreController . ScoreView hérite de View
@@ -32,8 +34,19 @@ class ScoreView(View):
         self.scoreTbLabel = Label(self.mainFrame, text="Tableau des scores", font="Roboto 30 bold", bg="white" )
         self.scoreTbLabel.place(x=457, y=130, anchor="center")
 
-    def _makeClassement(self,classement):
+    def _makeClassement(self):
         i: int = 1
+
+        self.id = str(int(list(self.db["parties"].keys())[-1]))
+
+        colors = ["bleu","rouge","vert","jaune"]
+        game = self.db["parties"][self.id]
+
+        classement = {}
+        for color in colors:
+            classement[color] = game[color]["score"]
+        classement = {k: v for k, v in sorted(classement.items(), key=lambda item: abs(item[1]))}
+
         for couleur in classement.keys():
             podium: str = i == 1 and "1er :" or str( i ) + "ème :"
             podiumPos: Label = Label(self.mainFrame, text=podium, font="Roboto 30 bold", bg="white", fg=self.colors[ i - 1 ])
@@ -53,12 +66,13 @@ class ScoreView(View):
         self.backButton: Bouton = Bouton(self.window, self, 354, 500,  width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self._leaveGame)
 
     def main(self, longueur=914, hauteur=606):
-        classement = list(openJson()).pop()
+        self.db = jsonManager.readJson()
+        # classement = list(openJson()).pop()
         _resizeWindow(self.window, longueur, hauteur)
         self._makeFrame()
         self._makeBackground()
         self._makeTitleClassement()
-        self._makeClassement(classement)
+        self._makeClassement()
         self._makeBackButton()
 
     def close(self):

@@ -9,6 +9,7 @@ from utils.config_utils import Configuration
 from utils.minmaxIA import medium_automate
 from utils.automates_utils import easy_automate
 import asyncio
+from utils.data_utils import dataGame
 
 class GameController(Controller):
     """ 
@@ -26,6 +27,9 @@ class GameController(Controller):
         self.plateau = Plateau(20,20)
         self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
+
+        self.db = dataGame()
+
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
         """
@@ -62,12 +66,10 @@ class GameController(Controller):
         # if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
             canvas.destroy()
             self.actualPlayer.removePiece(numPiece-1)
-            if self.debut == False:
-                self.classement = updateClassementFromPlay(self.actualPlayer, numPiece)
-            else:
-                self.classement = makeClassement(self.joueurs)
-                writeInJson(self.classement)  
-            print(self.classement)
+
+            self.db.addPoints(self.actualPlayer.couleur,len(pieceBlokus))
+            self.db.addToHistoriquePlayer(self.actualPlayer.couleur,y//30,x//30,numPiece-1)
+
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)
@@ -114,7 +116,7 @@ class GameController(Controller):
 
         if not playable:
             print("terminé")
-            makeClassement(self.joueurs)
+            # makeClassement(self.joueurs)
             _openController(self.gameView, "Score", self.window)
 
     def loadMap(self):
