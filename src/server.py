@@ -23,8 +23,8 @@ class Server(Thread):
 
 
     def sendAllPeople(self, mess):
-        for joueur in self.players:
-            joueur[0].send(bytes(mess, encoding="utf8"))
+        for player in self.players:
+            player[0].send(bytes(mess, encoding="utf8"))
     
     def send(self, player, mess):
         player.send(bytes(mess, encoding="utf8"))
@@ -38,7 +38,10 @@ class Server(Thread):
             self.send(client, couleur)
             self.players.append([client, addr, self.counter, couleur])
             self.counter+=1
-            print(f"{self.counter} Connected")
+            if self.counter == 1:
+                print(f"{self.counter} Player Connected")
+            else:
+                print(f"{self.counter} Players Connected")
         print("\nLaunching game !\n")
 
         self.myColor = self.colors.pop()
@@ -53,9 +56,7 @@ class Server(Thread):
                 paquet = self.gameParam.paquet
                 if paquet != "":
                     self.sendAllPeople(paquet)
-                #Récupérer les coordonnées de la pièces posée
-                #Envoyé a tous les joueurs les infos de la pièces posée + le joueur suivant (actualPlayer)
-                #On fait apparaite le waitingLabel
+
             else:
                 #j'attend les infos de la pièce
                 paquet = self.client.recv(1024).decode(encoding="utf8") 
