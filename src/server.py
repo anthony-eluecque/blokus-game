@@ -3,7 +3,6 @@ from socket import *
 from threading import *
 from tkinter import scrolledtext
 from MainServer import Main
-from controllers.GameController import GameController
 from random import choice
 
     
@@ -32,6 +31,7 @@ class Server(Thread):
     # Activité du thread
     def run(self):
         print("Waiting for 3 persons...\n")
+        self.myColor = self.colors.pop(self.colors.index("Bleu"))
         while self.counter < 3:
             client,addr = self.server.accept()
             couleur = self.colors.pop(self.colors.index(choice(self.colors)))
@@ -44,23 +44,23 @@ class Server(Thread):
                 print(f"{self.counter} Players Connected")
         print("\nLaunching game !\n")
 
-        self.myColor = self.colors.pop()
         print(f"IA color : {self.myColor}")
 
         self.sendAllPeople("Launch")
         self.myGame = Main()
         self.gameParam = self.myGame.game
-
+        print("coucou")
         while self.gameParam.nePeutPlusJouer:
             if self.gameParam.actualPlayer == self.myColor:
+                print("C'EST MON TOUR")
                 paquet = self.gameParam.paquet
                 if paquet != "":
                     self.sendAllPeople(paquet)
-
             else:
                 #j'attend les infos de la pièce
-                paquet = self.client.recv(1024).decode(encoding="utf8") 
-
+                paquet = self.client.recv(1024).decode(encoding="utf8")
+                print("PAS MON TOUR")
+                print(paquet)
                 if paquet != "":
                     #Je recupère les données
                     path = paquet[0]

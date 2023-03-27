@@ -109,7 +109,7 @@ class GameController(Controller):
         # A MODIFIER POUR QUE CA SOIT + OPTIMISER ET RAPIDE
         # J'ai fais ça pour test
         self.joueursIA = []
-        for player in Configuration.getConfig():
+        for player in Configuration.getConfigClient():
             if player["niveau_difficulte"]!=0:
                 self.joueursIA.append(player["couleur"])
         if self.actualPlayer.getCouleur() in self.joueursIA:

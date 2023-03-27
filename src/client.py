@@ -30,27 +30,28 @@ class Client(Thread):
         self.gameParam = self.myGame.game
         while self.gameParam.nePeutPlusJouer:
           if self.gameParam.actualPlayer == self.myColor:
-              self.gameParam.gameView.waitingLabel.destroy()
-              # while self.gameParam.actualPlayer == self.myColor:
-              if self.gameParam.actualPlayer == self.myColor:
-                  paquet = self.gameParam.paquet
-                  if paquet != "":
-                      self.send(paquet)
-                      
-              else:
-                  #j'attend les infos de la pièce
-                  paquet = self.client.recv(1024).decode(encoding="utf8") 
+            print("C'EST MON TOUR")
+            self.gameParam.gameView.waitingLabel.destroy()
+            # while self.gameParam.actualPlayer == self.myColor:
+            paquet = self.gameParam.paquet
+            if paquet != "":
+                self.send(paquet)
+                  
+          else:
+              #j'attend les infos de la pièce
+              paquet = self.client.recv(1024).decode(encoding="utf8") 
+              print("PAS MON TOUR")
+              print(paquet)
+              if paquet != "":
+                  #Je recupère les données
+                  path = paquet[0]
+                  coord = (paquet[1], paquet[2])
+                  rotation = paquet[3]
+                  inversion = paquet[4]
+                  canvas = self.gameParam.canvas
 
-                  if paquet != "":
-                      #Je recupère les données
-                      path = paquet[0]
-                      coord = (paquet[1], paquet[2])
-                      rotation = paquet[3]
-                      inversion = paquet[4]
-                      canvas = self.gameParam.canvas
-
-                      #je l'ajoute à mon tableau
-                      self.gameParam.callbackGame(path, coord[0], coord[1], rotation, inversion, canvas)
+                  #je l'ajoute à mon tableau
+                  self.gameParam.callbackGame(path, coord[0], coord[1], rotation, inversion, canvas)
                 
     except ConnectionRefusedError:
       print("Connexion au serveur échouée")
