@@ -43,11 +43,11 @@ class GameController(Controller):
         file = file.replace(chr(92), "/") #chr(92) = \
         if "/src/.." in file:
             file = file.replace("/src/..", "")
-        numPiece = int(file.split("/")[8].split(".")[0])
+        numPiece = int(file.split("/")[9].split(".")[0])
         piece = self.actualPlayer.jouerPiece(numPiece-1)
         couleurJoueur = self.actualPlayer.getCouleur()
         indexJoueur = self.joueurs.index(self.actualPlayer)
-        
+        self.paquet = ""
         nb_rotation = abs(rotation) // 90
     
         for i in range(nb_rotation):
@@ -76,7 +76,8 @@ class GameController(Controller):
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)
             
             self.actualPlayer.hasPlayedPiece(numPiece-1)
-            
+            self.paquet = file + "," + str(x) + "," + str(y) + "," + str(rotation) + "," + str(inversion)
+            self.canvas = canvas
             self.nextPlayer()
             self.debut = False
             self.gameView.update(self.actualPlayer, self.index)

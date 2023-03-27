@@ -20,5 +20,5 @@ class Main:
         except Exception as e:
             print(str(e))
 
-# if __name__ == '__main__':
-#     Main.run(Main)
+if __name__ == '__main__':
+    Main.run(Main)

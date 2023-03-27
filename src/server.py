@@ -50,8 +50,25 @@ class Server(Thread):
 
         while self.gameParam.nePeutPlusJouer:
             if self.gameParam.actualPlayer == self.myColor:
-                pass
+                paquet = self.gameParam.paquet
+                if paquet != "":
+                    self.sendAllPeople(paquet)
+                #Récupérer les coordonnées de la pièces posée
+                #Envoyé a tous les joueurs les infos de la pièces posée + le joueur suivant (actualPlayer)
+                #On fait apparaite le waitingLabel
+            else:
+                #j'attend les infos de la pièce
+                paquet = self.client.recv(1024).decode(encoding="utf8") 
 
+                if paquet != "":
+                    #Je recupère les données
+                    path = paquet[0]
+                    coord = (paquet[1], paquet[2])
+                    rotation = paquet[3]
+                    inversion = paquet[4]
+                    canvas = self.gameParam.canvas
 
+                    #je l'ajoute à mon tableau
+                    self.gameParam.callbackGame(path, coord[0], coord[1], rotation, inversion, canvas)
 
 app = Server().start()
