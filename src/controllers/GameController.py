@@ -159,6 +159,6 @@ class GameController(Controller):
         # self.loadMap()
 
     def IA(self):
-        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
+        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
         # print(self.plateau)
         self.nextPlayer()

@@ -12,7 +12,7 @@ class Main:
             window.title("Blokus")
             window.iconbitmap(r'media\Icon\icon.ico')
             # Changer ici par home (pour menu) 
-            app = Core.openController("Home", window)
+            app = Core.openController("Game", window)
             app.main()
             window.mainloop()
         except Exception as e:
