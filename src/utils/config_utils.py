@@ -38,6 +38,16 @@ class Configuration:
     def getConfig() -> list:
         with open(APP_PATH + r"\..\gameconfig.json", "r") as f:
             return loads(f.read())
+        
+    @staticmethod
+    def getConfigServer() -> list:
+        with open(APP_PATH + r"\..\gameconfigServer.json", "r") as f:
+            return loads(f.read())
+        
+    @staticmethod
+    def getConfigClient() -> list:
+        with open(APP_PATH + r"\..\gameconfigClient.json", "r") as f:
+            return loads(f.read())
 
     @staticmethod
     def getColorsOrder() -> list:

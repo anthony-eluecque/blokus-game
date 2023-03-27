@@ -2,7 +2,7 @@ from tkinter import *
 from socket import *
 from threading import *
 from tkinter import scrolledtext
-from MainRes import Main
+from MainServer import Main
 from controllers.GameController import GameController
 from random import choice
 

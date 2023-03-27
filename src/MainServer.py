@@ -1,5 +1,5 @@
 # -*- encoding:utf-8 -*-
-from controllers.GameController import GameController 
+from controllers.GameControllerServer import GameController
 from customtkinter import CTk
 from utils.window_utils import _resizeWindow
 from config import APP_PATH

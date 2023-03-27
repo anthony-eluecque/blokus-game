@@ -2,7 +2,7 @@ from tkinter import *
 from socket import *
 from threading import *
 from tkinter.scrolledtext import ScrolledText
-from MainRes import Main
+from MainClient import Main
     
 class Client(Thread):
   def __init__(self):
@@ -52,8 +52,6 @@ class Client(Thread):
                       #je l'ajoute à mon tableau
                       self.gameParam.callbackGame(path, coord[0], coord[1], rotation, inversion, canvas)
                 
-
-
     except ConnectionRefusedError:
       print("Connexion au serveur échouée")
     finally: 
