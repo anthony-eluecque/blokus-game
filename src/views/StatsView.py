@@ -3,13 +3,14 @@ from utils.window_utils import _resizeWindow, _createFrame, _deleteChilds
 from utils.data_utils import jsonManager
 from customtkinter import CTk, CTkImage, CTkLabel
 from PIL import Image,ImageTk
-from tkinter import Button, Label,Scrollbar,Listbox,END,BOTH,RIGHT,Y,Frame,Canvas,LEFT,font
+from tkinter import Button, Label,Scrollbar,Tk,Listbox,END,BOTH,RIGHT,Y,Frame,Canvas,LEFT,font
 from components.stats.gamehistorique import gameHistorique
 from components.bouton import Bouton
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+import numpy as np 
 
 try:
     from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
@@ -139,10 +140,7 @@ class StatsView(View):
             Buttons.append(button)
 
         self.scrollableBody.update()
-
-        f = Figure(figsize=(5,5),dpi=100)
-        VictoryGraph(f,self.mainFrame)
-        
+        VictoryGraph(self.mainFrame)
         # self.createWidgets()
         self.backToHomeButton()
 
@@ -162,43 +160,44 @@ class StatsButton:
         self.button.configure(height=2,width=80,bd=0,highlightthickness=0)
         self.button.configure(font=style,bg='white')
         self.button.grid()
-    
-
-
-    
-
+      
 class Graph:
     
-    def __init__(self,figure,window) -> None:
-        self.canvas : FigureCanvasTkAgg = FigureCanvasTkAgg(figure,window)
+    def __init__(self,root) -> None:
+        self.frame = Frame()
+        self.figure : Figure = Figure(figsize=(5,4.2),dpi=100)
+        self.canvas : FigureCanvasTkAgg = FigureCanvasTkAgg(self.figure,self.frame)
+
+        self.frame.place(x=750,y=250)
 
 class VictoryGraph(Graph):
 
-    def __init__(self, figure : Figure, window) -> None:
-        super().__init__(figure, window)
+    def __init__(self, root) -> None:
+        super().__init__(root)
 
         self.data = jsonManager.readJson()
 
         Victories = self.data["overall"]
 
-        Colors = ['Bleu','Rouge','Vert','Jaune']
-        Winrates = []
+        yAxesColors = ['Bleu','Rouge','Vert','Jaune']
+
+        xAxesWinrates = []
         for colorVictories in Victories:
             nbGames = Victories[colorVictories]['victoires'] + Victories[colorVictories]['defaites']
             winrate = 0
             if nbGames!=0:
                 winrate = round(Victories[colorVictories]['victoires'] / nbGames,2) * 100
-            Winrates.append(winrate)
+            xAxesWinrates.append(int(winrate))
 
-        subplot = figure.add_subplot(111)
-        subplot.plot(Colors,Winrates)
-        toolbar = NavigationToolbar2TkAgg(self.canvas,window)
-        toolbar.update()
+        # plot = self.figure.add_axes([0,0,0,0])
+        plot = self.figure.add_subplot(111)
+        plot.bar(np.array(yAxesColors),np.array(xAxesWinrates))
+        plot.set_xlabel('Couleur')
+        plot.set_ylabel('Winrate')
         self.canvas.draw()
         self.canvas.get_tk_widget().pack()
 
     
-        
 
 
 class ScrollableFrame(Frame):
