@@ -31,29 +31,29 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list
 
     secTourPossibilities: list[ dict ] = []
     solutions: list[ dict ] = getSolutions( positions, joueur, plateau, 0 )
-    
-    for pose in sorted( solutions, key = lambda x: x[ "score" ] ):
-        predictedPlate: Plateau = deepcopy( plateau )
-        pieceBlokus = coordsBlocs( joueur.jouerPiece( pose[ "pieceID" ] ), pose[ "y" ], pose[ "x" ] )
+    secTourPossibilities = solutions
+    # for pose in sorted( solutions, key = lambda x: x[ "score" ] ):
+    #     predictedPlate: Plateau = deepcopy( plateau )
+    #     pieceBlokus = coordsBlocs( joueur.jouerPiece( pose[ "pieceID" ] ), pose[ "y" ], pose[ "x" ] )
 
-        for _ in range( pose[ "nbRota" ] ):
-            joueur.pieces.rotate( pose[ "pieceID" ] ) 
+    #     for _ in range( pose[ "nbRota" ] ):
+    #         joueur.pieces.rotate( pose[ "pieceID" ] ) 
 
-        if pieceBlokus != -1:
-            for xpos,ypos in pieceBlokus:
-                predictedPlate.setColorOfCase( xpos, ypos, index )
+    #     if pieceBlokus != -1:
+    #         for xpos,ypos in pieceBlokus:
+    #             predictedPlate.setColorOfCase( xpos, ypos, index )
 
-        joueur.pieces.pieces_joueurs.remove( pose[ "pieceID" ] )
-        joueur.nb_piece -= 1
+    #     joueur.pieces.pieces_joueurs.remove( pose[ "pieceID" ] )
+    #     joueur.nb_piece -= 1
 
-        possibilities = getPossibilities( index, predictedPlate, joueur )
-        predictedFoundSoluces: list[ dict ] = getSolutions( possibilities, joueur, predictedPlate, pose[ "score" ], pose[ "x" ], pose[ "y" ], pose[ "pieceID" ], pose[ "nbRota" ] )
+    #     possibilities = getPossibilities( index, predictedPlate, joueur )
+    #     predictedFoundSoluces: list[ dict ] = getSolutions( possibilities, joueur, predictedPlate, pose[ "score" ], pose[ "x" ], pose[ "y" ], pose[ "pieceID" ], pose[ "nbRota" ] )
         
-        joueur.pieces.resetRotation( pose[ "pieceID" ] )
-        joueur.pieces.pieces_joueurs.append( pose[ "pieceID" ] )
-        joueur.nb_piece += 1
+    #     joueur.pieces.resetRotation( pose[ "pieceID" ] )
+    #     joueur.pieces.pieces_joueurs.append( pose[ "pieceID" ] )
+    #     joueur.nb_piece += 1
 
-        if len( predictedFoundSoluces ) > 0: secTourPossibilities += predictedFoundSoluces
+    #     if len( predictedFoundSoluces ) > 0: secTourPossibilities += predictedFoundSoluces
 
     possMin: dict = sorted( secTourPossibilities, key = lambda x: x[ "score" ], reverse = True )
 
@@ -61,22 +61,21 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list
     possMin = possMin[ 0 ]
 
     idPiece: int = possMin[ "firstPID" ]
-    if idPiece < 0: idPiece = possMin[ "pieceID" ]
-    
     x: int = possMin[ "firstX" ]
-    if x < 0: x = possMin[ "x" ]
-
     y: int = possMin[ "firstY" ]
-    if y < 0: y = possMin[ "y" ]
-
     rota: int = possMin[ "firstRota" ]
-    if rota < 0: rota = possMin[ "nbRota" ]
+    
+    if x < 0:
+        idPiece = possMin[ "pieceID" ]
+        x = possMin[ "x" ]
+        y = possMin[ "y" ]
+        rota = possMin[ "nbRota" ]
 
     for _ in range( rota ):
         joueur.pieces.rotate( idPiece )
 
     joueur.hasPlayedPiece( idPiece )
-    return coordsBlocs( joueur.jouerPiece( idPiece ), y, x )
+    return ( coordsBlocs( joueur.jouerPiece( idPiece ), y, x ), idPiece )
 
 TAILLE = 19
 
@@ -133,9 +132,11 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
     possibilities = getPossibilities(index,plateau,joueurActuel)
-    pieceBlokus = managePiece(joueurActuel,plateau,possibilities, index )
-    
+    pieceBlokus, idPiece = managePiece(joueurActuel,plateau,possibilities, index )
+
     if pieceBlokus != -1:
         for xpos,ypos in pieceBlokus:
             view._addToGrid(cheminFichierPiece,ypos,xpos)
             plateau.setColorOfCase(xpos,ypos,index)
+
+    joueurActuel.pieces.resetRotation( idPiece )
