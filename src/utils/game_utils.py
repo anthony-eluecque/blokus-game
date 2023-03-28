@@ -6,10 +6,8 @@ import math
 def hasAllPieces(player: Player) -> bool:
     """Fonction permettant de vérifier si un joueur n'a pas encore joué
     sur le plateau
-
     Args:
         player (Player): Le joueur actuel
-
     Returns:
         bool: Vrai => Il a pas encore joué 
     """
@@ -19,11 +17,9 @@ def hasAllPieces(player: Player) -> bool:
 def isPositionDepart(cube_traite, player: Player) -> bool:
     """Fonction permettant de vérifier si le joueur place 
     sa pièce à la première position (premier placement)
-
     Args:
         cube_traite (_type_): Le cube d'origine de la pièce
         player (Player): le joueur actuel
-
     Returns:
         bool: Vrai => Le joueur est bien sur sa position de départ
     """
@@ -33,32 +29,28 @@ def verifTotalPieces(piece, plateau: Plateau, player: Player) -> bool:
     """Fonction permettant de vérifier que tous les carrés de la pièce
     respectent les conditions du jeu blokus, sinon la pièce ne peut pas
     se poser.
-
     Args:
         piece (_type_): La pièce jouée par le joueur
         plateau (Plateau): Le plateau de jeu
         player (Player): Le joueur actuel
-
     Returns:
         bool: Vrai => Il peut jouer
     """
     for part_piece in piece:
-            if part_piece[0]<0 or part_piece[0]>19 or part_piece[1]<0 or part_piece[1]>19:
-                return False
+        if part_piece[0]<0 or part_piece[0]>19 or part_piece[1]<0 or part_piece[1]>19:
+            return False
 
-            if not verifAroundCube(player,part_piece,plateau):
-                return False
+        if not verifAroundCube(player,part_piece,plateau):
+            return False
             
     return True
         
 def notPieceBelow(piece, plateau: Plateau) -> bool:
     """Fonction permettant de vérifier qu'une pièce ne va pas se poser sur une pièce
     existante
-
     Args:
         piece (_type_): La pièce jouée par le joueur
         plateau (Plateau): Le plateau de jeu
-
     Returns:
         bool: Vrai => La pièce peut être posé
     """
@@ -81,12 +73,10 @@ def isInPlateau(cube: list) -> bool:
 def verifAroundCube(player: Player, cube, plateau: Plateau) -> bool:
     """Fonction permettant de vérifier qu'un cube n'a pas un côté adjacent
     avec une pièce déjà existante
-
     Args:
         player (Player): le joueur actuel
         cube (_type_): le cube de la pièce 
         plateau (Plateau): le plateau de jeu
-
     Returns:
         bool: Vrai => La pièce peut être joué
     """
@@ -107,12 +97,10 @@ def coordsBlocs(piece: list, col: int, row: int) -> list:
        0 équivaut à un emplacement "vide"
        >>> coords_blocs([1,1],2,2)
        >>> [3,3]
-
     Args:
         piece (list): la pièce du bloc
         row (int): la ligne à l'origine du premier cube (permet une simulation de déplacement de cube)
         col (int): la colonne à l'origine du premier cube 
-
     Returns:
         list: nouvelles coordonées d'une pièce dans un bloc.
     """
@@ -126,51 +114,40 @@ def coordsBlocs(piece: list, col: int, row: int) -> list:
 
 def validPlacement(bloc: list[int], row: int, col: int, plateau: Plateau, player: Player) -> bool:
     """Fonction permettant de vérifier si un bloc peut être placer sur le plateau.
-
     Args:
         bloc (list[list]): le bloc à positionner sur le plateau
         row (int): ligne de position à l'origine de la pièce
         col (int): colonne de position à l'origine de la pièce
         plateau (Plateau): plateau de jeu
         player (Player): Joueur
-
     Returns:
         bool: le bloc peut être ajouté au tableau
     """
-
+    # print(bloc)
     playerColor: str = player.getCouleur()[0]
     new_bloc: list = coordsBlocs(bloc, col, row)
-    allPieces: bool = hasAllPieces(player)
     verifTotal: bool = verifTotalPieces(new_bloc, plateau, player)
     notBelow: bool = notPieceBelow(new_bloc, plateau)
+    # print(new_bloc)
     
     #  Cas ou le joueur n'a pas encore joué, et il va jouer sa première pièce
     for each_cube in new_bloc:
-        if allPieces:
-            if isPositionDepart(each_cube, player):
-                # print("Position départ")
-                if verifTotal:
-                    # print("vérif Total")
-                    return True
+        if isPositionDepart(each_cube, player):
+            if verifTotal:
+                return True
         # Les cas généraux 
         else:
-            # print("Cas général")
             if expectedPlayerInDiagonals(each_cube, plateau, playerColor):
-                # print("Joueur diagonale")
                 if notBelow:
-                    # print("Pas de pièce en dessous")
                     if verifTotal:
-                        # print("Vérif total pièces")
                         return True
     return False
     
 
 def getSquare(piece: list) -> list[list]:
     """Obtenir toutes les positions autour d'un cube
-
     Args:
         piece (list): le cube du bloc
-
     Returns:
         list[list]: liste des positions autour du cube
     """
@@ -179,10 +156,8 @@ def getSquare(piece: list) -> list[list]:
 
 def getDiagonals(piece: list) -> list[list]:
     """Obtenir toutes les diagonales autour d'un cube
-
     Args:
         piece (list): le cube du bloc
-
     Returns:
         list[list]: liste des diagonales autour du cube
     """
@@ -193,10 +168,8 @@ def getDiagonals(piece: list) -> list[list]:
 
 def getAdjacents(piece: list) -> list[list]:
     """Obtenir toutes les côtés adjacents autour d'un cube
-
     Args:
         piece (list): le cube du bloc
-
     Returns:
         list[list]: liste des adjacents autour du cube
     """
@@ -209,12 +182,10 @@ def getAdjacents(piece: list) -> list[list]:
 def expectedPlayerInDiagonals(piece: list, plateau: Plateau, colorPlayer: str) -> bool:
     """Fonction permettant de savoir si il existe dans une des diagonales il existe un cube de la couleur
     correspondante au joueur actuel
-
     Args:
         piece (list): le cube du bloc à ajouter
         plateau (Plateau): le plateau de jeu
         colorPlayer (str): la couleur du joueur
-
     Returns:
         bool: Vrai : il existe dans l'une des diagonales un carré existant de la même couleur.
               Faux : l'inverse.
@@ -228,11 +199,9 @@ def expectedPlayerInDiagonals(piece: list, plateau: Plateau, colorPlayer: str) -
 
 def playerCanPlay(player: Player, plateau: Plateau) -> bool:
     """Permet de vérifier si un joueur est en capacité de jouer ou non.
-
     Args:
         player (Player): Le joueur actuel
         plateau (Plateau): Le plateau derrière l'affichage graphique
-
     Returns:
         bool: Vrai = Il peut jouer, Faux l'inverse
     """
@@ -242,10 +211,10 @@ def playerCanPlay(player: Player, plateau: Plateau) -> bool:
         for i in range(0, 20):
             for j in range(0, 20):
                 if validPlacement(player.pieces.liste_pieces[indice_piece], i, j, plateau, player):
-                    print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j}")
+                    # print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j}")
                     return True
                 if validPlacementRotation(indice_piece, i, j, plateau, player):
-                    print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j} en étant rotate")
+                    # print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j} en étant rotate")
                     return True
                     
     player.canplay = False
@@ -253,14 +222,12 @@ def playerCanPlay(player: Player, plateau: Plateau) -> bool:
 
 def validPlacementRotation(indice_piece, i: int, j: int, plateau: Plateau, player: Player) -> bool:
     """Fonction permettant de vérifier si un joueur est en capacité de jouer parmis les 4 rotations possibles d'une pièce
-
     Args:
         indice_piece (int): l'indice de la pièce 
         i (int): la position en i dans le tableau 
         j (int): la position en j dans le tableau
         plateau (Plateau): Le plateau de jeu 
         player (Player): Le joueur actuel
-
     Returns:
         bool: True = il peut jouer, False = Il ne peut pas
     """
@@ -275,14 +242,105 @@ def validPlacementRotation(indice_piece, i: int, j: int, plateau: Plateau, playe
 
 def roundDown(n, decimals=2)->int:
     """Fonction permettant d'arrondir à l'inférieur pour notre jeu.
-
     Args:
         n : le nombre à arrondir à l'inférieur
         decimals (int, optional): l'arrondis à faire . Defaults to 2.
-
     Returns:
         int: le nombre arrondi
     """
     multiplier = 10 ** decimals
     result =  int(math.floor(n * multiplier) / multiplier)
     return (result // 30) * 30
+
+
+
+def isInGrid(y,x):
+    if y<0 or y>19 or x<0 or x>19:
+        return False
+    return True
+    
+def isValidFirstMove(piece: list[list[int]], startPosX: int, startPosY: int):
+    startPositionFilled = False
+
+    for cube in piece:
+        yPos, xPos = cube
+
+        if not isInGrid(yPos, xPos):
+            print("ça dépasse")
+            return False
+        
+        if xPos == startPosX and yPos == startPosY:
+            startPositionFilled = True
+
+    return startPositionFilled
+
+def hasAdjacentSameSquare(plateau: Plateau, player: Player, posX: int, posY: int):
+    color = player.getCouleur()[0]
+    # right
+    if isInGrid(posY, posX + 1):
+        if color == plateau.getColorOfCase(posY, posX + 1):
+            return True
+    
+    # left
+    if isInGrid(posY, posX - 1):
+        if color == plateau.getColorOfCase(posY, posX - 1):
+            return True
+    
+    # top
+    if isInGrid(posY - 1, posX):
+        if color == plateau.getColorOfCase(posY - 1, posX):
+            return True
+    
+    if isInGrid(posY + 1, posX):
+        if color == plateau.getColorOfCase(posY + 1, posX):
+            return True
+    return False
+ 
+def hasAdjacentDiagonal(plateau: Plateau, player: Player, posX: int, posY: int):
+    color = player.getCouleur()[0]
+    # bottom - right
+    if isInGrid(posY + 1, posX + 1):
+        if plateau.getColorOfCase(posY + 1, posX + 1) == color:
+            return True
+    
+    # bottom - left
+    if isInGrid(posY + 1, posX - 1):
+        if plateau.getColorOfCase(posY + 1, posX - 1) == color:
+            return True
+    
+    # top - right
+    if isInGrid(posY - 1, posX + 1):
+        if plateau.getColorOfCase(posY - 1, posX + 1) == color:
+            return True
+    
+    # top - left
+    if isInGrid(posY - 1, posX - 1):
+        if plateau.getColorOfCase(posY - 1, posX - 1) == color:
+            return True
+    return False
+
+def isValidMove(piece:list[list[int]],row:int,col:int,plateau:Plateau,player:Player):
+    grid = plateau.getTab()
+    piece = coordsBlocs(piece,col,row)
+    y,x = player.getPositionDepart()
+    if grid[y][x] == 'X':
+        return isValidFirstMove(piece, x, y)
+    
+    pieceHasAdjacentDiagonal = False
+
+    for cube in piece:
+        posY, posX = cube
+
+        if not isInGrid(posY, posX):
+            return False
+        
+        if grid[posY][posX] != 'X':
+            return False
+        
+        if hasAdjacentDiagonal(plateau, player, posX, posY):
+            pieceHasAdjacentDiagonal = True
+
+        if hasAdjacentSameSquare(plateau, player, posX, posY):
+            return False
+
+    return pieceHasAdjacentDiagonal

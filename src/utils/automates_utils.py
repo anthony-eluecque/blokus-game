@@ -1,8 +1,7 @@
 from random import randint
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import validPlacement, coordsBlocs
-from copy import deepcopy
+from utils.game_utils import validPlacement, coordsBlocs, hasAdjacentSameSquare, isInGrid
 
 def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int, x: int = -1, y: int = -1, firstPID: int = -1, firstRota: int = -1 ) -> list[ dict ]:
     poses: list[ dict ] = []
@@ -26,7 +25,8 @@ def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int,
             joueur.pieces.resetRotation( pieceID )
     return poses
 
-def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list:
+def managePiece(joueur:Player,plateau:Plateau, index: int )->list:
+    positions: list = getPossibilities( index, plateau, joueur )
     if len( positions ) < 1: return -1
 
     secTourPossibilities: list[ dict ] = []
@@ -77,13 +77,6 @@ def managePiece(joueur:Player,plateau:Plateau,positions:list, index: int )->list
     joueur.hasPlayedPiece( idPiece )
     return ( coordsBlocs( joueur.jouerPiece( idPiece ), y, x ), idPiece )
 
-TAILLE = 19
-
-def isInGrid(side:list)->bool:
-    if side[0] <= TAILLE and side[1] <= TAILLE and side[0] >= 0 and side[1] >= 0:
-        return True
-    return False
-
 class Position:
     def __init__( self, x, y ) -> None:
         self.left = [ x, y - 1 ]
@@ -91,28 +84,26 @@ class Position:
         self.top = [ x - 1, y ]
         self.bottom = [ x + 1, y ]
 
-def adjacents(x:int , y:int, plateau:Plateau, indexJoueur:int) ->list:
+def adjacents( x:int , y:int, plateau:Plateau, joueur: Player ) -> list:
     possibilites = []
-    grid = plateau.getTab()
-    pos = Position( x, y )
+    
+    if isInGrid(y - 1, x - 1):
+        if not hasAdjacentSameSquare(plateau, joueur, x - 1, y - 1):
+            possibilites.append([y - 1, x - 1])
 
-    if isInGrid(pos.left) and isInGrid(pos.top):
-        if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
-            possibilites.append([pos.top[0],pos.left[1]])
+    if isInGrid(y + 1, x - 1):
+        if not hasAdjacentSameSquare(plateau, joueur, x - 1, y + 1):
+            possibilites.append([y + 1 , x - 1])
 
-    if isInGrid(pos.left) and isInGrid(pos.bottom):
-        if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur:
-            possibilites.append([pos.bottom[0], pos.left[1]])
+    if isInGrid(y - 1, x + 1):
+        if not hasAdjacentSameSquare(plateau, joueur, x + 1, y - 1):
+            possibilites.append([y - 1 , x + 1])
 
-    if isInGrid(pos.right) and isInGrid(pos.top):
-        if grid[pos.right[0]][pos.right[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
-            possibilites.append([pos.top[0], pos.right[1]])
+    if isInGrid(y + 1, x + 1):
+        if not hasAdjacentSameSquare(plateau, joueur, x + 1, y + 1):
+            possibilites.append([y + 1, x + 1])
 
-    if isInGrid(pos.right) and isInGrid(pos.bottom):
-        if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
-            possibilites.append([pos.bottom[0],pos.right[1]])
-
-    return list( filter( lambda coords: grid[coords[0]][coords[1]] != indexJoueur, possibilites ) )
+    return possibilites
 
 def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
     p = []
@@ -120,7 +111,7 @@ def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
     for i,ligne in enumerate(grille):
         for j,col in enumerate(ligne):
             if col == indexJoueur:
-                possibilities = adjacents(i,j,plateau,indexJoueur)
+                possibilities = adjacents(i,j,plateau,joueur)
                 if len(possibilities):
                     for _pos in possibilities:
                         p.append(_pos)
@@ -130,9 +121,7 @@ def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
 
 def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
-
-    possibilities = getPossibilities(index,plateau,joueurActuel)
-    pieceBlokus, idPiece = managePiece(joueurActuel,plateau,possibilities, index )
+    pieceBlokus, idPiece = managePiece(joueurActuel,plateau, index )
 
     if pieceBlokus != -1:
         for xpos,ypos in pieceBlokus:
