@@ -2,7 +2,6 @@ from models.Player import Player
 from models.Plateau import Plateau
 from utils.game_utils import validPlacement, coordsBlocs
 
-# comment faire pour qu'une IA joue en fonction du coup qui lui rapportera le plus de point sur un plateau de jeu déjà valué en python 
 
 def managePiece(joueur: Player, plateau: Plateau, positions: list ) -> list :
     """TODO"""
@@ -33,6 +32,7 @@ class gameManager:
 
     @staticmethod
     def getBestPossibilities(plateau: Plateau, indexJoueur: int, joueur: Player):
+        """TODO: adapter la fonction pour jouer en fonction de @valoriser_grille"""
         startPos = joueur.getPositionDepart()
         grid = plateau.getTab()
         if grid[startPos[0]][startPos[1]] != indexJoueur:
@@ -47,16 +47,15 @@ class gameManager:
         return possibilites
 
     @staticmethod
-    def valoriser_grille(plateau: Plateau) -> list:
+    def valoriser_grille(plateau: Plateau) -> list[list[float]]:
         """TODO: faire jouer l'ia en fonction du score du plateau"""
         grille = plateau.getTab()
 
-        centre_x = len(grille) // 2
-        centre_y = len(grille[0]) // 2
+        centre_x, centre_y = len(grille) // 2, len(grille[0]) // 2
         max_distance = max(centre_x, centre_y)
-        valeurs = []
+        valeurs: list[list[float]] = []
         for i in range(len(grille)):
-            ligne = []
+            ligne: list[float] = []
             for j in range(len(grille[0])):
                 distance = abs(i - centre_x) + abs(j - centre_y)
                 proportion_distance = 1 - (distance / max_distance)
@@ -100,6 +99,7 @@ class gameManager:
         return list(filter(lambda coords: grid[coords[0]][coords[1]] != indexJoueur, possibilites))
 
 def easy_automate(joueurActuel: Player, plateau: Plateau, index: int, view):
+    """TODO: Modifier le code pour qu'il joue bien (voir avec l'évolution des autres programmes)"""
 
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
