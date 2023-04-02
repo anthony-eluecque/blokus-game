@@ -13,7 +13,8 @@ from matplotlib.figure import Figure
 import numpy as np 
 from components.game.grille import grille
 from utils.game_utils import coordsBlocs
-
+from models.Player import Player
+            
 try:
     from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
 except ImportError:
@@ -96,8 +97,7 @@ class StatsView(View):
         self.grille = grille(self.window,400,400,False)
         self.grille.canvas.place(x=500,y=100)
         
-        from models.Player import Player
-            
+
         for color in colors:
             
             player = Player(color.upper()[0]+color[1:])
