@@ -10,14 +10,15 @@ class grille:
     Ne gère que la partie graphique
     """
 
-    def __init__(self,window:CTk,largeur:int,hauteur:int)->None:
+    def __init__(self,window:CTk,largeur:int,hauteur:int,condition:bool)->None:
 
         self.liste_piece = []
         self.window = window
 
         self._canvasCreation(largeur,hauteur)
         self._gridCreation(largeur)
-        self._playersCorner(largeur,hauteur)
+        if condition:
+            self._playersCorner(largeur,hauteur)
         self._configWidget()
 
     def _canvasCreation(self,w:int,h:int)->None:
