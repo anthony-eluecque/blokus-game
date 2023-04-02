@@ -118,6 +118,10 @@ class StatsView(View):
                     cube.place(x=((xpos*20)+500),y=((ypos*20)+100))
                     self.cubes.append([images[color],cube,img])
 
+        self.title = CTkLabel(self.window,text="Résumé de la partie : ",bg_color='white',text_color='black')
+        self.title.configure(font=('Roboto Bold', 35))
+        self.title.place(x=320,y=30)
+
         self.backStats: Bouton = Bouton(self.window, self, 400, 540, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.statsController.backToStats)
 
 
