@@ -3,7 +3,7 @@ from utils.window_utils import _resizeWindow, _createFrame, _deleteChilds
 from utils.data_utils import jsonManager
 from customtkinter import CTk, CTkImage, CTkLabel
 from PIL import Image,ImageTk
-from tkinter import Button, Label,Scrollbar,Tk,Listbox,END,BOTH,RIGHT,Y,Frame,Canvas,LEFT,font
+from tkinter import Button, Label, PhotoImage,Scrollbar,Tk,Listbox,END,BOTH,RIGHT,Y,Frame,Canvas,LEFT,font
 from components.stats.gamehistorique import gameHistorique
 from components.bouton import Bouton
 import matplotlib
@@ -11,6 +11,7 @@ matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np 
+from components.game.grille import grille
 
 try:
     from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
@@ -56,9 +57,9 @@ class StatsView(View):
     def openDetailGame(self,idPartie) -> None:
 
         _deleteChilds(self.window)
-        _resizeWindow(self.window,500,600)
-        self._makeFrame(500,600)
-        self._makeBackground(500,600,"./media/assets/bgDetailPartie.png")
+        _resizeWindow(self.window,1000,600)
+        self._makeFrame(1000,600)
+        self._makeBackground(1000,600,"./media/assets/bgDetailPartie.png")
         self.banners = []
 
         colors = ["bleu","rouge","vert","jaune"]
@@ -83,12 +84,40 @@ class StatsView(View):
             y_joueur+=110
             self.labelWidgets.append(widget)
 
-        
-        # for color in colors:
-        #     PARTIE[color]
+        x = 500 ; y= 100
+        self.cubes = []
+        images = {
+            'bleu':'./media/pieces/B/1.png',
+            'rouge':'./media/pieces/R/1.png',
+            'vert':'./media/pieces/V/1.png',
+            'jaune':'./media/pieces/J/1.png'}
+
+        # self.gridImage = CTkImage(Image.open('./media/assets/grilleDetail.png'), size=(400, 400))
+        # self.gridBg = CTkLabel(self.window, text="", image = self.gridImage)
+        # self.gridBg.place(x = 500, y = 100)
+        self.grille = grille(self.window,400,400,False)
+        self.grille.canvas.place(x=500,y=100)
+
+        for color in colors:
+
+            logPlacements = PARTIE[color]["historique_placement"]
+            for placement in logPlacements:
+                y,x = placement[0]
+                y = y*20+100
+                x = x*20+500
+
+                img = Image.open('./media/pieces/'+color[0].upper()+'/'+str(placement[1]+1)+'.png')
+                w,h = img.size
+                print(w,h)
+                img = img.resize((int(w/1.5),int(h/1.5)))
+                img = ImageTk.PhotoImage(img)
+                cube = Canvas(self.window,width=int(w/1.5),height=int(h/1.5),bd=0,highlightthickness=0,relief='ridge')
+                cube.create_image(0,0,image=img,anchor = "nw" )
+                cube.place(x=x,y=y)
+                self.cubes.append([images[color],cube,img])
 
 
-        self.backStats: Bouton = Bouton(self.window, self, 150, 540, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.statsController.backToStats)
+        self.backStats: Bouton = Bouton(self.window, self, 400, 540, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.statsController.backToStats)
 
 
     def makeBanner(self,file,xpos,ypos):
