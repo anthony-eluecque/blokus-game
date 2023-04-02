@@ -12,6 +12,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np 
 from components.game.grille import grille
+from utils.game_utils import coordsBlocs
 
 try:
     from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
@@ -92,30 +93,30 @@ class StatsView(View):
             'vert':'./media/pieces/V/1.png',
             'jaune':'./media/pieces/J/1.png'}
 
-        # self.gridImage = CTkImage(Image.open('./media/assets/grilleDetail.png'), size=(400, 400))
-        # self.gridBg = CTkLabel(self.window, text="", image = self.gridImage)
-        # self.gridBg.place(x = 500, y = 100)
         self.grille = grille(self.window,400,400,False)
         self.grille.canvas.place(x=500,y=100)
-
+        
+        from models.Player import Player
+            
         for color in colors:
-
+            
+            player = Player(color.upper()[0]+color[1:])
             logPlacements = PARTIE[color]["historique_placement"]
+            img = Image.open('./media/pieces/'+color.upper()[0]+'/1.png')
+            w,h = img.size
+            img = img.resize((20,20))
+            img = ImageTk.PhotoImage(img)
             for placement in logPlacements:
                 y,x = placement[0]
-                y = y*20+100
-                x = x*20+500
+                piece = player.jouerPiece(placement[1])
+                piece = coordsBlocs(piece,x,y)
 
-                img = Image.open('./media/pieces/'+color[0].upper()+'/'+str(placement[1]+1)+'.png')
-                w,h = img.size
-                print(w,h)
-                img = img.resize((int(w/1.5),int(h/1.5)))
-                img = ImageTk.PhotoImage(img)
-                cube = Canvas(self.window,width=int(w/1.5),height=int(h/1.5),bd=0,highlightthickness=0,relief='ridge')
-                cube.create_image(0,0,image=img,anchor = "nw" )
-                cube.place(x=x,y=y)
-                self.cubes.append([images[color],cube,img])
-
+                for ypos,xpos in piece:
+                    print(ypos,xpos)
+                    cube = Canvas(self.window,width=20,height=20,bd=0,highlightthickness=0,relief='ridge')
+                    cube.create_image(0,0,image=img,anchor = "nw" )
+                    cube.place(x=((xpos*20)+500),y=((ypos*20)+100))
+                    self.cubes.append([images[color],cube,img])
 
         self.backStats: Bouton = Bouton(self.window, self, 400, 540, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.statsController.backToStats)
 
