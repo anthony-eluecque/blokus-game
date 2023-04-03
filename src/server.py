@@ -38,19 +38,19 @@ class Server(Thread):
             self.send(client, couleur)
             self.players.append([client, addr, self.counter, couleur])
             self.counter+=1
-            if self.counter == 1:
-                print(f"{self.counter} Player Connected")
-            else:
-                print(f"{self.counter} Players Connected")
-        print("\nLaunching game !\n")
+            print(f"{self.counter} Player(s) Connected")
 
+        print(self.players)
+        print("\nLaunching game !\n")
         print(f"IA color : {self.myColor}")
 
         self.sendAllPeople("Launch")
         self.myGame = Main()
         self.gameParam = self.myGame.game
         print("coucou")
+        
         while self.gameParam.nePeutPlusJouer:
+
             if self.gameParam.actualPlayer == self.myColor:
                 print("C'EST MON TOUR")
                 paquet = self.gameParam.paquet

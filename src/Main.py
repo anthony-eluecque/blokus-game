@@ -7,16 +7,16 @@ from config import APP_PATH
 class Main:
     @staticmethod    
     def run():
-        try:
+        # try:
             window = CTk()
             _resizeWindow(window, 700, 700)
             window.title("Blokus")
             window.iconbitmap(APP_PATH + r'\..\media\Icon\icon.ico')
-            app = Core.openController("Game", window)
+            app = Core.openController("Multiplayer", window)
             app.main()  
             window.mainloop()
-        except Exception as e:
-            print(str(e))
+        # except Exception as e:
+        #     print(str(e))
 
 if __name__ == '__main__':
     Main.run()

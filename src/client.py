@@ -18,17 +18,25 @@ class Client(Thread):
   # Activité du thread
   def run(self):
     self.client = socket()
+
     try:
+
       self.client.connect(('localhost', 3000))
+      
       print("client connecté !")
       colorMessage = self.client.recv(1024).decode(encoding="utf8")
+      
       self.myColor = colorMessage
+
       print(f"Your color : {self.myColor}")
-      launchMessage = self.client.recv(1024).decode(encoding="utf8") 
+      launchMessage = self.client.recv(1024).decode(encoding="utf8")
+
       if launchMessage == "Launch":
         self.myGame = Main()
         self.gameParam = self.myGame.game
+
         while self.gameParam.nePeutPlusJouer:
+
           if self.gameParam.actualPlayer == self.myColor:
             print("C'EST MON TOUR")
             self.gameParam.gameView.waitingLabel.destroy()
