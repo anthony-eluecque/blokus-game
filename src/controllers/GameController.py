@@ -37,7 +37,6 @@ class GameController(Controller):
             inversion (int) : nombre d'inversion
             canvas : l'affichage de la pièce
         """
-        print("test")
         numPiece = int(file.split("/")[4].split(".")[0])
         
         piece = self.actualPlayer.jouerPiece(numPiece-1)
@@ -156,6 +155,6 @@ class GameController(Controller):
         #self.loadMap()
 
     def IA(self):
-        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
-        print(self.plateau)
+        played: bool = easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
+        self.actualPlayer.canplay = played
         self.nextPlayer()

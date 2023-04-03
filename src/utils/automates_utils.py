@@ -1,55 +1,58 @@
-from random import randint
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import isValidMove, coordsBlocs
+from utils.game_utils import isValidMove, coordsBlocs, isInGrid, hasAdjacentSameSquare
 from copy import deepcopy
 
-def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int, x: int = -1, y: int = -1, firstPID: int = -1, firstRota: int = -1 ) -> list[ dict ]:
+def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int, x: int = -1, y: int = -1, firstPID: int = -1, firstRota: int = -1, firstReverse: int = -1 ) -> list[ dict ]:
     poses: list[ dict ] = []
     pieces: list = joueur.pieces.pieces_joueurs
     
     for pos in positions:
-        for pieceID in pieces:         
-            for i in range( 4 ):
-                if i > 0: joueur.pieces.rotate( pieceID )
-                piece: list = joueur.jouerPiece( pieceID )
+        for pieceID in pieces:
+            for j in range( 2 ):
+                if j == 1: joueur.pieces.reverse( pieceID )
 
-                canPlace = isValidMove( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
-                if pieceID == 14 and i == 2: print( piece )
-                
-                if canPlace:
-                    valPiece: int = 0
+                for i in range( 4 ):
+                    if i > 0: joueur.pieces.rotate( pieceID )
+                    piece: list = joueur.jouerPiece( pieceID )
 
-                    for row in piece:
-                        valPiece += row.count( 1 )
+                    canPlace = isValidMove( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
                     
-                    preRota: int = firstRota
-                    if preRota == -1: preRota = i
+                    if canPlace:
+                        valPiece: int = 0
 
-                    prePID: int = firstPID
-                    if prePID == -1: prePID = pieceID
+                        for row in piece:
+                            valPiece += row.count( 1 )
+                        
+                        preReverse: int = firstReverse
+                        if preReverse == -1: preReverse = j
+                        
+                        preRota: int = firstRota
+                        if preRota == -1: preRota = i
 
-                    preX: int = x
-                    if preX == -1: preX = pos[ 0 ]
+                        prePID: int = firstPID
+                        if prePID == -1: prePID = pieceID
 
-                    preY: int = y
-                    if preY == -1: preY = pos[ 1 ]
-                    
-                    poses.append( { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': i, 'firstX': preX, 'firstY': preY, 'firstPID': prePID, 'firstRota': preRota } )
+                        preX: int = x
+                        if preX == -1: preX = pos[ 0 ]
+
+                        preY: int = y
+                        if preY == -1: preY = pos[ 1 ]
+                        
+                        poses.append( { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': i, 'nbReverse': j, 'firstX': preX, 'firstY': preY, 'firstPID': prePID, 'firstRota': preRota, 'firstReverse': preReverse } )
 
             joueur.pieces.resetRotation( pieceID )
     return poses
 
-def managePiece(joueur:Player,plateau:Plateau, index: int )->list:
-    positions: list = getPossibilities( index, plateau, joueur )
-    if len( positions ) < 1: return -1
-
+def predictSolutions( plateau: Plateau, joueur: Player, index: int, solutions: list[ dict ] ) -> list:
     secTourPossibilities: list[ dict ] = []
-    solutions: list[ dict ] = getSolutions( positions, joueur, plateau, 0 )
 
     for pose in sorted( solutions, key = lambda x: x[ "score" ] ):
         predictedPlate: Plateau = deepcopy( plateau )
         pieceBlokus = coordsBlocs( joueur.jouerPiece( pose[ "pieceID" ] ), pose[ "y" ], pose[ "x" ] )
+
+        for _ in range( pose[ "nbReverse" ] ):
+            joueur.pieces.reverse( pose[ "pieceID" ] ) 
 
         for _ in range( pose[ "nbRota" ] ):
             joueur.pieces.rotate( pose[ "pieceID" ] ) 
@@ -62,13 +65,22 @@ def managePiece(joueur:Player,plateau:Plateau, index: int )->list:
         joueur.nb_piece -= 1
 
         possibilities = getPossibilities( index, predictedPlate, joueur )
-        predictedFoundSoluces: list[ dict ] = getSolutions( possibilities, joueur, predictedPlate, pose[ "score" ], pose[ "x" ], pose[ "y" ], pose[ "pieceID" ], pose[ "nbRota" ] )
+        predictedFoundSoluces: list[ dict ] = getSolutions( possibilities, joueur, predictedPlate, pose[ "score" ], pose[ "x" ], pose[ "y" ], pose[ "pieceID" ], pose[ "nbRota" ], pose[ "nbReverse" ] )
         
         joueur.pieces.resetRotation( pose[ "pieceID" ] )
         joueur.pieces.pieces_joueurs.append( pose[ "pieceID" ] )
         joueur.nb_piece += 1
 
         if len( predictedFoundSoluces ) > 0: secTourPossibilities += predictedFoundSoluces
+    return secTourPossibilities
+
+def managePiece(joueur:Player,plateau:Plateau, index: int )->list:
+    positions: list = getPossibilities( index, plateau, joueur )
+    if len( positions ) < 1: return -1
+
+    solutions: list[ dict ] = getSolutions( positions, joueur, plateau, 0 )
+
+    secTourPossibilities: list[ dict ] = predictSolutions( plateau, joueur, index, solutions )
 
     possMin: dict = sorted( secTourPossibilities, key = lambda x: x[ "score" ], reverse = True )
 
@@ -79,12 +91,17 @@ def managePiece(joueur:Player,plateau:Plateau, index: int )->list:
     x: int = possMin[ "firstX" ]
     y: int = possMin[ "firstY" ]
     rota: int = possMin[ "firstRota" ]
+    reverse: int = possMin[ "firstReverse" ]
     
     if x == -1:
         idPiece = possMin[ "pieceID" ]
         x = possMin[ "x" ]
         y = possMin[ "y" ]
         rota = possMin[ "nbRota" ]
+        reverse = possMin[ "nbReverse" ]
+
+    for _ in range( reverse ):
+        joueur.pieces.reverse( idPiece )
 
     for _ in range( rota ):
         joueur.pieces.rotate( idPiece )
@@ -92,40 +109,26 @@ def managePiece(joueur:Player,plateau:Plateau, index: int )->list:
     joueur.hasPlayedPiece( idPiece )
     return ( coordsBlocs( joueur.jouerPiece( idPiece ), y, x ), idPiece )
 
-def adjacents(x,y,plateau:Plateau,indexJoueur:int)->list:
-    adjs = [[x-1,y],[x,y-1],[x,y+1],[x+1,y]]
-
+def adjacents(x,y,plateau:Plateau,joueur:Player)->list:
     possibilites = []
-    grille = plateau.getTab()
+    
+    if isInGrid(y - 1, x - 1):
+        if not hasAdjacentSameSquare(plateau, joueur, x - 1, y - 1):
+            possibilites.append([y - 1, x - 1])
 
-        
-    if grille[adjs[0][0]][adjs[0][1]] != indexJoueur and grille[adjs[1][0]][adjs[1][1]] != indexJoueur:
-        possibilites.append([adjs[0][0],adjs[1][1]])
-    
-    if grille[adjs[0][0]][adjs[0][1]] != indexJoueur and grille[adjs[2][0]][adjs[2][1]] != indexJoueur:
-        possibilites.append([adjs[0][0],adjs[2][1]])
-    
-    if grille[adjs[3][0]][adjs[3][1]] != indexJoueur and grille[adjs[1][0]][adjs[1][1]] != indexJoueur:
-        possibilites.append([adjs[3][0],adjs[1][1]])
-    
-    if grille[adjs[3][0]][adjs[3][1]] != indexJoueur and grille[adjs[2][0]][adjs[2][1]] != indexJoueur:
-        possibilites.append([adjs[3][0],adjs[2][1]])
-    
-    return list(filter(lambda coords : 0<=coords[0]<=19 and 0<=coords[1]<=20 and grille[coords[0]][coords[1]]!=indexJoueur,possibilites))
+    if isInGrid(y + 1, x - 1):
+        if not hasAdjacentSameSquare(plateau, joueur, x - 1, y + 1):
+            possibilites.append([y + 1 , x - 1])
 
-def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
-    p = []
-    grille = plateau.getTab()
-    for i,ligne in enumerate(grille):
-        for j,col in enumerate(ligne):
-            if col == indexJoueur:
-                possibilities = adjacents(i,j,plateau,indexJoueur)
-                if len(possibilities):
-                    for _pos in possibilities:
-                        p.append(_pos)
-    if not len(p):
-        return [joueur.getPositionDepart()]
-    return p
+    if isInGrid(y - 1, x + 1):
+        if not hasAdjacentSameSquare(plateau, joueur, x + 1, y - 1):
+            possibilites.append([y - 1 , x + 1])
+
+    if isInGrid(y + 1, x + 1):
+        if not hasAdjacentSameSquare(plateau, joueur, x + 1, y + 1):
+            possibilites.append([y + 1, x + 1])
+
+        return possibilites
 
 def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
     p = []
@@ -133,7 +136,7 @@ def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
     for i,ligne in enumerate(grille):
         for j,col in enumerate(ligne):
             if col == indexJoueur:
-                possibilities = adjacents(i,j,plateau,indexJoueur)
+                possibilities = adjacents(i,j,plateau,joueur)
                 if len(possibilities):
                     for _pos in possibilities:
                         p.append(_pos)
@@ -143,7 +146,7 @@ def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
 
 def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
-    tour = managePiece(joueurActuel,plateau, index )
+    tour = managePiece( joueurActuel,plateau, index )
 
     if tour != -1:
         pieceBlokus, idPiece = tour[ 0 ], tour[ 1 ]
@@ -154,3 +157,5 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
             plateau.setColorOfCase(xpos,ypos,index)
 
         joueurActuel.pieces.resetRotation( idPiece )
+
+    return tour != -1
