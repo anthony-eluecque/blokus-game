@@ -1,5 +1,5 @@
 from socket import socket
-from controllers.MultiplayerController import Network, Server
+from controllers.MultiplayerController import Network, Server , Client
 from core.Controller import Controller
 from models.Player import Player
 from models.Plateau import Plateau
@@ -34,9 +34,12 @@ class GameMultiplayerController(Controller):
     def unbindAllPiecesWhenNotPlay(self):
         self.gameView.unbindConfig()
 
-    def bindServer(self , server : Server) :
-        self.server : Server = server
+    def bindServer(self , server) :
+        self.server = server
     
+    def bindClient(self , client) :
+        self.client = client
+
     def bindWhenYouPlay(self):
         self.gameView.bindConfig()
     
@@ -91,8 +94,9 @@ class GameMultiplayerController(Controller):
             self.debut = False
             self.gameView.update(self.actualPlayer, self.index)
             
-            Network.sendAllMessage('stop',self.server.players)
-            Network.sendAllMessage(self.actualPlayer.getCouleur(),self.server.players)
+            # Network.sendAllMessage('stop',self.server.players)
+            # Network.sendAllMessage(self.actualPlayer.getCouleur(),self.server.players)
+            Network.sendMessage(self.paquet,self.client)
 
         if nb_rotation > 0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)

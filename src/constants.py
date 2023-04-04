@@ -55,5 +55,5 @@ PIECES =    [
                 [[0,1,0],[1,1,1],[0,1,0]]        
             ]
 
-COLORS = ['Jaune','Vert','Rouge']
+COLORS = ['Bleu','Jaune','Vert','Rouge']
 ROULEMENT_COULEUR = ['Bleu','Jaune','Vert','Rouge']
