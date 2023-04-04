@@ -13,6 +13,8 @@ class Player():
         self.score = 0
         self.canplay = True
 
+        self.logPieces = []
+
     def getCouleur(self: Self) -> str:
         """Retourne la couleur du joueur
 

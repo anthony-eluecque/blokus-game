@@ -6,6 +6,7 @@ class Plateau():
     def __init__(self : Self,rows : int,cols : int) -> None:
         self.tab : list[list] =  [['X']*rows for _ in range(cols)]
         self.colors = ["B","J","V","R"]
+        self.oldMove = []
 
     def getCase(self : Self,row : int,col : int)->int:
         """Retourne une case spécifiée du plateau
@@ -39,9 +40,14 @@ class Plateau():
             col (int): Colonne du plateau
             statement (int): Nouvelle couleur
         """
-        
         # self.tab[row][col] = self.colors[statement]
         self.tab[row][col] = statement
+        # if statement!='X':
+        #     self.oldMove.append([row,col])
+
+    def undoMove(self):
+        x,y = self.oldMove[-1]
+        self.setColorOfCase(x,y,'X')
 
     def isEmpty(self: Self, row: int, col: int ) -> bool:
         """Retourne si une case spécifiée du plateau est vide ou non
@@ -71,6 +77,12 @@ class Plateau():
     def __str__(self: Self) -> str:
         affichage_tab = ""
         for line in self.tab:
-            affichage_tab+=str(line)+"\n"
-
+            toString = ""
+            for elem in line : 
+                if elem == 'X':
+                    elem = '-'
+                toString += " " +str(elem) + " "
+             
+            affichage_tab+=toString+"\n"
+            toString = ""
         return affichage_tab

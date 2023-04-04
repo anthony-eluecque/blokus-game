@@ -31,7 +31,7 @@ class GameView(View):
         self._makeFrame()
         self._makeBackground()
 
-        self.grille: grille = grille(self.window, 600, 600)
+        self.grille: grille = grille(self.window, 600, 600,True)
         self.score: score = score(self.window, Player('Bleu'))
         self.piecesManager: piecesManager = piecesManager(self.window, Player('Bleu'), self)
         

@@ -1,14 +1,17 @@
 from core.Controller import Controller
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import coordsBlocs, validPlacement, playerCanPlay
+from utils.game_utils import coordsBlocs, isValidMove, validPlacement, playerCanPlay
 from utils.leaderboard_utils import makeClassement, writeInJson, updateClassementFromPlay
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
+from utils.minmaxIA import medium_automate
 from utils.automates_utils import easy_automate
 from views.GameView import GameView
 from config import APP_PATH
+import asyncio
+from utils.data_utils import dataGame
 
 class GameController(Controller):
     """ 
@@ -27,6 +30,9 @@ class GameController(Controller):
         self.gameView = GameView(self, self.window)
         # self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
+
+        self.db = dataGame()
+
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
         """
@@ -43,7 +49,7 @@ class GameController(Controller):
         file = file.replace(chr(92), "/") #chr(92) = \
         if "/src/.." in file:
             file = file.replace("/src/..", "")
-        numPiece = int(file.split("/")[9].split(".")[0])
+        numPiece = int(file.split("/")[-1].split(".")[0])
         piece = self.actualPlayer.jouerPiece(numPiece-1)
         couleurJoueur = self.actualPlayer.getCouleur()
         indexJoueur = self.joueurs.index(self.actualPlayer)
@@ -57,20 +63,19 @@ class GameController(Controller):
         if inversion %2 != 0:
             self.actualPlayer.pieces.reverse(numPiece-1)
             piece = self.actualPlayer.jouerPiece(numPiece-1)
-            print(piece)
+
         pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
         cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + r"/1.png"
         # cheminFichierPiece = PIECES_IMAGES_URL[couleurJoueur.upper()[0]][0]
 
-        if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
+        if isValidMove(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
+        # if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
             canvas.destroy()
             self.actualPlayer.removePiece(numPiece-1)
-            if self.debut == False:
-                self.classement = updateClassementFromPlay(self.actualPlayer, numPiece)
-            else:
-                self.classement = makeClassement(self.joueurs)
-                writeInJson(self.classement)  
-            print(self.classement)
+
+            self.db.addPoints(self.actualPlayer.couleur,len(pieceBlokus))
+            self.db.addToHistoriquePlayer(self.actualPlayer.couleur,y//30,x//30,numPiece-1)
+
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)
@@ -113,11 +118,11 @@ class GameController(Controller):
             if player["niveau_difficulte"]!=0:
                 self.joueursIA.append(player["couleur"])
         if self.actualPlayer.getCouleur() in self.joueursIA:
-            self.IA()
+            asyncio.run(self.IA())
 
         if not playable:
             print("terminé")
-            makeClassement(self.joueurs)
+            # makeClassement(self.joueurs)
             _openController(self.gameView, "Score", self.window)
 
     def loadMap(self):
@@ -146,7 +151,7 @@ class GameController(Controller):
     def startGame(self):
         for player in Configuration.getConfig():
             if player["niveau_difficulte"]!=0 and player["couleur"]=="Bleu":
-                self.IA()
+                asyncio.run(self.IA())
        
 
     def _newGame(self):
@@ -159,9 +164,9 @@ class GameController(Controller):
         self.gameView.main()
         self.startGame()    
         self.gameView.update(self.actualPlayer, self.index)
-        #self.loadMap()
+        # self.loadMap()
 
-    def IA(self):
-        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
-        print(self.plateau)
+    async def IA(self):
+        # easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
+        result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
         self.nextPlayer()
