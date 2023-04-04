@@ -11,6 +11,7 @@ from utils.config_utils import Configuration
 from utils.automates_utils import easy_automate
 from views.GameMultiplayerView import GameMultiplayerView
 from config import APP_PATH
+from utils.data_utils import dataGame
 
 class GameMultiplayerController(Controller):
     """ 
@@ -30,6 +31,7 @@ class GameMultiplayerController(Controller):
         # self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
         self.paquet = ""
+        self.db = dataGame()
 
     def unbindAllPiecesWhenNotPlay(self):
         self.gameView.unbindConfig()
@@ -177,7 +179,7 @@ class GameMultiplayerController(Controller):
         #self.loadMap()
 
     def IA(self):
-        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
+        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
         self.nextPlayer()
 
 
