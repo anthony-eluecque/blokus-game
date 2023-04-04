@@ -94,7 +94,9 @@ class Client(Thread):
             self.gameController.gameView.update(
                 self.gameController.actualPlayer,
                 self.gameController.index)
-        
+            
+            if nb_rotation > 0:    
+                self.gameController.actualPlayer.pieces.resetRotation(numPiece-1)
 
         # Partie changement de couleur
         ctx = Network.receiveMessage(self.client) # ctx = 'couleur'
