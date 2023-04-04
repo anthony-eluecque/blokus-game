@@ -129,10 +129,12 @@ class Server(Thread):
         index = 0
 
         while 1:
+
             client,addr = self.server.accept()
             self.players.append([client,addr])
             print(f"Il y a {len(self.players)} joueur(s) connecté(s)")
             Network.sendMessage(COLORS[index],client)
+            self.controller.multiPlayerView.onConnection()
             if len(self.players) == 4 : break
             index+=1
 
@@ -170,18 +172,44 @@ class MultiplayerController(Controller):
 
         self.colors = ['Jaune','Vert','Rouge']
 
+        # try:
+        #     self.server = Server('0.0.0.0',self)
+        #     self.server.start()
+        # except:
+        #     pass
+        
+        # client = Client('127.0.0.1',self)
+        # client.start()
+
+    def __initClient(self,ip):
+        client = Client(str(ip),self)
+        client.start()
+
+    def waitingOthers(self):
+        self.multiPlayerView.close()
+        self.multiPlayerView.waitingScreen()
+
+
+    def _createServer(self,ip):
+        self.waitingOthers()
         try:
-            self.server = Server('0.0.0.0',self)
+            self.server = Server(str(ip),self)
             self.server.start()
         except:
             pass
-        
-        client = Client('127.0.0.1',self)
-        client.start()
+        self.__initClient('localhost')
 
+    def _joinServer(self,ip):
+        self.multiPlayerView.close()
+        self.multiPlayerView.waitingScreen()
+        self.multiPlayerView.onConnectionClient()
+        self.__initClient(ip)
         
     def main(self):
         self.multiPlayerView.main()
+
+    def goBackMenu(self):
+        _openController(self.multiPlayerView,"Home",self.window)
     
     def openGame(self):
         self.multiPlayerView.close()

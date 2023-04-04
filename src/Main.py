@@ -12,7 +12,7 @@ class Main:
             _resizeWindow(window, 700, 700)
             window.title("Blokus")
             window.iconbitmap(APP_PATH + r'\..\media\Icon\icon.ico')
-            app = Core.openController("Multiplayer", window)
+            app = Core.openController("Home", window)
             app.main()  
             window.mainloop()
         # except Exception as e:
