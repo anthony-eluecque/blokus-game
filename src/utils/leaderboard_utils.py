@@ -2,6 +2,7 @@ import json
 from models.Player import Player
 import os
 from datetime import datetime
+from config import APP_PATH
 
 def makeClassement(joueurs:list[Player]) -> dict:
     """
@@ -43,7 +44,7 @@ def updateClassementFromPlay(joueur : Player, num_piece : int):
     dat = str(date.day) + "-" + str(date.month) + "-" + str(date.year)
     classement["date"] = dat
     classement["heure"] = heure
-    if os.path.exists("./src/classement.json"):
+    if os.path.exists(APP_PATH + r"/classement.json"):
         anciennesParties = list(openJson())
         anciennesParties.pop()
         anciennesParties.append(classement)
@@ -64,7 +65,7 @@ def writeInJson(classement):
     classement["date"] = dat
     classement["heure"] = heure
     historique = []
-    if os.path.exists("./src/classement.json"):
+    if os.path.exists(APP_PATH + r"/classement.json"):
         anciennesParties = openJson()
         for dico in anciennesParties:
             historique.append(dico)
@@ -82,7 +83,7 @@ def writeJson(classement):
         classement (dict) : classement d'une partie
     """
     classement = json.dumps(classement,indent=4)
-    with open("./src/classement.json","w") as outfile:
+    with open(APP_PATH + r"/classement.json","w") as outfile:
         outfile.write(classement)
 
 def openJson():
@@ -92,6 +93,6 @@ def openJson():
     Returns:
         list[dict] : Historique des classements
     """
-    with open("./src/classement.json","r") as file:
+    with open(APP_PATH + r"/classement.json","r") as file:
         classement = json.load(file)
     return classement

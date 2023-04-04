@@ -31,7 +31,7 @@ class Controller(metaclass=abc.ABCMeta):
         viewName = viewName[0].upper()+viewName[1:]+"View"
         # On vérifie que le chemin existe (APP_PATH correspondant à la racine du projet)
         if os.path.exists(APP_PATH+"/views/"+viewName+".py"):
-            module = importlib.import_module("views."+viewName)    
+            module = importlib.import_module("views."+viewName)   
             class_ = getattr(module, viewName)
             response = class_(self,window)
         return response

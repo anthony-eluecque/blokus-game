@@ -1,19 +1,18 @@
+from socket import socket
+from controllers.MultiplayerController import Network, Server , Client
 from core.Controller import Controller
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import coordsBlocs, isValidMove, validPlacement, playerCanPlay
+from utils.game_utils import coordsBlocs, validPlacement, playerCanPlay
 from utils.leaderboard_utils import makeClassement, writeInJson, updateClassementFromPlay
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
-from utils.minmaxIA import medium_automate
 from utils.automates_utils import easy_automate
-from views.GameView import GameView
+from views.GameMultiplayerView import GameMultiplayerView
 from config import APP_PATH
-import asyncio
-from utils.data_utils import dataGame
 
-class GameController(Controller):
+class GameMultiplayerController(Controller):
     """ 
     Controller gérant le menu héritant de la classe Controller ainsi que de sa méthode abstraite main()
     Hérite également des éléments pour le bon fonctionnement d'une partie.
@@ -27,12 +26,22 @@ class GameController(Controller):
         self.debut = True
         self.actualPlayer: Player = self.joueurs[self.index]
         self.plateau = Plateau(20,20)
-        self.gameView = GameView(self, self.window)
+        self.gameView = GameMultiplayerView(self, self.window)
         # self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
+        self.paquet = ""
 
-        self.db = dataGame()
+    def unbindAllPiecesWhenNotPlay(self):
+        self.gameView.unbindConfig()
 
+    def bindServer(self , server) :
+        self.server = server
+    
+    def bindClient(self , client) :
+        self.client = client
+
+    def bindWhenYouPlay(self):
+        self.gameView.bindConfig()
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
         """
@@ -53,7 +62,6 @@ class GameController(Controller):
         piece = self.actualPlayer.jouerPiece(numPiece-1)
         couleurJoueur = self.actualPlayer.getCouleur()
         indexJoueur = self.joueurs.index(self.actualPlayer)
-        self.paquet = ""
         nb_rotation = abs(rotation) // 90
     
         for i in range(nb_rotation):
@@ -63,19 +71,18 @@ class GameController(Controller):
         if inversion %2 != 0:
             self.actualPlayer.pieces.reverse(numPiece-1)
             piece = self.actualPlayer.jouerPiece(numPiece-1)
-
         pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
         cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + r"/1.png"
         # cheminFichierPiece = PIECES_IMAGES_URL[couleurJoueur.upper()[0]][0]
 
-        if isValidMove(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
-        # if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
+        if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
             canvas.destroy()
             self.actualPlayer.removePiece(numPiece-1)
-
-            self.db.addPoints(self.actualPlayer.couleur,len(pieceBlokus))
-            self.db.addToHistoriquePlayer(self.actualPlayer.couleur,y//30,x//30,numPiece-1)
-
+            if self.debut == False:
+                self.classement = updateClassementFromPlay(self.actualPlayer, numPiece)
+            else:
+                self.classement = makeClassement(self.joueurs)
+                writeInJson(self.classement)  
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)
@@ -86,6 +93,10 @@ class GameController(Controller):
             self.nextPlayer()
             self.debut = False
             self.gameView.update(self.actualPlayer, self.index)
+            
+            # Network.sendAllMessage('stop',self.server.players)
+            # Network.sendAllMessage(self.actualPlayer.getCouleur(),self.server.players)
+            Network.sendMessage(self.paquet,self.client)
 
         if nb_rotation > 0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
@@ -118,11 +129,10 @@ class GameController(Controller):
             if player["niveau_difficulte"]!=0:
                 self.joueursIA.append(player["couleur"])
         if self.actualPlayer.getCouleur() in self.joueursIA:
-            asyncio.run(self.IA())
+            self.IA()
 
         if not playable:
-            print("terminé")
-            # makeClassement(self.joueurs)
+            makeClassement(self.joueurs)
             _openController(self.gameView, "Score", self.window)
 
     def loadMap(self):
@@ -151,7 +161,7 @@ class GameController(Controller):
     def startGame(self):
         for player in Configuration.getConfig():
             if player["niveau_difficulte"]!=0 and player["couleur"]=="Bleu":
-                asyncio.run(self.IA())
+                self.IA()
        
 
     def _newGame(self):
@@ -164,9 +174,11 @@ class GameController(Controller):
         self.gameView.main()
         self.startGame()    
         self.gameView.update(self.actualPlayer, self.index)
-        # self.loadMap()
+        #self.loadMap()
 
-    async def IA(self):
-        # easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
-        result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
+    def IA(self):
+        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
         self.nextPlayer()
+
+
+    # def sendMessageToServer(self,):

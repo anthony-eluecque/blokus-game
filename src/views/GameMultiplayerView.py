@@ -11,7 +11,7 @@ from tkinter.messagebox import showinfo
 from config import APP_PATH
 
 
-class GameView(View):
+class GameMultiplayerView(View):
     """
     Classe qui gère la partie graphique du GameController . GameView hérite de View
     """
@@ -23,6 +23,15 @@ class GameView(View):
         self.gameController = controller
         self.window = window
 
+    def bindConfig(self):
+        self.piecesManager._makeFrame()
+        self.piecesManager._displayPieces()
+
+    def unbindConfig(self):
+        for piece in self.piecesManager.listeCanvas:
+            piece[0].destroy()
+        self.piecesManager.listeCanvas = []
+        self.piecesManager.frame.destroy()
 
     def _makeFrame(self):
         self.mainFrame = _createFrame(self.window, 1300, 800)
@@ -31,7 +40,7 @@ class GameView(View):
         self._makeFrame()
         self._makeBackground()
 
-        self.grille: grille = grille(self.window, 600, 600,True)
+        self.grille: grille = grille(self.window, 600, 600)
         self.score: score = score(self.window, Player('Bleu'))
         self.piecesManager: piecesManager = piecesManager(self.window, Player('Bleu'), self)
         

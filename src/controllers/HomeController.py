@@ -24,7 +24,9 @@ class HomeController(Controller,Sound):
 
     def btnStats(self):
         _openController(self.homeView, "Stats", self.window)
-      
-        
+
+    def btnMultiplayer(self):
+        _openController(self.homeView, "Multiplayer" , self.window)  
+    
     def main(self):
         self.homeView.main()
