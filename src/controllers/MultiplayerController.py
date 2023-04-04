@@ -150,7 +150,7 @@ class Server(Thread):
             Network.sendMessage('attente',self.players[index][0])
 
             # Partie chagement de couleur
-            index+=1
+            index = (index + 1 ) % 4
             Network.sendAllMessage(COLORS[index],self.players)
             
 
