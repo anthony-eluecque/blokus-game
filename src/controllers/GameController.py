@@ -87,7 +87,7 @@ class GameController(Controller):
             self.debut = False
             self.gameView.update(self.actualPlayer, self.index)
 
-        if nb_rotation > 0:    
+        if nb_rotation > 0 or inversion%2==1:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
 
     def nextPlayer(self) -> None:

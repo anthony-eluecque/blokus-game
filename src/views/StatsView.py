@@ -118,7 +118,8 @@ class StatsView(View):
                 for i in range(nbRotation):
                     player.pieces.rotate(numPiece)
 
-                if nbInversion %2 != 0:
+                print(color,nbInversion)
+                if nbInversion %2 == 1:
                     player.pieces.reverse(numPiece)
 
                 piece = player.jouerPiece(numPiece)
@@ -131,7 +132,7 @@ class StatsView(View):
                     cube.place(x=((xpos*20)+500),y=((ypos*20)+100))
                     self.cubes.append([images[color],cube,img])
                 
-                if nbRotation > 0:    
+                if nbRotation > 0 or nbInversion%2==1:    
                     player.pieces.resetRotation(numPiece)
 
         self.title = CTkLabel(self.window,text="Résumé de la partie : ",bg_color='white',text_color='black')
