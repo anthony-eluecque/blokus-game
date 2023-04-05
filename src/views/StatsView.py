@@ -110,15 +110,30 @@ class StatsView(View):
             img = ImageTk.PhotoImage(img)
             for placement in logPlacements:
                 y,x = placement[0]
-                piece = player.jouerPiece(placement[1])
+                numPiece = placement[1]
+                nbRotation = placement[2]
+                nbInversion = placement[3]
+                piece = player.jouerPiece(numPiece)
+                
+                for i in range(nbRotation):
+                    player.pieces.rotate(numPiece)
+                    piece = player.jouerPiece(numPiece)
+
+                if nbInversion %2 != 0:
+                    player.pieces.reverse(numPiece-1)
+                    piece = player.jouerPiece(numPiece-1)
+
                 piece = coordsBlocs(piece,x,y)
 
                 for ypos,xpos in piece:
-                    print(ypos,xpos)
+
                     cube = Canvas(self.window,width=20,height=20,bd=0,highlightthickness=0,relief='ridge')
                     cube.create_image(0,0,image=img,anchor = "nw" )
                     cube.place(x=((xpos*20)+500),y=((ypos*20)+100))
                     self.cubes.append([images[color],cube,img])
+                
+                if nbRotation > 0:    
+                    player.pieces.resetRotation(numPiece)
 
         self.title = CTkLabel(self.window,text="Résumé de la partie : ",bg_color='white',text_color='black')
         self.title.configure(font=('Roboto Bold', 35))
