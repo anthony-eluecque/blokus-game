@@ -22,7 +22,7 @@ class MultiplayerView(View):
 
     
     def _makeBackground(self):
-        self.backgroundImage = Image.open(os.path.join("./media/assets/multiplayer_bg.png"))
+        self.backgroundImage = Image.open(os.path.join(APP_PATH + r"/../media/assets/multiplayer_bg.png"))
         self.background = ImageTk.PhotoImage(self.backgroundImage)
         self.label = Label(self.mainFrame, image = self.background, bd = 0) 
         self.label.place(x=0,y=0)
@@ -35,7 +35,7 @@ class MultiplayerView(View):
         _resizeWindow(self.window,largeur,hauteur)
         self._makeFrame()
         self._makeBackground()
-        self.backHome: Bouton = Bouton(self.window, self, 300, 700, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.multiplayerController.goBackMenu)    
+        self.backHome: Bouton = Bouton(self.window, self, 300, 700, width=206, heigth=49, file=APP_PATH + "/../media/assets/buttun_rules_return.png", son="button", command=self.multiplayerController.goBackMenu)    
 
         self.entryServer = Entry(self.window,width=15)
         self.entryServer.configure(font=('Roboto Bold', 20))
@@ -47,12 +47,12 @@ class MultiplayerView(View):
 
         self.createServer : Bouton = Bouton(
             self.window, self, 420, 230, width=206, heigth=49, 
-            file="./media/assets/createMulti_button.png", son="button", 
+            file=APP_PATH + r"/../media/assets/createMulti_button.png", son="button", 
             command= lambda : self.multiplayerController._createServer('0.0.0.0'))    
         
         self.joinServer : Bouton = Bouton(
             self.window, self, 420, 500, width=206, heigth=49, 
-            file="./media/assets/joinMulti_button.png", son="button", 
+            file=APP_PATH + r"/../media/assets/joinMulti_button.png", son="button", 
             command=lambda : self.multiplayerController._joinServer('127.0.0.1'))    
 
 

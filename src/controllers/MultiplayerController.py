@@ -106,11 +106,6 @@ class Client(Thread):
             self.gameController.unbindAllPiecesWhenNotPlay()
 
 
-
-
-
-
-
 class Server(Thread):
 
     def __init__(self,ip,controller):

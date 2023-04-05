@@ -7,6 +7,7 @@ import os
 from utils.window_utils import _resizeWindow,_deleteChilds,_createFrame
 from components.bouton import Bouton
 from components.SoundButton import SoundButton
+from config import APP_PATH
 
 class HomeView(View):
     """
@@ -26,19 +27,19 @@ class HomeView(View):
         self.label.place(x = 0,y = 0)  
 
     def _UI(self : Self):
-        self.playButton: Bouton = Bouton(self.window, self, 165, 280, width=370, heigth=49, file="./media/assets/button_play.png", son="button", command=self.homeController.btnPlay)
+        self.playButton: Bouton = Bouton(self.window, self, 165, 280, width=370, heigth=49, file=APP_PATH + r"/../media/assets/button_play.png", son="button", command=self.homeController.btnPlay)
 
-        self.multiButton: Bouton = Bouton(self.window, self, 165, 340, width=370, heigth=49, file="./media/assets/multi_button.png", son="button", command=self.homeController.btnMultiplayer)
+        self.multiButton: Bouton = Bouton(self.window, self, 165, 340, width=370, heigth=49, file=APP_PATH + r"/../media/assets/multi_button.png", son="button", command=self.homeController.btnMultiplayer)
 
 
-        self.rulesButton: Bouton = Bouton(self.window, self, 165, 460, width=370, heigth=49, file="./media/assets/button_rules.png", son="button", command=self.homeController.btnRules)
+        self.rulesButton: Bouton = Bouton(self.window, self, 165, 460, width=370, heigth=49, file=APP_PATH + r"/../media/assets/button_rules.png", son="button", command=self.homeController.btnRules)
         
-        self.statsButton: Bouton = Bouton(self.window, self, 165, 400, width=370, heigth=49, file="./media/assets/button_stats.png", son="button", command=self.homeController.btnStats)
+        self.statsButton: Bouton = Bouton(self.window, self, 165, 400, width=370, heigth=49, file=APP_PATH + r"/../media/assets/button_stats.png", son="button", command=self.homeController.btnStats)
 
         
-        self.leaveButton: Bouton = Bouton(self.window, self, 165, 560, width=370, heigth=49, file="./media/assets/button_leave.png", son="button", command=self.window.destroy)
+        self.leaveButton: Bouton = Bouton(self.window, self, 165, 560, width=370, heigth=49, file=APP_PATH + r"/../media/assets/button_leave.png", son="button", command=self.window.destroy)
         
-        self.backgroundImage = Image.open(os.path.join("./media/assets/carre.png"))
+        self.backgroundImage = Image.open(os.path.join(APP_PATH + r"/../media/assets/carre.png"))
         self.background = ImageTk.PhotoImage(self.backgroundImage)
         self.label = Label(self.mainFrame, image = self.background, bd = 0)   
 

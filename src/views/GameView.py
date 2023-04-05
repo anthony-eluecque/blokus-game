@@ -37,7 +37,7 @@ class GameView(View):
         
     def __createButtons(self):
 
-        # self.newGameButton: Bouton = Bouton(self.window, self, 710, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/Button_new_game.png", son="button", command=self._newGame)
+        self.newGameButton: Bouton = Bouton(self.window, self, 710, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/Button_new_game.png", son="button", command=self._newGame)
         self.leaveButton: Bouton = Bouton(self.window, self, 1060, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/button_leave_game.png", son="button", command=self._leaveGame)
 
     def _makeBackground(self):
