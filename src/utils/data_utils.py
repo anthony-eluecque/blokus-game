@@ -28,7 +28,14 @@ class dataGame():
         if os.path.exists('./src/models/data.json'):
             self.data = jsonManager.readJson()
             self.id = str(int(list(self.data["parties"].keys())[-1]) + 1)
-            self.data["parties"][self.id] = {'date': date, 'heure': heure,'gagnant':"", 'bleu': {'score': 0,'pseudo':"", 'historique_placement': []}, 'rouge': {'score': 0,'pseudo':"", 'historique_placement': []}, 'vert': {'score': 0,'pseudo':"", 'historique_placement': []}, 'jaune': {'score': 0,'pseudo':"", 'historique_placement': []}}
+            self.data["parties"][self.id] = {
+                'date': date, 'heure': heure,
+                'gagnant':"", 
+                    'bleu': {'score': 0,'pseudo':"", 'historique_placement': []}, 
+                    'rouge': {'score': 0,'pseudo':"", 'historique_placement': []}, 
+                    'vert': {'score': 0,'pseudo':"", 'historique_placement': []}, 
+                    'jaune': {'score': 0,'pseudo':"", 'historique_placement': []}
+                }
             jsonManager.writeJson(self.data)
         else:
             jsonManager.writeJson(jsonManager.readJson("./src/models/template_data.json"))
@@ -43,8 +50,8 @@ class dataGame():
         self.data["parties"][self.id][couleur.lower()]["score"]+=taillePiece
         jsonManager.writeJson(self.data)
 
-    def addToHistoriquePlayer(self,couleur,ligne,colonne,numPiece)->None:
+    def addToHistoriquePlayer(self,couleur,ligne,colonne,numPiece,rotation,inversion)->None:
         self.data = jsonManager.readJson()
-        self.data["parties"][self.id][couleur.lower()]["historique_placement"].append([[ligne,colonne],numPiece])
+        self.data["parties"][self.id][couleur.lower()]["historique_placement"].append([[ligne,colonne],numPiece,rotation,inversion])
         jsonManager.writeJson(self.data)
 
