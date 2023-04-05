@@ -63,6 +63,7 @@ class piecesManager:
                     col -=40
                 else:row = 750
 
+
     def _makeImagePiece(self,fichier:str,_col:int,_row:int)->None:
         """Fonction permettant la création de chaque pièce du joueur
         On configure notammet ici le click, le drag et le drop , ainsi que le clique droit pour la rotation
@@ -87,8 +88,6 @@ class piecesManager:
         canvas.bind('<ButtonRelease-1>',lambda e : self.onDrop(e,canvas,w,h))
         canvas.bind('<Button-3>',lambda e: self._rotatePiece(e,canvas))
         canvas.bind('<MouseWheel>',lambda e: self._reversePiece(e,canvas))
-
-
         self.listeCanvas.append([canvas,self.img,fichier,_row,_col])
 
     def _rotatePiece(self,e,canvas:Canvas)->None:
@@ -193,8 +192,11 @@ class piecesManager:
             player (Player): _description_
         """
         self.imagesPieces = player.pieces.getImagesPieces()
-        for piece in self.listeCanvas:
-            piece[0].destroy()
+        # for piece in self.listeCanvas:
+        #     piece[0].destroy()
+        #     piece[1] = ""
+
+        print(self.listeCanvas)
 
         self.nbinversion = 0
         self.nbrotation = 0
@@ -204,3 +206,13 @@ class piecesManager:
         
         self._makeFrame()
         self._displayPieces()
+
+    def bindPiece(self):
+        self._displayPieces()
+
+    def unbindPiece(self):
+        for propertyCanvas in self.listeCanvas:
+            propertyCanvas[0].unbind('<B1-Motion>')
+            propertyCanvas[0].unbind('<ButtonRelease-1>')
+            propertyCanvas[0].unbind('<Button-3>')
+            propertyCanvas[0].unbind('<MouseWheel>')

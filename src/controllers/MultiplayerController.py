@@ -80,7 +80,6 @@ class Client(Thread):
             pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
             cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + r"/1.png"
 
-            # self.gameController.canvas.destroy()
             self.gameController.actualPlayer.removePiece(numPiece-1)
 
             for coordY,coordX in pieceBlokus:

@@ -24,14 +24,16 @@ class GameMultiplayerView(View):
         self.window = window
 
     def bindConfig(self):
-        self.piecesManager._makeFrame()
-        self.piecesManager._displayPieces()
+        # self.piecesManager._makeFrame()
+        # self.piecesManager._displayPieces()
+        self.piecesManager.bindPiece()
 
     def unbindConfig(self):
-        for piece in self.piecesManager.listeCanvas:
-            piece[0].destroy()
-        self.piecesManager.listeCanvas = []
-        self.piecesManager.frame.destroy()
+        # for piece in self.piecesManager.listeCanvas:
+        #     piece[0].destroy()
+        # self.piecesManager.listeCanvas = []
+        # self.piecesManager.frame.destroy()
+        self.piecesManager.unbindPiece()
 
     def _makeFrame(self):
         self.mainFrame = _createFrame(self.window, 1300, 800)

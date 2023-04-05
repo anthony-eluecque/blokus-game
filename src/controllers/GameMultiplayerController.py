@@ -36,6 +36,9 @@ class GameMultiplayerController(Controller):
     def unbindAllPiecesWhenNotPlay(self):
         self.gameView.unbindConfig()
 
+    def bindWhenYouPlay(self):
+        self.gameView.bindConfig()
+
     def bindServer(self , server) :
         self.server = server
     
@@ -44,6 +47,13 @@ class GameMultiplayerController(Controller):
 
     def bindWhenYouPlay(self):
         self.gameView.bindConfig()
+    
+    def deleteElemCanvas(self):
+        for piece in self.piecesManager.listeCanvas:
+            piece[0].destroy()
+        self.piecesManager.listeCanvas = []
+    
+            
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
         """
@@ -94,10 +104,9 @@ class GameMultiplayerController(Controller):
             self.canvas = canvas
             self.nextPlayer()
             self.debut = False
+
             self.gameView.update(self.actualPlayer, self.index)
             
-            # Network.sendAllMessage('stop',self.server.players)
-            # Network.sendAllMessage(self.actualPlayer.getCouleur(),self.server.players)
             Network.sendMessage(self.paquet,self.client)
 
         if nb_rotation > 0:    
