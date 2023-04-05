@@ -117,12 +117,11 @@ class StatsView(View):
                 
                 for i in range(nbRotation):
                     player.pieces.rotate(numPiece)
-                    piece = player.jouerPiece(numPiece)
 
                 if nbInversion %2 != 0:
-                    player.pieces.reverse(numPiece-1)
-                    piece = player.jouerPiece(numPiece-1)
+                    player.pieces.reverse(numPiece)
 
+                piece = player.jouerPiece(numPiece)
                 piece = coordsBlocs(piece,x,y)
 
                 for ypos,xpos in piece:
