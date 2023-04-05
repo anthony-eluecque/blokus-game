@@ -53,7 +53,7 @@ class MultiplayerView(View):
         self.joinServer : Bouton = Bouton(
             self.window, self, 420, 500, width=206, heigth=49, 
             file=APP_PATH + r"/../media/assets/joinMulti_button.png", son="button", 
-            command=lambda : self.multiplayerController._joinServer('127.0.0.1'))    
+            command=lambda : self.multiplayerController._joinServer(self.entryClient.get()))    
 
 
     def waitingScreen(self):

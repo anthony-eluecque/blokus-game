@@ -118,7 +118,6 @@ class StatsView(View):
                 for i in range(nbRotation):
                     player.pieces.rotate(numPiece)
 
-                print(color,nbInversion)
                 if nbInversion %2 == 1:
                     player.pieces.reverse(numPiece)
 

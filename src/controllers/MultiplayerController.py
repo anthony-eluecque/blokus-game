@@ -1,4 +1,4 @@
-from socket import socket
+from socket import socket,gethostname,AF_INET,SOCK_STREAM,gethostbyname
 from threading import Thread
 from config import APP_PATH
 from core.Controller import Controller
@@ -112,8 +112,8 @@ class Server(Thread):
         
         Thread.__init__(self)
         self.daemon = True
-        self.server = socket()
-        self.server.bind((str(ip), 3000))
+        self.server = socket(AF_INET,SOCK_STREAM)
+        self.server.bind((ip, 3000))
         self.server.listen(5)
         self.players = []
         self.controller = controller
@@ -166,15 +166,6 @@ class MultiplayerController(Controller):
 
         self.colors = ['Jaune','Vert','Rouge']
 
-        # try:
-        #     self.server = Server('0.0.0.0',self)
-        #     self.server.start()
-        # except:
-        #     pass
-        
-        # client = Client('127.0.0.1',self)
-        # client.start()
-
     def __initClient(self,ip):
         client = Client(str(ip),self)
         client.start()
@@ -187,11 +178,13 @@ class MultiplayerController(Controller):
     def _createServer(self,ip):
         self.waitingOthers()
         try:
-            self.server = Server(str(ip),self)
+            self.server = Server(gethostname(),self)
             self.server.start()
         except:
             pass
-        self.__initClient('localhost')
+        # print(gethostbyname(gethostname()))
+        # print(self.server.server.getsockname())
+        self.__initClient(gethostbyname(gethostname()))
 
     def _joinServer(self,ip):
         self.multiPlayerView.close()
