@@ -3,7 +3,6 @@ from utils.window_utils import _resizeWindow, _createFrame, _deleteChilds
 from tkinter import Entry, Label
 from views.View import View
 from PIL import ImageTk, Image
-from utils.leaderboard_utils import openJson
 from customtkinter import CTk
 from components.bouton import Bouton
 import os
