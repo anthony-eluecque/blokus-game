@@ -55,8 +55,12 @@ class Client(Thread):
 
     if ctx != self.color:
         self.gameController.unbindAllPiecesWhenNotPlay() # On unbind tous les joueurs
+        self.gameController.gameView.tourLabel.configure(text="C'est au joueur " + self.gameController.actualPlayer.getCouleur(), text_color="#3D5ECC")
+    else:
+        self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color="blue")
 
-    while 1: 
+
+    while 1:
         ctx = Network.receiveMessage(self.client) # ctx = logPiece
         if ctx != 'attente':
             ctx = ctx.split(',')
@@ -100,10 +104,13 @@ class Client(Thread):
         # Partie changement de couleur
         ctx = Network.receiveMessage(self.client) # ctx = 'couleur'
         print(ctx,'<---- Couleur')
+        couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
         if self.color == ctx:
             self.gameController.bindWhenYouPlay()
+            self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
         else:
             self.gameController.unbindAllPiecesWhenNotPlay()
+            self.gameController.gameView.tourLabel.configure(text="C'est au joueur " + self.gameController.actualPlayer.getCouleur(), text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
 
 
 class Server(Thread):
