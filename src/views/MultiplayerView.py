@@ -8,7 +8,7 @@ from customtkinter import CTk
 from components.bouton import Bouton
 import os
 from customtkinter import CTk, CTkImage, CTkLabel, CTkCanvas
-
+from socket import gethostname, gethostbyname
 
 class MultiplayerView(View):
 
@@ -60,10 +60,11 @@ class MultiplayerView(View):
         self.bg = CTkLabel(self.window, text="", image = self.bgImage)
         self.bg.place(x=0,y=0)
         
-        self.updatedConnection = CTkLabel(self.window,text=f"Il y a {self.index} joueur(s) connecté(s) ... \n en attente de {4-self.index} autres",bg_color='white',text_color='black')
-        self.updatedConnection.configure(font=('Roboto Bold', 25))
+        self.updatedConnection = CTkLabel(self.window,text=f"Il y a {self.index} joueur(s) connecté(s) ... \n en attente de {4-self.index} autres",bg_color='white',text_color='black', font=('Roboto Bold', 25))
         self.updatedConnection.place(x=140,y=100)
 
+        self.ipLabel = CTkLabel(self.window,text="Votre code d'acces à partager\n avec vos ami(e)s : " + gethostbyname(gethostname()),bg_color='white',text_color='black', font=('Roboto Bold', 25))
+        self.ipLabel.place(x=120,y=180)
 
     def onConnection(self):
         self.index+=1
@@ -76,7 +77,7 @@ class MultiplayerView(View):
         self.updatedConnection.destroy()
         self.updatedConnection = CTkLabel(self.window,text=f"En attente du meneur de jeu ... ",bg_color='white',text_color='black')
         self.updatedConnection.configure(font=('Roboto Bold', 25))
-        self.updatedConnection.place(x=140,y=100)
+        self.updatedConnection.place(x=130,y=100)
 
 
 
