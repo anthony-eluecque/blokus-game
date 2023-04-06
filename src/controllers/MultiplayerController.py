@@ -178,12 +178,13 @@ class MultiplayerController(Controller):
     def _createServer(self,ip):
         self.waitingOthers()
         try:
-            self.server = Server(gethostname(),self)
+            self.server = Server(gethostbyname(gethostname()),self)
             self.server.start()
         except:
             pass
         # print(gethostbyname(gethostname()))
         # print(self.server.server.getsockname())
+        print('----> ip du serveur : ',gethostbyname(gethostname()))
         self.__initClient(gethostbyname(gethostname()))
 
     def _joinServer(self,ip):
