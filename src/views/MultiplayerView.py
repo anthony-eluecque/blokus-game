@@ -37,16 +37,12 @@ class MultiplayerView(View):
         self._makeBackground()
         self.backHome: Bouton = Bouton(self.window, self, 300, 700, width=206, heigth=49, file=APP_PATH + "/../media/assets/buttun_rules_return.png", son="button", command=self.multiplayerController.goBackMenu)    
 
-        self.entryServer = Entry(self.window,width=15)
-        self.entryServer.configure(font=('Roboto Bold', 20))
-        self.entryServer.place(x=150,y=235)
-
         self.entryClient = Entry(self.window,width=15)
         self.entryClient.configure(font=('Roboto Bold', 20))
         self.entryClient.place(x=150,y=505)
 
         self.createServer : Bouton = Bouton(
-            self.window, self, 420, 230, width=206, heigth=49, 
+            self.window, self, 290, 230, width=206, heigth=49, 
             file=APP_PATH + r"/../media/assets/createMulti_button.png", son="button", 
             command= lambda : self.multiplayerController._createServer('0.0.0.0'))    
         
