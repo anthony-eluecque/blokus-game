@@ -97,8 +97,7 @@ class GameMultiplayerController(Controller):
             self.paquet = file + "," + str(x) + "," + str(y) + "," + str(rotation) + "," + str(inversion)
             self.canvas = canvas
             self.nextPlayer()
-            self.gameView.update(self.actualPlayer, self.index)
-            
+            # self.gameView.update(self.actualPlayer, self.index)
             Network.sendMessage(self.paquet,self.client)
 
         if nb_rotation > 0:    
@@ -136,6 +135,8 @@ class GameMultiplayerController(Controller):
 
         if not playable:
             _openController(self.gameView, "Score", self.window)
+        else:
+            self.gameView.update(self.actualPlayer, self.index)
 
     def loadMap(self):
         """

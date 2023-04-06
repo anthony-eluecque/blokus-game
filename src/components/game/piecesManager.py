@@ -107,7 +107,6 @@ class piecesManager:
         
         for i in range(len(self.listeCanvas)):
             if self.listeCanvas[i][0]==canvas:
-                print(canvas)
                 canvas.delete("all")
                 self.img = Image.open(self.listeCanvas[i][2]).rotate(self.nbrotation,expand=True)
                 if self.nbinversion%2!=0:
@@ -195,8 +194,6 @@ class piecesManager:
         # for piece in self.listeCanvas:
         #     piece[0].destroy()
         #     piece[1] = ""
-
-        print(self.listeCanvas)
 
         self.nbinversion = 0
         self.nbrotation = 0
