@@ -11,6 +11,7 @@ from utils.automates_utils import easy_automate
 from views.GameView import GameView
 from config import APP_PATH
 import asyncio
+import json
 from utils.data_utils import dataGame
 
 class GameController(Controller):
@@ -168,5 +169,15 @@ class GameController(Controller):
 
     async def IA(self):
         # easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
-        result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
+        with open(APP_PATH + r"\..\gameconfig.json", "r") as outfile:
+            gameConfig = json.load(outfile)
+        color = self.actualPlayer.getCouleur()
+        for confPlayer in gameConfig:
+            if confPlayer['couleur'] == self.actualPlayer.getCouleur():
+                niveau = confPlayer["niveau_difficulte"]
+        if niveau == "Facile":
+            easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
+        elif niveau == "Moyen":
+            result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
+        
         self.nextPlayer()

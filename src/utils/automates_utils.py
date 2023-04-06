@@ -99,4 +99,4 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view,db):
             plateau.setColorOfCase(xpos,ypos,index)
 
         db.addPoints(joueurActuel.couleur,len(pieceBlokus))
-        db.addToHistoriquePlayer(joueurActuel.couleur,pieceBlokus[0][0],pieceBlokus[0][1],idPiece)
+        db.addToHistoriquePlayer(joueurActuel.couleur,pieceBlokus[0][0],pieceBlokus[0][1],idPiece,0,0)
