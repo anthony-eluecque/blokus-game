@@ -1,8 +1,7 @@
 from core.Controller import Controller
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import coordsBlocs, isValidMove, validPlacement, playerCanPlay
-from utils.leaderboard_utils import makeClassement, writeInJson, updateClassementFromPlay
+from utils.game_utils import coordsBlocs, isValidMove, playerCanPlay
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
@@ -86,7 +85,6 @@ class GameController(Controller):
             self.canvas = canvas
             self.nextPlayer()
             self.debut = False
-            self.gameView.update(self.actualPlayer, self.index)
 
         if nb_rotation > 0 or inversion%2==1:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
@@ -125,6 +123,8 @@ class GameController(Controller):
             print("terminé")
             # makeClassement(self.joueurs)
             _openController(self.gameView, "Score", self.window)
+        else:
+            self.gameView.update(self.actualPlayer, self.index)
 
     def loadMap(self):
         """
