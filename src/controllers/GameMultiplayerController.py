@@ -30,7 +30,6 @@ class GameMultiplayerController(Controller):
         # self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
         self.paquet = ""
-        self.db = dataGame()
 
     def unbindAllPiecesWhenNotPlay(self):
         self.gameView.unbindConfig()
@@ -89,6 +88,7 @@ class GameMultiplayerController(Controller):
         if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
             canvas.destroy()
             self.actualPlayer.removePiece(numPiece-1) 
+            
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)

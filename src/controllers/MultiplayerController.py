@@ -7,6 +7,7 @@ from customtkinter import CTk
 from time import sleep
 from utils.controller_utils import _openController
 from constants import COLORS
+from utils.data_utils import dataGame
 from utils.game_utils import coordsBlocs
 
 class Network():
@@ -81,6 +82,7 @@ class Client(Thread):
             if inversion %2 != 0:
                 self.gameController.actualPlayer.pieces.reverse(numPiece-1)
                 piece = self.gameController.actualPlayer.jouerPiece(numPiece-1)
+
             pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
             cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + r"/1.png"
 
@@ -124,6 +126,7 @@ class Server(Thread):
         self.server.listen(5)
         self.players = []
         self.controller = controller
+        self.db = dataGame()
 
 
     def acceptClients(self):
@@ -149,6 +152,28 @@ class Server(Thread):
         Network.sendAllMessage(COLORS[index],self.players) # le premier tour pour init les joueurs
         while 1:
             ctx = Network.receiveMessage(self.players[index][0]) # On reçoit les infos du joueur qui vient de jouer
+            ctx_2 = ctx.split(',')
+            file = ctx_2[0]
+            x = int(ctx_2[1])
+            y = int(ctx_2[2])
+            rotation = int(ctx_2[3])
+            inversion = int(ctx_2[4])
+            numPiece = int(file.split("/")[-1].split(".")[0]) - 1
+
+            piece = self.gameController.actualPlayer.jouerPiece(numPiece)
+            nb_rotation = abs(rotation) // 90
+            for i in range(nb_rotation):
+                self.gameController.actualPlayer.pieces.rotate(numPiece)
+                piece = self.gameController.actualPlayer.jouerPiece(numPiece)
+
+            if inversion %2 != 0:
+                self.gameController.actualPlayer.pieces.reverse(numPiece)
+                piece = self.gameController.actualPlayer.jouerPiece(numPiece)
+            pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
+
+            self.db.addPoints(COLORS[index],len(pieceBlokus))
+            self.db.addToHistoriquePlayer(COLORS[index],y//30,x//30,numPiece,nb_rotation,inversion)
+            
             for player in self.players:
                 if player != self.players[index]:
                     Network.sendMessage(ctx,player[0])
@@ -158,7 +183,8 @@ class Server(Thread):
             index = (index + 1 ) % 4
             Network.sendAllMessage(COLORS[index],self.players)
             
-
+# self.db.addPoints(self.gameController.actualPlayer.couleur,len(pieceBlokus))
+#             self.db.addToHistoriquePlayer(self.gameController.actualPlayer.couleur,y//30,x//30,numPiece-1,nb_rotation,inversion)
 
 
 
