@@ -191,9 +191,9 @@ class piecesManager:
             player (Player): _description_
         """
         self.imagesPieces = player.pieces.getImagesPieces()
-        # for piece in self.listeCanvas:
-        #     piece[0].destroy()
-        #     piece[1] = ""
+        for piece in self.listeCanvas:
+            piece[0].destroy()
+            piece[1] = ""
 
         self.nbinversion = 0
         self.nbrotation = 0
