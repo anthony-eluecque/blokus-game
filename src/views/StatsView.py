@@ -183,9 +183,10 @@ class StatsView(View):
                 if score>bestScore:
                     bestCouleur = color
                     bestScore = score
-            text += f" | Pas de gagnant"
             if bestScore != 0:
                 text += f" | Gagnant de la partie {bestCouleur} | Score : {bestScore}"
+            else:
+                text += f" | Pas de gagnant"
             button = StatsButton(self.scrollableBody,idPartie,text,command=self.statsController.showWidget)
             Buttons.append(button)
 

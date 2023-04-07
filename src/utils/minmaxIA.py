@@ -31,7 +31,7 @@ async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int,
         view._addToGrid(cheminFichierPiece,y,x)
 
     db.addPoints(joueurActuel.couleur,len(piece))
-    db.addToHistoriquePlayer(joueurActuel.couleur,bestMove['position'][0],bestMove['position'][1],numPiece)
+    db.addToHistoriquePlayer(joueurActuel.couleur,bestMove['position'][0],bestMove['position'][1],numPiece,0,0)
     return -1
 
 def doMinmax(numPiece: int, plateau: Plateau, possibility:list[int,int], joueur: Player, indexJoueur:int,results):
