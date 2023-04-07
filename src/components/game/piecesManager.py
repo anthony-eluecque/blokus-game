@@ -94,13 +94,13 @@ class piecesManager:
         canvas.bind('<MouseWheel>',lambda e: self._reversePiece(e,canvas))
 
         # Transparency of canvas
-        canvas.configure(bg='maroon')
-        hwnd = canvas.winfo_id()
-        colorkey = win32api.RGB(128, 0, 0)
-        wnd_exstyle = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
-        new_exstyle = wnd_exstyle | win32con.WS_EX_LAYERED
-        win32gui.SetWindowLong(hwnd,win32con.GWL_EXSTYLE,new_exstyle)
-        win32gui.SetLayeredWindowAttributes(hwnd,colorkey,255,win32con.LWA_COLORKEY)
+        # canvas.configure(bg='maroon')
+        # hwnd = canvas.winfo_id()
+        # colorkey = win32api.RGB(128, 0, 0)
+        # wnd_exstyle = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+        # new_exstyle = wnd_exstyle | win32con.WS_EX_LAYERED
+        # win32gui.SetWindowLong(hwnd,win32con.GWL_EXSTYLE,new_exstyle)
+        # win32gui.SetLayeredWindowAttributes(hwnd,colorkey,255,win32con.LWA_COLORKEY)
 
         self.listeCanvas.append([canvas,self.img,fichier,_row,_col])
 
