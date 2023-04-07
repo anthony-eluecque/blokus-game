@@ -20,7 +20,7 @@ class RulesView(View):
         "• Bloquer un adversaire pour l’empêcher de poser ses pièces  est autorisé.\n\n",
         "• Quand vous ne pouvez plus placer de pièces, passez votre    tour.\n\n",
         "• La partie se termine quand tous les joueurs ne peuvent plus placer de pièces.\n\n",
-        "• Le gagnant est la personne ayant le plus de points à la fin de la partie.",
+        "• Le gagnant est la personne ayant le plus de points à la fin \nde la partie.",
     ]
 
     def __init__(self: Self, controller, window: CTk, width=625, heigth=700):
