@@ -5,13 +5,14 @@ from utils.game_utils import coordsBlocs, isValidMove, playerCanPlay
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
-from utils.minmaxIA import medium_automate
+from utils.minmaxIA import medium_automate,gameManager
 from utils.automates_utils import easy_automate
 from views.GameView import GameView
 from config import APP_PATH
 import asyncio
 import json
 from utils.data_utils import dataGame
+
 
 class GameController(Controller):
     """ 
@@ -30,6 +31,8 @@ class GameController(Controller):
         self.gameView = GameView(self, self.window)
         # self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
+        self.logsPossibilities = []
+
 
         self.db = dataGame()
 
@@ -89,6 +92,24 @@ class GameController(Controller):
         if nb_rotation > 0 or inversion%2==1:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
 
+    def activateCheatMode(self):
+        if len(self.logsPossibilities):
+            for possibility in self.logsPossibilities:
+                x,y = possibility
+                self.gameView.drawCell(x,y,"white")
+            self.logsPossibilities.clear()
+
+        
+        possibilities = gameManager.getBestPossibilities(self.plateau,self.index,self.actualPlayer)
+        for possibility in possibilities:
+            x,y = possibility
+            x = x*30
+            y = y*30
+            self.gameView.drawCell(y,x,"purple")
+            self.logsPossibilities.append([y,x])
+
+
+
     def nextPlayer(self) -> None:
         """        
         Procédure permettant de gérer les changements de joueur
@@ -124,6 +145,7 @@ class GameController(Controller):
             # makeClassement(self.joueurs)
             _openController(self.gameView, "Score", self.window)
         else:
+            self.activateCheatMode() #Comment for remove cheat mode
             self.gameView.update(self.actualPlayer, self.index)
 
     def loadMap(self):
@@ -165,6 +187,8 @@ class GameController(Controller):
         self.gameView.main()
         self.startGame()    
         self.gameView.update(self.actualPlayer, self.index)
+        
+        self.activateCheatMode() # Comment for remove cheat mode
         # self.loadMap()
 
     async def IA(self):

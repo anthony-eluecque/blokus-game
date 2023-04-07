@@ -35,6 +35,10 @@ class GameView(View):
         self.score: score = score(self.window, Player('Bleu'))
         self.piecesManager: piecesManager = piecesManager(self.window, Player('Bleu'), self)
         
+    def drawCell(self,x,y,color):
+        self.grille.canvas.create_rectangle(x,y, x+30, y+30, fill=color)
+
+
     def __createButtons(self):
 
         self.newGameButton: Bouton = Bouton(self.window, self, 710, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/Button_new_game.png", son="button", command=self._newGame)
