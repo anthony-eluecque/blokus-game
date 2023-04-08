@@ -25,10 +25,6 @@ class GameMultiplayerView(View):
         self.window = window
         self.commandesView = None
 
-    def bindConfig(self):
-        # self.piecesManager._makeFrame()
-        # self.piecesManager._displayPieces()
-        self.piecesManager.bindPiece()
 
     def unbindConfig(self):
         # for piece in self.piecesManager.listeCanvas:
@@ -54,13 +50,10 @@ class GameMultiplayerView(View):
             self.commandesView.focus()
 
     def _cheatMode(self):
-        print("je passe par la")
         if self.gameController.cheat:
             self.gameController.cheat = False
-            print("cheat désactivé")
         else:
             self.gameController.cheat = True
-            print("cheat actuvé")
         self.gameController.cheatMode()
 
     def __createButtons(self):
@@ -103,11 +96,10 @@ class GameMultiplayerView(View):
         
     def drawCell(self,x,y,color):
         self.grille.canvas.create_rectangle(x,y, x+30, y+30, fill=color)
-        
+
     def update(self, player, index):
         self.score.nextPlayer(index, player )
         self.piecesManager.update(player)
-        
         self.leaveButton.destroy()
         # self.newGameButton.destroy()
         self.__createButtons()

@@ -99,11 +99,13 @@ class Client(Thread):
                 
 
                 self.gameController.actualPlayer.hasPlayedPiece(numPiece-1)
-                # self.gameController.canvas = canvas
+
                 self.gameController.nextPlayer()
-                self.gameController.gameView.update(
-                    self.gameController.actualPlayer,
-                    self.gameController.index)
+                # self.gameController.gameView.update(
+                #     self.gameController.actualPlayer,
+                #     self.gameController.index)
+            
+                
                 
                 if nb_rotation > 0 or inversion%2 == 1:    
                     self.gameController.actualPlayer.pieces.resetRotation(numPiece-1)
@@ -119,7 +121,6 @@ class Client(Thread):
                 except : pass
             else:
                 if self.color == ctx:
-                    self.gameController.bindWhenYouPlay()
                     self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
                 else:
                     self.gameController.unbindAllPiecesWhenNotPlay()

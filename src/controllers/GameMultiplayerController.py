@@ -38,17 +38,11 @@ class GameMultiplayerController(Controller):
     def unbindAllPiecesWhenNotPlay(self):
         self.gameView.unbindConfig()
 
-    def bindWhenYouPlay(self):
-        self.gameView.bindConfig()
-
     def bindServer(self , server) :
         self.server = server
     
     def bindClient(self , client) :
         self.client = client
-
-    def bindWhenYouPlay(self):
-        self.gameView.bindConfig()
     
     def deleteElemCanvas(self):
         for piece in self.piecesManager.listeCanvas:
@@ -96,7 +90,7 @@ class GameMultiplayerController(Controller):
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)
-            
+
             self.actualPlayer.hasPlayedPiece(numPiece-1)
             self.paquet = file + "," + str(x) + "," + str(y) + "," + str(rotation) + "," + str(inversion)
             self.canvas = canvas
@@ -126,8 +120,6 @@ class GameMultiplayerController(Controller):
             self.logsPossibilities.clear()
 
     def cheatMode(self):
-        print("coucou")
-        print("compteur : " + str(self.compteurNbPiecePose))
         if self.compteurNbPiecePose > 0:
             if self.cheat:
                 self.activateCheatMode()
