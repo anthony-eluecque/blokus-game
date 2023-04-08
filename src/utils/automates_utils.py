@@ -3,6 +3,7 @@ from models.Player import Player
 from models.Plateau import Plateau
 from utils.game_utils import validPlacement,coordsBlocs,getDiagonals,getAdjacents
 from copy import deepcopy
+from config import APP_PATH
 
 def pickPiece(joueur:Player)->int:
     index = 100
@@ -86,7 +87,8 @@ def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
 
 def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view,db):
 
-    cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
+    cheminFichierPiece = APP_PATH + r"/../media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
+    # cheminFichierPiece = PIECES_IMAGES_URL[joueurActuel.getCouleur().upper()[0]][0]
 
     possibilities = getPossibilities(index,plateau,joueurActuel)
     pieceBlokus,idPiece = managePiece(joueurActuel,plateau,possibilities)
@@ -97,4 +99,4 @@ def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view,db):
             plateau.setColorOfCase(xpos,ypos,index)
 
         db.addPoints(joueurActuel.couleur,len(pieceBlokus))
-        db.addToHistoriquePlayer(joueurActuel.couleur,pieceBlokus[0][0],pieceBlokus[0][1],idPiece)
+        db.addToHistoriquePlayer(joueurActuel.couleur,pieceBlokus[0][0],pieceBlokus[0][1],idPiece,0,0)

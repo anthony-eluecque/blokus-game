@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 from typing_extensions import Self
 from utils.window_utils import _resizeWindow, _deleteChilds, _createFrame
 from components.bouton import Bouton
+from config import APP_PATH
 
 class RulesView(View):
     """
@@ -19,7 +20,7 @@ class RulesView(View):
         "• Bloquer un adversaire pour l’empêcher de poser ses pièces  est autorisé.\n\n",
         "• Quand vous ne pouvez plus placer de pièces, passez votre    tour.\n\n",
         "• La partie se termine quand tous les joueurs ne peuvent plus placer de pièces.\n\n",
-        "• Le gagnant est la personne ayant le plus de points à la fin de la partie.",
+        "• Le gagnant est la personne ayant le plus de points à la fin \nde la partie.",
     ]
 
     def __init__(self: Self, controller, window: CTk, width=625, heigth=700):
@@ -32,7 +33,7 @@ class RulesView(View):
         self.mainFrame = _createFrame(self.window,1000,1000)
 
     def _makeWindow(self):
-        self.backgroundImage = Image.open("./media/assets/background_rules.png")
+        self.backgroundImage = Image.open(APP_PATH + r"/../media/assets/background_rules.png")
         self.background = ImageTk.PhotoImage(self.backgroundImage)
         self.bgRules = Label(self.mainFrame, text="", image = self.background, bd = 0)
 
@@ -47,7 +48,7 @@ class RulesView(View):
             self.rulesBox.insert("end", rule)
 
     def _makeButtonRules(self):
-        self.backRules: Bouton = Bouton(self.window, self, 378, 500, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.rulesController.btn_clear)
+        self.backRules: Bouton = Bouton(self.window, self, 378, 500, width=206, heigth=49, file= APP_PATH + r"/../media/assets/buttun_rules_return.png", son="button", command=self.rulesController.btn_clear)
 
     def _configWidget(self):
         self.bgRules.place(x = 0,y = 0)

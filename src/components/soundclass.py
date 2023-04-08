@@ -2,7 +2,7 @@
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1' # Retire l'alerte de pygame dans le terminal
 from pygame import mixer
-
+from config import APP_PATH
 class Sound:
     def __init__(self, sound: str) -> None:
         # Initialisation du mixer
@@ -23,7 +23,7 @@ class Sound:
             return "Sound does not exist"
 
         # Chargement du son
-        mixer.music.load("././media/sounds/" + self.sound + ".wav")
+        mixer.music.load(APP_PATH + r"/../media/sounds/" + self.sound + ".wav")
 
         # Si le son à jouer est la musique de fond 
         if(self.sound == "background"):

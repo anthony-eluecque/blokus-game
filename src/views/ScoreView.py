@@ -2,9 +2,9 @@ from utils.window_utils import _resizeWindow, _createFrame, _deleteChilds
 from tkinter import Label
 from views.View import View
 from PIL import ImageTk, Image
-from utils.leaderboard_utils import openJson
 from customtkinter import CTk
 from components.bouton import Bouton
+from collections import OrderedDict
 
 from utils.data_utils import dataGame,jsonManager
 
@@ -34,18 +34,13 @@ class ScoreView(View):
         self.scoreTbLabel = Label(self.mainFrame, text="Tableau des scores", font="Roboto 30 bold", bg="white" )
         self.scoreTbLabel.place(x=457, y=130, anchor="center")
 
-    def _makeClassement(self):
+    def _makeClassement(self,classement):
         i: int = 1
 
-        self.id = str(int(list(self.db["parties"].keys())[-1]))
 
         colors = ["bleu","rouge","vert","jaune"]
-        game = self.db["parties"][self.id]
-
-        classement = {}
-        for color in colors:
-            classement[color] = game[color]["score"]
         classement = {k: v for k, v in sorted(classement.items(), key=lambda item: abs(item[1]))}
+        classement = OrderedDict(reversed(list(classement.items())))
 
         for couleur in classement.keys():
             podium: str = i == 1 and "1er :" or str( i ) + "ème :"
@@ -67,13 +62,23 @@ class ScoreView(View):
 
     def main(self, longueur=914, hauteur=606):
         self.db = jsonManager.readJson()
+
+        Colors = ['bleu','rouge','vert','jaune']
+        lastgame = self.db["parties"][str(len(self.db["parties"]))]
+
+        scoreGame = {}
+        for color in Colors:
+            scoreGame[color] = lastgame[color]['score']
         # classement = list(openJson()).pop()
         _resizeWindow(self.window, longueur, hauteur)
         self._makeFrame()
         self._makeBackground()
         self._makeTitleClassement()
-        self._makeClassement()
+        self._makeClassement(scoreGame)
         self._makeBackButton()
+
+
+
 
     def close(self):
         _deleteChilds(self.window)

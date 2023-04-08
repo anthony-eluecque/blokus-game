@@ -5,6 +5,10 @@ from tkinter import Canvas,PhotoImage
 from utils.mouse_utils import getMouseX,getMouseY
 from utils.game_utils import roundDown
 from PIL import ImageOps,ImageTk,Image
+import win32gui
+import win32con
+import win32api
+
 
 class piecesManager:
     """
@@ -63,6 +67,7 @@ class piecesManager:
                     col -=40
                 else:row = 750
 
+
     def _makeImagePiece(self,fichier:str,_col:int,_row:int)->None:
         """Fonction permettant la création de chaque pièce du joueur
         On configure notammet ici le click, le drag et le drop , ainsi que le clique droit pour la rotation
@@ -88,6 +93,14 @@ class piecesManager:
         canvas.bind('<Button-3>',lambda e: self._rotatePiece(e,canvas))
         canvas.bind('<MouseWheel>',lambda e: self._reversePiece(e,canvas))
 
+        # Transparency of canvas
+        # canvas.configure(bg='maroon')
+        # hwnd = canvas.winfo_id()
+        # colorkey = win32api.RGB(128, 0, 0)
+        # wnd_exstyle = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+        # new_exstyle = wnd_exstyle | win32con.WS_EX_LAYERED
+        # win32gui.SetWindowLong(hwnd,win32con.GWL_EXSTYLE,new_exstyle)
+        # win32gui.SetLayeredWindowAttributes(hwnd,colorkey,255,win32con.LWA_COLORKEY)
 
         self.listeCanvas.append([canvas,self.img,fichier,_row,_col])
 
@@ -108,7 +121,6 @@ class piecesManager:
         
         for i in range(len(self.listeCanvas)):
             if self.listeCanvas[i][0]==canvas:
-                print(canvas)
                 canvas.delete("all")
                 self.img = Image.open(self.listeCanvas[i][2]).rotate(self.nbrotation,expand=True)
                 if self.nbinversion%2!=0:
@@ -152,9 +164,6 @@ class piecesManager:
             width (int): La largeur de la pièce 
             heigh (int): La hauteur de la pièce
         """
-        # self.abs_x = getMouseX(self.window) - width//2
-        # self.abs_y = getMouseY(self.window) - height//2
-
         if self.nbrotation == 0 or self.nbrotation == -270:
             self.abs_x = getMouseX(self.window) - width//2
             self.abs_y = getMouseY(self.window) - height//2
@@ -163,7 +172,6 @@ class piecesManager:
             self.abs_y = getMouseY(self.window) - width//2
 
         if 60<=self.abs_x<=660 and 150<=self.abs_y<=750 :
-
             x_round = roundDown(self.abs_x)
             y_round = roundDown(self.abs_y)
             self.callbackPiece(canvas,x_round-60,y_round-150)
@@ -195,6 +203,7 @@ class piecesManager:
         self.imagesPieces = player.pieces.getImagesPieces()
         for piece in self.listeCanvas:
             piece[0].destroy()
+            piece[1] = ""
 
         self.nbinversion = 0
         self.nbrotation = 0
@@ -204,3 +213,13 @@ class piecesManager:
         
         self._makeFrame()
         self._displayPieces()
+
+    def bindPiece(self):
+        self._displayPieces()
+
+    def unbindPiece(self):
+        for propertyCanvas in self.listeCanvas:
+            propertyCanvas[0].unbind('<B1-Motion>')
+            propertyCanvas[0].unbind('<ButtonRelease-1>')
+            propertyCanvas[0].unbind('<Button-3>')
+            propertyCanvas[0].unbind('<MouseWheel>')

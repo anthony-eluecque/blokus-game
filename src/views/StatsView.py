@@ -14,6 +14,8 @@ import numpy as np
 from components.game.grille import grille
 from utils.game_utils import coordsBlocs
 from models.Player import Player
+from config import APP_PATH
+
             
 try:
     from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
@@ -30,7 +32,7 @@ class StatsView(View):
     def _makeFrame(self,width,heigth) -> None:
         self.mainFrame = _createFrame(self.window, width, heigth)
 
-    def _makeBackground(self,xsize,ysize,file="./media/assets/bgStats.png")->None:
+    def _makeBackground(self,xsize,ysize,file= APP_PATH + r"/../media/assets/bgStats.png")->None:
         self.bgImage = CTkImage(Image.open(file), size=(xsize, ysize))
         self.bg = CTkLabel(self.window, text="", image = self.bgImage)
         self.bg.place(x = 0, y = 0)
@@ -53,7 +55,7 @@ class StatsView(View):
         self.scrollableBody.update()
         
     def backToHomeButton(self)-> None:
-        self.backStats: Bouton = Bouton(self.window, self, 560, 700, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self._leaveStatsMenu)
+        self.backStats: Bouton = Bouton(self.window, self, 560, 700, width=206, heigth=49, file=APP_PATH + r"/../media/assets/buttun_rules_return.png", son="button", command=self._leaveStatsMenu)
 
     
     def openDetailGame(self,idPartie) -> None:
@@ -61,13 +63,13 @@ class StatsView(View):
         _deleteChilds(self.window)
         _resizeWindow(self.window,1000,600)
         self._makeFrame(1000,600)
-        self._makeBackground(1000,600,"./media/assets/bgDetailPartie.png")
+        self._makeBackground(1000,600, APP_PATH + r"/../media/assets/bgDetailPartie.png")
         self.banners = []
 
         colors = ["bleu","rouge","vert","jaune"]
         y = 100
         for color in colors:
-            banner = self.makeBanner(("./media/assets/banner"+color+".png"),xpos=50,ypos=y)
+            banner = self.makeBanner((APP_PATH + r"/../media/assets/banner"+color+".png"),xpos=50,ypos=y)
             self.banners.append(banner)
             y+=110
 
@@ -89,10 +91,10 @@ class StatsView(View):
         x = 500 ; y= 100
         self.cubes = []
         images = {
-            'bleu':'./media/pieces/B/1.png',
-            'rouge':'./media/pieces/R/1.png',
-            'vert':'./media/pieces/V/1.png',
-            'jaune':'./media/pieces/J/1.png'}
+            'bleu': APP_PATH + '/../media/pieces/B/1.png',
+            'rouge': APP_PATH + '/../media/pieces/R/1.png',
+            'vert': APP_PATH + '/../media/pieces/V/1.png',
+            'jaune': APP_PATH + '/../media/pieces/J/1.png'}
 
         self.grille = grille(self.window,400,400,False)
         self.grille.canvas.place(x=500,y=100)
@@ -102,27 +104,41 @@ class StatsView(View):
             
             player = Player(color.upper()[0]+color[1:])
             logPlacements = PARTIE[color]["historique_placement"]
-            img = Image.open('./media/pieces/'+color.upper()[0]+'/1.png')
+            img = Image.open(APP_PATH + r'/../media/pieces/'+color.upper()[0]+'/1.png')
             w,h = img.size
             img = img.resize((20,20))
             img = ImageTk.PhotoImage(img)
             for placement in logPlacements:
                 y,x = placement[0]
-                piece = player.jouerPiece(placement[1])
+                numPiece = placement[1]
+                nbRotation = placement[2]
+                nbInversion = placement[3]
+                piece = player.jouerPiece(numPiece)
+                
+                for i in range(nbRotation):
+                    player.pieces.rotate(numPiece)
+
+                if nbInversion %2 == 1:
+                    player.pieces.reverse(numPiece)
+
+                piece = player.jouerPiece(numPiece)
                 piece = coordsBlocs(piece,x,y)
 
                 for ypos,xpos in piece:
-                    print(ypos,xpos)
+
                     cube = Canvas(self.window,width=20,height=20,bd=0,highlightthickness=0,relief='ridge')
                     cube.create_image(0,0,image=img,anchor = "nw" )
                     cube.place(x=((xpos*20)+500),y=((ypos*20)+100))
                     self.cubes.append([images[color],cube,img])
+                
+                if nbRotation > 0 or nbInversion%2==1:    
+                    player.pieces.resetRotation(numPiece)
 
         self.title = CTkLabel(self.window,text="Résumé de la partie : ",bg_color='white',text_color='black')
         self.title.configure(font=('Roboto Bold', 35))
         self.title.place(x=320,y=30)
 
-        self.backStats: Bouton = Bouton(self.window, self, 400, 540, width=206, heigth=49, file="./media/assets/buttun_rules_return.png", son="button", command=self.statsController.backToStats)
+        self.backStats: Bouton = Bouton(self.window, self, 400, 540, width=206, heigth=49, file=APP_PATH + r"/../media/assets/buttun_rules_return.png", son="button", command=self.statsController.backToStats)
 
 
     def makeBanner(self,file,xpos,ypos):
@@ -167,9 +183,10 @@ class StatsView(View):
                 if score>bestScore:
                     bestCouleur = color
                     bestScore = score
-            text += f" | Pas de gagnant"
             if bestScore != 0:
                 text += f" | Gagnant de la partie {bestCouleur} | Score : {bestScore}"
+            else:
+                text += f" | Pas de gagnant"
             button = StatsButton(self.scrollableBody,idPartie,text,command=self.statsController.showWidget)
             Buttons.append(button)
 

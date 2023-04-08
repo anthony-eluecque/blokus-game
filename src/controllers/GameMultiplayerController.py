@@ -1,20 +1,19 @@
+from socket import socket
+from controllers.MultiplayerController import Network, Server , Client
 from core.Controller import Controller
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import coordsBlocs, isValidMove, playerCanPlay
+from utils.game_utils import coordsBlocs, validPlacement, playerCanPlay
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
-from utils.minmaxIA import medium_automate,gameManager
 from utils.automates_utils import easy_automate
-from views.GameView import GameView
+from utils.minmaxIA import gameManager
+from views.GameMultiplayerView import GameMultiplayerView
 from config import APP_PATH
-import asyncio
-import json
 from utils.data_utils import dataGame
 
-
-class GameController(Controller):
+class GameMultiplayerController(Controller):
     """ 
     Controller gérant le menu héritant de la classe Controller ainsi que de sa méthode abstraite main()
     Hérite également des éléments pour le bon fonctionnement d'une partie.
@@ -28,14 +27,33 @@ class GameController(Controller):
         self.debut = True
         self.actualPlayer: Player = self.joueurs[self.index]
         self.plateau = Plateau(20,20)
-        self.gameView = GameView(self, self.window)
+        self.gameView = GameMultiplayerView(self, self.window)
         # self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
         self.logsPossibilities = []
+        self.paquet = ""
 
+    def unbindAllPiecesWhenNotPlay(self):
+        self.gameView.unbindConfig()
 
-        self.db = dataGame()
+    def bindWhenYouPlay(self):
+        self.gameView.bindConfig()
 
+    def bindServer(self , server) :
+        self.server = server
+    
+    def bindClient(self , client) :
+        self.client = client
+
+    def bindWhenYouPlay(self):
+        self.gameView.bindConfig()
+    
+    def deleteElemCanvas(self):
+        for piece in self.piecesManager.listeCanvas:
+            piece[0].destroy()
+        self.piecesManager.listeCanvas = []
+    
+            
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
         """
@@ -56,7 +74,6 @@ class GameController(Controller):
         piece = self.actualPlayer.jouerPiece(numPiece-1)
         couleurJoueur = self.actualPlayer.getCouleur()
         indexJoueur = self.joueurs.index(self.actualPlayer)
-        self.paquet = ""
         nb_rotation = abs(rotation) // 90
     
         for i in range(nb_rotation):
@@ -66,19 +83,14 @@ class GameController(Controller):
         if inversion %2 != 0:
             self.actualPlayer.pieces.reverse(numPiece-1)
             piece = self.actualPlayer.jouerPiece(numPiece-1)
-
         pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
         cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + r"/1.png"
         # cheminFichierPiece = PIECES_IMAGES_URL[couleurJoueur.upper()[0]][0]
 
-        if isValidMove(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
-        # if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
+        if validPlacement(piece, y // 30, x // 30, self.plateau, self.actualPlayer):
             canvas.destroy()
-            self.actualPlayer.removePiece(numPiece-1)
-
-            self.db.addPoints(self.actualPlayer.couleur,len(pieceBlokus))
-            self.db.addToHistoriquePlayer(self.actualPlayer.couleur,y//30,x//30,numPiece-1,nb_rotation,inversion)
-
+            self.actualPlayer.removePiece(numPiece-1) 
+            
             for coordY,coordX in pieceBlokus:
                 self.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
                 self.plateau.setColorOfCase(coordY, coordX, indexJoueur)
@@ -87,28 +99,26 @@ class GameController(Controller):
             self.paquet = file + "," + str(x) + "," + str(y) + "," + str(rotation) + "," + str(inversion)
             self.canvas = canvas
             self.nextPlayer()
-            self.debut = False
+            # self.gameView.update(self.actualPlayer, self.index)
+            Network.sendMessage(self.paquet,self.client)
 
-        if nb_rotation > 0 or inversion%2==1:    
+        if nb_rotation > 0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
-
+    
     def activateCheatMode(self):
-        if len(self.logsPossibilities):
-            for possibility in self.logsPossibilities:
+            if len(self.logsPossibilities):
+                for possibility in self.logsPossibilities:
+                    x,y = possibility
+                    self.gameView.drawCell(x,y,"white")
+                self.logsPossibilities.clear()
+            
+            possibilities = gameManager.getBestPossibilities(self.plateau,self.index,self.actualPlayer)
+            for possibility in possibilities:
                 x,y = possibility
-                self.gameView.drawCell(x,y,"white")
-            self.logsPossibilities.clear()
-
-        
-        possibilities = gameManager.getBestPossibilities(self.plateau,self.index,self.actualPlayer)
-        for possibility in possibilities:
-            x,y = possibility
-            x = x*30
-            y = y*30
-            self.gameView.drawCell(y,x,"purple")
-            self.logsPossibilities.append([y,x])
-
-
+                x = x*30
+                y = y*30
+                self.gameView.drawCell(y,x,"purple")
+                self.logsPossibilities.append([y,x])
 
     def nextPlayer(self) -> None:
         """        
@@ -126,7 +136,7 @@ class GameController(Controller):
             else:
                 if joueur.getCouleur() not in self.nePeutPlusJouer:
                     self.nePeutPlusJouer.append(joueur.getCouleur())
-                    self.gameView._makePopup(joueur)
+                    # self.gameView._makePopup(joueur)
         self.actualPlayer = joueur
 
 
@@ -138,14 +148,12 @@ class GameController(Controller):
             if player["niveau_difficulte"]!=0:
                 self.joueursIA.append(player["couleur"])
         if self.actualPlayer.getCouleur() in self.joueursIA:
-            asyncio.run(self.IA())
+            self.IA()
 
         if not playable:
-            print("terminé")
-            # makeClassement(self.joueurs)
             _openController(self.gameView, "Score", self.window)
         else:
-            self.activateCheatMode() #Comment for remove cheat mode
+            self.activateCheatMode()
             self.gameView.update(self.actualPlayer, self.index)
 
     def loadMap(self):
@@ -174,7 +182,7 @@ class GameController(Controller):
     def startGame(self):
         for player in Configuration.getConfig():
             if player["niveau_difficulte"]!=0 and player["couleur"]=="Bleu":
-                asyncio.run(self.IA())
+                self.IA()
        
 
     def _newGame(self):
@@ -187,21 +195,12 @@ class GameController(Controller):
         self.gameView.main()
         self.startGame()    
         self.gameView.update(self.actualPlayer, self.index)
-        
-        self.activateCheatMode() # Comment for remove cheat mode
+        self.activateCheatMode()
         # self.loadMap()
 
-    async def IA(self):
-        # easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
-        with open(APP_PATH + r"\..\gameconfig.json", "r") as outfile:
-            gameConfig = json.load(outfile)
-        color = self.actualPlayer.getCouleur()
-        for confPlayer in gameConfig:
-            if confPlayer['couleur'] == self.actualPlayer.getCouleur():
-                niveau = confPlayer["niveau_difficulte"]
-        if niveau == "Facile":
-            easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
-        elif niveau == "Moyen":
-            result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
-        
+    def IA(self):
+        easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
         self.nextPlayer()
+
+
+    # def sendMessageToServer(self,):
