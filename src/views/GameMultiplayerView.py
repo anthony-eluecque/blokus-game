@@ -89,7 +89,10 @@ class GameMultiplayerView(View):
     def _leaveGame(self):
         self.close()
         self.gameController._backToHome()
-
+        
+    def drawCell(self,x,y,color):
+        self.grille.canvas.create_rectangle(x,y, x+30, y+30, fill=color)
+        
     def update(self, player, index):
         self.score.nextPlayer(index, player )
         self.piecesManager.update(player)

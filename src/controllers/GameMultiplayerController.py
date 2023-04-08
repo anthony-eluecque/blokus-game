@@ -8,6 +8,7 @@ from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
 from utils.automates_utils import easy_automate
+from utils.minmaxIA import gameManager
 from views.GameMultiplayerView import GameMultiplayerView
 from config import APP_PATH
 from utils.data_utils import dataGame
@@ -29,6 +30,7 @@ class GameMultiplayerController(Controller):
         self.gameView = GameMultiplayerView(self, self.window)
         # self.gameView = self.loadView("Game",window)
         self.nePeutPlusJouer = []
+        self.logsPossibilities = []
         self.paquet = ""
 
     def unbindAllPiecesWhenNotPlay(self):
@@ -102,6 +104,21 @@ class GameMultiplayerController(Controller):
 
         if nb_rotation > 0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
+    
+    def activateCheatMode(self):
+            if len(self.logsPossibilities):
+                for possibility in self.logsPossibilities:
+                    x,y = possibility
+                    self.gameView.drawCell(x,y,"white")
+                self.logsPossibilities.clear()
+            
+            possibilities = gameManager.getBestPossibilities(self.plateau,self.index,self.actualPlayer)
+            for possibility in possibilities:
+                x,y = possibility
+                x = x*30
+                y = y*30
+                self.gameView.drawCell(y,x,"purple")
+                self.logsPossibilities.append([y,x])
 
     def nextPlayer(self) -> None:
         """        
@@ -119,7 +136,7 @@ class GameMultiplayerController(Controller):
             else:
                 if joueur.getCouleur() not in self.nePeutPlusJouer:
                     self.nePeutPlusJouer.append(joueur.getCouleur())
-                    self.gameView._makePopup(joueur)
+                    # self.gameView._makePopup(joueur)
         self.actualPlayer = joueur
 
 
@@ -136,6 +153,7 @@ class GameMultiplayerController(Controller):
         if not playable:
             _openController(self.gameView, "Score", self.window)
         else:
+            self.activateCheatMode()
             self.gameView.update(self.actualPlayer, self.index)
 
     def loadMap(self):
@@ -177,7 +195,8 @@ class GameMultiplayerController(Controller):
         self.gameView.main()
         self.startGame()    
         self.gameView.update(self.actualPlayer, self.index)
-        #self.loadMap()
+        self.activateCheatMode()
+        # self.loadMap()
 
     def IA(self):
         easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)

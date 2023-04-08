@@ -9,6 +9,7 @@ from utils.controller_utils import _openController
 from constants import COLORS
 from utils.data_utils import dataGame
 from utils.game_utils import coordsBlocs
+from models.Player import Player
 
 class Network():
 
@@ -58,7 +59,7 @@ class Client(Thread):
         self.gameController.unbindAllPiecesWhenNotPlay() # On unbind tous les joueurs
         self.gameController.gameView.tourLabel.configure(text="C'est au joueur " + self.gameController.actualPlayer.getCouleur(), text_color="#3D5ECC")
     else:
-        self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color="blue")
+        self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color="#3D5ECC")
 
 
     while 1:
@@ -75,6 +76,8 @@ class Client(Thread):
             couleurJoueur = self.gameController.actualPlayer.getCouleur()
             indexJoueur = self.gameController.joueurs.index(self.gameController.actualPlayer)
             nb_rotation = abs(rotation) // 90
+
+
             for i in range(nb_rotation):
                 self.gameController.actualPlayer.pieces.rotate(numPiece-1)
                 piece = self.gameController.actualPlayer.jouerPiece(numPiece-1)
@@ -100,19 +103,25 @@ class Client(Thread):
                 self.gameController.actualPlayer,
                 self.gameController.index)
             
-            if nb_rotation > 0:    
+            if nb_rotation > 0 or inversion%2 == 1:    
                 self.gameController.actualPlayer.pieces.resetRotation(numPiece-1)
 
         # Partie changement de couleur
-        ctx = Network.receiveMessage(self.client) # ctx = 'couleur'
+        ctx = Network.receiveMessage(self.client) # ctx = 'couleur' or fin
         print(ctx,'<---- Couleur')
         couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
-        if self.color == ctx:
-            self.gameController.bindWhenYouPlay()
-            self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
+        
+        if ctx == 'fin':
+            try:
+                _openController(self.gameController.gameView, "Score", self.gameController.window)
+            except : pass
         else:
-            self.gameController.unbindAllPiecesWhenNotPlay()
-            self.gameController.gameView.tourLabel.configure(text="C'est au joueur " + self.gameController.actualPlayer.getCouleur(), text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
+            if self.color == ctx:
+                self.gameController.bindWhenYouPlay()
+                self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
+            else:
+                self.gameController.unbindAllPiecesWhenNotPlay()
+                self.gameController.gameView.tourLabel.configure(text="C'est au joueur " + self.gameController.actualPlayer.getCouleur(), text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
 
 
 class Server(Thread):
@@ -159,34 +168,33 @@ class Server(Thread):
             rotation = int(ctx_2[3])
             inversion = int(ctx_2[4])
             numPiece = int(file.split("/")[-1].split(".")[0]) - 1
-
-            piece = self.gameController.actualPlayer.jouerPiece(numPiece)
+            self.player = Player(COLORS[index])
+            piece = self.player.jouerPiece(numPiece)
             nb_rotation = abs(rotation) // 90
-            for i in range(nb_rotation):
-                self.gameController.actualPlayer.pieces.rotate(numPiece)
-                piece = self.gameController.actualPlayer.jouerPiece(numPiece)
-
-            if inversion %2 != 0:
-                self.gameController.actualPlayer.pieces.reverse(numPiece)
-                piece = self.gameController.actualPlayer.jouerPiece(numPiece)
             pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
 
             self.db.addPoints(COLORS[index],len(pieceBlokus))
             self.db.addToHistoriquePlayer(COLORS[index],y//30,x//30,numPiece,nb_rotation,inversion)
-            
+
             for player in self.players:
                 if player != self.players[index]:
                     Network.sendMessage(ctx,player[0])
             Network.sendMessage('attente',self.players[index][0])
-
-            # Partie chagement de couleur
-            index = (index + 1 ) % 4
-            Network.sendAllMessage(COLORS[index],self.players)
             
-# self.db.addPoints(self.gameController.actualPlayer.couleur,len(pieceBlokus))
-#             self.db.addToHistoriquePlayer(self.gameController.actualPlayer.couleur,y//30,x//30,numPiece-1,nb_rotation,inversion)
-
-
+            # Partie chagement de couleur
+            finishGame = False
+            logIndex = index
+            index = (index + 1 ) % 4
+            while COLORS[index] in self.gameController.nePeutPlusJouer:
+                index = (index + 1 ) % 4
+                if len(self.gameController.nePeutPlusJouer) == 4:
+                    finishGame = True
+                    break
+            if finishGame:
+                Network.sendAllMessage('fin',self.players)
+            else:
+                Network.sendAllMessage(COLORS[index],self.players)
+            
 
 class MultiplayerController(Controller):
 
@@ -215,8 +223,6 @@ class MultiplayerController(Controller):
             self.server.start()
         except:
             pass
-        # print(gethostbyname(gethostname()))
-        # print(self.server.server.getsockname())
         print('----> ip du serveur : ',gethostbyname(gethostname()))
         self.__initClient(gethostbyname(gethostname()))
 
