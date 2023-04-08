@@ -1,3 +1,4 @@
+from views.CommandesView import CommandesView
 from views.View import View
 from utils.window_utils import _resizeWindow, _deleteChilds, _createFrame
 from customtkinter import CTk, CTkImage, CTkFrame, CTkLabel, CTkFont
@@ -22,6 +23,7 @@ class GameMultiplayerView(View):
 
         self.gameController = controller
         self.window = window
+        self.commandesView = None
 
     def bindConfig(self):
         # self.piecesManager._makeFrame()
@@ -45,9 +47,16 @@ class GameMultiplayerView(View):
         self.score: score = score(self.window, Player('Bleu'))
         self.piecesManager: piecesManager = piecesManager(self.window, Player('Bleu'), self)
 
+    def _openCommandesView(self):
+        if self.commandesView is None or not self.commandesView.winfo_exists():
+            self.commandesView = CommandesView()
+        else:
+            self.commandesView.focus()
+
     def __createButtons(self):
         # self.newGameButton: Bouton = Bouton(self.window, self, 710, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/Button_new_game.png", son="button", command=self._newGame)
         self.leaveButton: Bouton = Bouton(self.window, self, 1060, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/button_leave_game.png", son="button", command=self._leaveGame)
+        self.commandesButton : Bouton = Bouton(self.window, self, 950, 757, width=40, heigth=40, file= APP_PATH + r"/../media/assets/commands_button.png", son="button", command=self._openCommandesView)
         self.tourLabel = CTkLabel(
         master=self.window,
         text="", 
