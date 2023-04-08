@@ -29,9 +29,11 @@ class GameMultiplayerController(Controller):
         self.plateau = Plateau(20,20)
         self.gameView = GameMultiplayerView(self, self.window)
         # self.gameView = self.loadView("Game",window)
+        self.compteurNbPiecePose = 0
         self.nePeutPlusJouer = []
         self.logsPossibilities = []
         self.paquet = ""
+        self.cheat = False
 
     def unbindAllPiecesWhenNotPlay(self):
         self.gameView.unbindConfig()
@@ -100,25 +102,37 @@ class GameMultiplayerController(Controller):
             self.canvas = canvas
             self.nextPlayer()
             # self.gameView.update(self.actualPlayer, self.index)
+            self.compteurNbPiecePose += 1
             Network.sendMessage(self.paquet,self.client)
 
         if nb_rotation > 0:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
     
     def activateCheatMode(self):
-            if len(self.logsPossibilities):
-                for possibility in self.logsPossibilities:
-                    x,y = possibility
-                    self.gameView.drawCell(x,y,"white")
-                self.logsPossibilities.clear()
-            
-            possibilities = gameManager.getBestPossibilities(self.plateau,self.index,self.actualPlayer)
-            for possibility in possibilities:
+        self.clearCheatMode()
+        possibilities = gameManager.getBestPossibilities(self.plateau,self.index,self.actualPlayer)
+        for possibility in possibilities:
+            x,y = possibility
+            x = x*30
+            y = y*30
+            self.gameView.drawCell(y,x,"purple")
+            self.logsPossibilities.append([y,x])
+
+    def clearCheatMode(self):
+        if len(self.logsPossibilities):
+            for possibility in self.logsPossibilities:
                 x,y = possibility
-                x = x*30
-                y = y*30
-                self.gameView.drawCell(y,x,"purple")
-                self.logsPossibilities.append([y,x])
+                self.gameView.drawCell(x,y,"white")
+            self.logsPossibilities.clear()
+
+    def cheatMode(self):
+        print("coucou")
+        print("compteur : " + str(self.compteurNbPiecePose))
+        if self.compteurNbPiecePose > 0:
+            if self.cheat:
+                self.activateCheatMode()
+            else: 
+                self.clearCheatMode()
 
     def nextPlayer(self) -> None:
         """        
@@ -153,7 +167,7 @@ class GameMultiplayerController(Controller):
         if not playable:
             _openController(self.gameView, "Score", self.window)
         else:
-            self.activateCheatMode()
+            self.cheatMode()
             self.gameView.update(self.actualPlayer, self.index)
 
     def loadMap(self):
@@ -195,7 +209,7 @@ class GameMultiplayerController(Controller):
         self.gameView.main()
         self.startGame()    
         self.gameView.update(self.actualPlayer, self.index)
-        self.activateCheatMode()
+        self.cheatMode()
         # self.loadMap()
 
     def IA(self):
