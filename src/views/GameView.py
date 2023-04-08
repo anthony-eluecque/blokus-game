@@ -1,6 +1,7 @@
+from views.CommandesView import CommandesView
 from views.View import View
 from utils.window_utils import _resizeWindow, _deleteChilds, _createFrame
-from customtkinter import CTk, CTkImage, CTkLabel, CTkCanvas
+from customtkinter import CTk, CTkImage, CTkLabel, CTkCanvas, CTkInputDialog
 from PIL import Image
 from components.game.grille import grille
 from components.game.score import score
@@ -22,6 +23,7 @@ class GameView(View):
 
         self.gameController = controller
         self.window = window
+        self.commandesView = None
 
 
     def _makeFrame(self):
@@ -38,19 +40,21 @@ class GameView(View):
     def drawCell(self,x,y,color):
         self.grille.canvas.create_rectangle(x,y, x+30, y+30, fill=color)
 
+    def _openCommandesView(self):
+        if self.commandesView is None or not self.commandesView.winfo_exists():
+            self.commandesView = CommandesView()
+        else:
+            self.commandesView.focus()
 
     def __createButtons(self):
 
         self.newGameButton: Bouton = Bouton(self.window, self, 710, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/Button_new_game.png", son="button", command=self._newGame)
         self.leaveButton: Bouton = Bouton(self.window, self, 1060, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/button_leave_game.png", son="button", command=self._leaveGame)
+        self.commandesButton : Bouton = Bouton(self.window, self, 950, 757, width=40, heigth=40, file= APP_PATH + r"/../media/assets/commands_button.png", son="button", command=self._openCommandesView)
 
     def _makeBackground(self):
         self.bgImage = CTkImage(Image.open(APP_PATH + r"/../media/assets/background_game.png"), size=(1300, 800))
         self.bg = CTkLabel(self.window, text="", image = self.bgImage)
-
-    def _waitingScreen(self):
-        self.waitingLabel = CTkLabel(self.window, width=1300, height=800, text="",wraplength=1)
-        self.waitingLabel.place(x = 0, y = 0)
         
     def _makePopup(self , player : Player):
         self.popup = showinfo("Blokus", "Le joueur " + player.getCouleur() + " ne peut plus jouer.")
