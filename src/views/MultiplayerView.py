@@ -18,7 +18,6 @@ class MultiplayerView(View):
         self.window = window
         self.multiplayerController = controller
         self.index = 0
-
     
     def _makeBackground(self):
         self.backgroundImage = Image.open(os.path.join(APP_PATH + r"/../media/assets/multiplayer_bg.png"))
@@ -51,6 +50,54 @@ class MultiplayerView(View):
             command=lambda : self.multiplayerController._joinServer(self.entryClient.get()))    
 
 
+    def invalidServer(self):
+        _resizeWindow(self.window,600,300)
+        self.mainFrame = _createFrame(self.window, 600, 300)
+        self.bgImage = CTkImage(Image.open(APP_PATH + r"/../media/assets/bg_erreurServ.png"), size=(600, 300))
+        self.bg = CTkLabel(self.window, text="", image = self.bgImage)
+        self.bg.place(x=0,y=0)
+
+        self.createServer : Bouton = Bouton(
+            self.window, self, 320, 255, width=200, heigth=33, 
+            file=APP_PATH + r"/../media/assets/createserv_erreur.png", son="button", 
+            command= lambda : self.multiplayerController._createServer('0.0.0.0')) 
+
+        self.retourServer : Bouton = Bouton(
+            self.window, self, 100, 255, width=200, heigth=33, 
+            file=APP_PATH + r"/../media/assets/retour_serveur.png", son="button", 
+            command= lambda : self.multiplayerController.goBackMultiMenu()) 
+
+
+    def invalidServerClientSide(self):
+        _resizeWindow(self.window,600,300)
+        self.mainFrame = _createFrame(self.window, 600, 300)
+        self.bgImage = CTkImage(Image.open(APP_PATH + r"/../media/assets/bg_retour_client.png"), size=(600, 300))
+        self.bg = CTkLabel(self.window, text="", image = self.bgImage)
+        self.bg.place(x=0,y=0)
+
+        self.retourServer : Bouton = Bouton(
+            self.window, self, 200, 255, width=200, heigth=33, 
+            file=APP_PATH + r"/../media/assets/retour_serveur.png", son="button", 
+            command= lambda : self.multiplayerController.goBackMultiMenu()) 
+
+    def choiseJoinOrNot(self):
+        _resizeWindow(self.window,600,300)
+        self.mainFrame = _createFrame(self.window, 600, 300)
+        self.bgImage = CTkImage(Image.open(APP_PATH + r"/../media/assets/bg_joinserver.png"), size=(600, 300))
+        self.bg = CTkLabel(self.window, text="", image = self.bgImage)
+        self.bg.place(x=0,y=0)
+
+        self.retourServer : Bouton = Bouton(
+            self.window, self, 320, 255, width=200, heigth=33, 
+            file=APP_PATH + r"/../media/assets/retour_serveur.png", son="button", 
+            command= lambda : self.multiplayerController.goBackMultiMenu())
+        
+        self.joinServer :  Bouton = Bouton(
+            self.window, self, 100, 255, width=200, heigth=33, 
+            file=APP_PATH + r"/../media/assets/joinserver.png", son="button", 
+            command= lambda : self.multiplayerController._joinServer(gethostbyname(gethostname())) 
+        )
+
     def waitingScreen(self):
         
         _resizeWindow(self.window,600,300)
@@ -65,12 +112,22 @@ class MultiplayerView(View):
         self.ipLabel = CTkLabel(self.window,text="Votre code d'acces à partager\n avec vos ami(e)s : " + gethostbyname(gethostname()),bg_color='white',text_color='black', font=('Roboto Bold', 25))
         self.ipLabel.place(x=120,y=180)
 
+
+    def backMenuServerSide(self):
+        print("test")
+        self.retourServer : Bouton = Bouton(
+            self.window, self, 200, 255, width=200, heigth=33, 
+            file=APP_PATH + r"/../media/assets/retour_serveur.png", son="button", 
+            command= lambda : self.multiplayerController.closeServ())   
+
     def onConnection(self):
         self.index+=1
         self.updatedConnection.destroy()
         self.updatedConnection = CTkLabel(self.window,text=f"Il y a {self.index} joueur(s) connecté(s) ... \n en attente de {4-self.index} autres",bg_color='white',text_color='black')
         self.updatedConnection.configure(font=('Roboto Bold', 25))
         self.updatedConnection.place(x=140,y=100)
+
+
 
     def onConnectionClient(self):
         self.updatedConnection.destroy()

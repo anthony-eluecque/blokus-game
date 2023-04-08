@@ -1,4 +1,4 @@
-from socket import socket,gethostname,AF_INET,SOCK_STREAM,gethostbyname
+from socket import SHUT_RDWR, SO_REUSEADDR, SOL_SOCKET, socket,gethostname,AF_INET,SOCK_STREAM,gethostbyname
 from threading import Thread
 from config import APP_PATH
 from core.Controller import Controller
@@ -47,81 +47,83 @@ class Client(Thread):
     self.color = ctx
 
     print("Ma couleur est ",self.color,"\n")
-    ctx = Network.receiveMessage(self.client) # ctx = 'start'
-    
-    self.controller.openGame() # On ouvre le jeu
-    self.gameController = self.controller.controller
-    self.gameController.bindClient(self.client)
-
-    ctx = Network.receiveMessage(self.client)
-
-    if ctx != self.color:
-        self.gameController.unbindAllPiecesWhenNotPlay() # On unbind tous les joueurs
-        self.gameController.gameView.tourLabel.configure(text="C'est au joueur " + self.gameController.actualPlayer.getCouleur(), text_color="#3D5ECC")
+    ctx = Network.receiveMessage(self.client) # ctx = 'start' || 'stop'
+    if ctx=='stop':
+        self.controller.closeConnectionByServer()
     else:
-        self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color="#3D5ECC")
+        self.controller.openGame() # On ouvre le jeu
+        self.gameController = self.controller.controller
+        self.gameController.bindClient(self.client)
 
+        ctx = Network.receiveMessage(self.client)
 
-    while 1:
-        ctx = Network.receiveMessage(self.client) # ctx = logPiece
-        if ctx != 'attente':
-            ctx = ctx.split(',')
-            file = ctx[0]
-            x = int(ctx[1])
-            y = int(ctx[2])
-            rotation = int(ctx[3])
-            inversion = int(ctx[4])
-            numPiece = int(file.split("/")[-1].split(".")[0])
-            piece = self.gameController.actualPlayer.jouerPiece(numPiece-1)
-            couleurJoueur = self.gameController.actualPlayer.getCouleur()
-            indexJoueur = self.gameController.joueurs.index(self.gameController.actualPlayer)
-            nb_rotation = abs(rotation) // 90
-
-
-            for i in range(nb_rotation):
-                self.gameController.actualPlayer.pieces.rotate(numPiece-1)
-                piece = self.gameController.actualPlayer.jouerPiece(numPiece-1)
-
-            if inversion %2 != 0:
-                self.gameController.actualPlayer.pieces.reverse(numPiece-1)
-                piece = self.gameController.actualPlayer.jouerPiece(numPiece-1)
-
-            pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
-            cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + r"/1.png"
-
-            self.gameController.actualPlayer.removePiece(numPiece-1)
-
-            for coordY,coordX in pieceBlokus:
-                self.gameController.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
-                self.gameController.plateau.setColorOfCase(coordY, coordX, indexJoueur)
-            
-
-            self.gameController.actualPlayer.hasPlayedPiece(numPiece-1)
-            # self.gameController.canvas = canvas
-            self.gameController.nextPlayer()
-            self.gameController.gameView.update(
-                self.gameController.actualPlayer,
-                self.gameController.index)
-            
-            if nb_rotation > 0 or inversion%2 == 1:    
-                self.gameController.actualPlayer.pieces.resetRotation(numPiece-1)
-
-        # Partie changement de couleur
-        ctx = Network.receiveMessage(self.client) # ctx = 'couleur' or fin
-        print(ctx,'<---- Couleur')
-        couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
-        
-        if ctx == 'fin':
-            try:
-                _openController(self.gameController.gameView, "Score", self.gameController.window)
-            except : pass
+        if ctx != self.color:
+            self.gameController.unbindAllPiecesWhenNotPlay() # On unbind tous les joueurs
+            self.gameController.gameView.tourLabel.configure(text="C'est au joueur " + self.gameController.actualPlayer.getCouleur(), text_color="#3D5ECC")
         else:
-            if self.color == ctx:
-                self.gameController.bindWhenYouPlay()
-                self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
+            self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color="#3D5ECC")
+
+
+        while 1:
+            ctx = Network.receiveMessage(self.client) # ctx = logPiece
+            if ctx != 'attente':
+                ctx = ctx.split(',')
+                file = ctx[0]
+                x = int(ctx[1])
+                y = int(ctx[2])
+                rotation = int(ctx[3])
+                inversion = int(ctx[4])
+                numPiece = int(file.split("/")[-1].split(".")[0])
+                piece = self.gameController.actualPlayer.jouerPiece(numPiece-1)
+                couleurJoueur = self.gameController.actualPlayer.getCouleur()
+                indexJoueur = self.gameController.joueurs.index(self.gameController.actualPlayer)
+                nb_rotation = abs(rotation) // 90
+
+
+                for i in range(nb_rotation):
+                    self.gameController.actualPlayer.pieces.rotate(numPiece-1)
+                    piece = self.gameController.actualPlayer.jouerPiece(numPiece-1)
+
+                if inversion %2 != 0:
+                    self.gameController.actualPlayer.pieces.reverse(numPiece-1)
+                    piece = self.gameController.actualPlayer.jouerPiece(numPiece-1)
+
+                pieceBlokus = coordsBlocs(piece, x // 30, y // 30)
+                cheminFichierPiece = APP_PATH +  r"/../media/pieces/" + couleurJoueur.upper()[0] + r"/1.png"
+
+                self.gameController.actualPlayer.removePiece(numPiece-1)
+
+                for coordY,coordX in pieceBlokus:
+                    self.gameController.gameView._addToGrid(cheminFichierPiece, coordX,coordY)
+                    self.gameController.plateau.setColorOfCase(coordY, coordX, indexJoueur)
+                
+
+                self.gameController.actualPlayer.hasPlayedPiece(numPiece-1)
+                # self.gameController.canvas = canvas
+                self.gameController.nextPlayer()
+                self.gameController.gameView.update(
+                    self.gameController.actualPlayer,
+                    self.gameController.index)
+                
+                if nb_rotation > 0 or inversion%2 == 1:    
+                    self.gameController.actualPlayer.pieces.resetRotation(numPiece-1)
+
+            # Partie changement de couleur
+            ctx = Network.receiveMessage(self.client) # ctx = 'couleur' or fin
+            print(ctx,'<---- Couleur')
+            couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
+            
+            if ctx == 'fin':
+                try:
+                    _openController(self.gameController.gameView, "Score", self.gameController.window)
+                except : pass
             else:
-                self.gameController.unbindAllPiecesWhenNotPlay()
-                self.gameController.gameView.tourLabel.configure(text="C'est au joueur " + self.gameController.actualPlayer.getCouleur(), text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
+                if self.color == ctx:
+                    self.gameController.bindWhenYouPlay()
+                    self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
+                else:
+                    self.gameController.unbindAllPiecesWhenNotPlay()
+                    self.gameController.gameView.tourLabel.configure(text="C'est au joueur " + self.gameController.actualPlayer.getCouleur(), text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
 
 
 class Server(Thread):
@@ -133,10 +135,14 @@ class Server(Thread):
         self.server = socket(AF_INET,SOCK_STREAM)
         self.server.bind((ip, 3000))
         self.server.listen(5)
+        self.server.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
         self.players = []
         self.controller = controller
-        self.db = dataGame()
 
+    def closeServer(self):
+        Network.sendAllMessage('stop',self.players)
+
+        self.server.close()        
 
     def acceptClients(self):
         index = 0
@@ -155,6 +161,7 @@ class Server(Thread):
         index = 0
         self.acceptClients() # Permet de bien check que 4 clients se connectent au serveur
         Network.sendAllMessage('start',self.players)
+        self.db = dataGame()
         # self.controller.openGame()
         self.gameController = self.controller.controller
         # self.gameController.bindServer(self)
@@ -215,22 +222,31 @@ class MultiplayerController(Controller):
         self.multiPlayerView.close()
         self.multiPlayerView.waitingScreen()
 
+    def closeConnectionByServer(self):
+        _openController(self.multiPlayerView,"Multiplayer",self.window)
+        self.multiPlayerView.invalidServerClientSide()
 
     def _createServer(self,ip):
-        self.waitingOthers()
         try:
             self.server = Server(gethostbyname(gethostname()),self)
             self.server.start()
+            self.waitingOthers()
+            self.multiPlayerView.backMenuServerSide()
+            print('----> ip du serveur : ',gethostbyname(gethostname()))
+            self.__initClient(gethostbyname(gethostname()))
         except:
-            pass
-        print('----> ip du serveur : ',gethostbyname(gethostname()))
-        self.__initClient(gethostbyname(gethostname()))
+            self.multiPlayerView.choiseJoinOrNot()
+    
 
     def _joinServer(self,ip):
-        self.multiPlayerView.close()
-        self.multiPlayerView.waitingScreen()
-        self.multiPlayerView.onConnectionClient()
-        self.__initClient(ip)
+        try:
+            self.multiPlayerView.close()
+            self.__initClient(ip)
+            self.multiPlayerView.waitingScreen()
+            self.multiPlayerView.onConnectionClient()
+        except:
+            self.multiPlayerView.close()
+            self.multiPlayerView.invalidServer()
         
     def main(self):
         self.multiPlayerView.main()
@@ -238,6 +254,14 @@ class MultiplayerController(Controller):
     def goBackMenu(self):
         _openController(self.multiPlayerView,"Home",self.window)
     
+    def goBackMultiMenu(self):
+        _openController(self.multiPlayerView,"Multiplayer",self.window)
+    
+    def closeServ(self):
+        self.server.closeServer()
+        _openController(self.multiPlayerView,"Multiplayer",self.window)
+
+
     def openGame(self):
         self.multiPlayerView.close()
         self.controller = Core.openController("GameMultiplayer", self.window)
