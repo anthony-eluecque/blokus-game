@@ -103,18 +103,19 @@ class MultiplayerView(View):
         _resizeWindow(self.window,600,300)
         self.mainFrame = _createFrame(self.window, 600, 300)
         self.bgImage = CTkImage(Image.open(APP_PATH + r"/../media/assets/waiting_bg.png"), size=(600, 300))
-        self.bg = CTkLabel(self.window, text="", image = self.bgImage)
+        self.bg = CTkLabel(self.mainFrame, text="", image = self.bgImage)
         self.bg.place(x=0,y=0)
-        
-        self.updatedConnection = CTkLabel(self.window,text=f"Il y a {self.index} joueur(s) connecté(s) ... \n en attente de {4-self.index} autres",bg_color='white',text_color='black', font=('Roboto Bold', 25))
-        self.updatedConnection.place(x=140,y=100)
+        self._createLabelPlayer()
+        self.ipLabel = CTkLabel(self.mainFrame,text="Votre code d'acces à partager\n avec vos ami(e)s : " + gethostbyname(gethostname()),bg_color='white',text_color='black', font=('Roboto Bold', 25))
+        self.ipLabel.place(x=120,y=100)
+        self.colorLabel = CTkLabel(self.mainFrame, text="", bg_color='white',text_color='black', font=('Roboto Bold', 25))
+        self.colorLabel.place(x=180, y=200)
 
-        self.ipLabel = CTkLabel(self.window,text="Votre code d'acces à partager\n avec vos ami(e)s : " + gethostbyname(gethostname()),bg_color='white',text_color='black', font=('Roboto Bold', 25))
-        self.ipLabel.place(x=120,y=180)
-
+    def _createLabelPlayer(self):
+        self.updatedConnection = CTkLabel(self.mainFrame,text=f"Il y a {self.index} joueur(s) connecté(s) ... \n en attente de {4-self.index} autres",bg_color='white',text_color='black', font=('Roboto Bold', 25))
+        self.updatedConnection.place(x=140,y=30)
 
     def backMenuServerSide(self):
-        print("test")
         self.retourServer : Bouton = Bouton(
             self.window, self, 200, 255, width=200, heigth=33, 
             file=APP_PATH + r"/../media/assets/retour_serveur.png", son="button", 
@@ -123,11 +124,7 @@ class MultiplayerView(View):
     def onConnection(self):
         self.index+=1
         self.updatedConnection.destroy()
-        self.updatedConnection = CTkLabel(self.window,text=f"Il y a {self.index} joueur(s) connecté(s) ... \n en attente de {4-self.index} autres",bg_color='white',text_color='black')
-        self.updatedConnection.configure(font=('Roboto Bold', 25))
-        self.updatedConnection.place(x=140,y=100)
-
-
+        self._createLabelPlayer()
 
     def onConnectionClient(self):
         self.updatedConnection.destroy()

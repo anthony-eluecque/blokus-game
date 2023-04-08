@@ -43,11 +43,12 @@ class Client(Thread):
         raise Exception
 
   def run(self):
+    couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
     ctx = Network.receiveMessage(self.client)  # ctx = 'color'
     self.color = ctx
-
+    self.controller.multiPlayerView.colorLabel.configure(text="Votre couleur : " + self.color, text_color=couleurEN[self.color.upper()[0] + self.color[1:]])
     print("Ma couleur est ",self.color,"\n")
-    ctx = Network.receiveMessage(self.client) # ctx = 'start' || 'stop'
+    ctx = Network.receiveMessage(self.client) # ctx = 'start' || 'stop'd
     if ctx=='stop':
         self.controller.closeConnectionByServer()
     else:
@@ -113,7 +114,6 @@ class Client(Thread):
             # Partie changement de couleur
             ctx = Network.receiveMessage(self.client) # ctx = 'couleur' or fin
             print(ctx,'<---- Couleur')
-            couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
             
             if ctx == 'fin':
                 try:
@@ -212,9 +212,6 @@ class MultiplayerController(Controller):
         self.multiPlayerView = self.loadView("Multiplayer", self.window)
         self.core: Core = Core()
 
-
-        self.colors = ['Jaune','Vert','Rouge']
-
     def __initClient(self,ip):
         client = Client(str(ip),self)
         client.start()
@@ -227,14 +224,14 @@ class MultiplayerController(Controller):
         _openController(self.multiPlayerView,"Multiplayer",self.window)
         self.multiPlayerView.invalidServerClientSide()
 
-    def _createServer(self,ip):
+    def _createServer(self, ip):
         try:
             self.server = Server(gethostbyname(gethostname()),self)
             self.server.start()
             self.waitingOthers()
-            self.multiPlayerView.backMenuServerSide()
             print('----> ip du serveur : ',gethostbyname(gethostname()))
             self.__initClient(gethostbyname(gethostname()))
+            self.multiPlayerView.backMenuServerSide()
         except:
             self.multiPlayerView.choiseJoinOrNot()
     
