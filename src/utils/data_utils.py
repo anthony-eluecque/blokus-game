@@ -56,3 +56,8 @@ class dataGame():
         self.data["parties"][self.id][couleur.lower()]["historique_placement"].append([[ligne,colonne],numPiece,rotation,inversion])
         jsonManager.writeJson(self.data)
 
+    def addPseudoInData(self,couleur,pseudo):
+        self.data = jsonManager.readJson()
+        self.data["parties"][self.id][couleur.lower()]["pseudo"] = pseudo
+        jsonManager.writeJson(self.data)
+

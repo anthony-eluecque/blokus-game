@@ -34,7 +34,11 @@ class GameController(Controller):
         self.nePeutPlusJouer = []
         self.logsPossibilities = []
         self.cheat = False
+
         self.db = dataGame()
+        conf = Configuration.getConfig()
+        for player in conf:
+            self.db.addPseudoInData(player['couleur'],player['nom'])
 
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
