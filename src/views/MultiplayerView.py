@@ -12,7 +12,7 @@ from socket import gethostname, gethostbyname
 class MultiplayerView(View):
 
 
-    def __init__(self, controller, window: CTk, longueur=800, hauteur=800):
+    def __init__(self, controller, window: CTk, longueur=900, hauteur=624):
         super().__init__()
 
         self.window = window
@@ -28,25 +28,25 @@ class MultiplayerView(View):
 
 
     def _makeFrame(self):
-        self.mainFrame = _createFrame(self.window, 800, 800)
+        self.mainFrame = _createFrame(self.window, 900, 624)
 
-    def main(self,largeur = 800,hauteur = 800):
+    def main(self,largeur = 900,hauteur = 624):
         _resizeWindow(self.window,largeur,hauteur)
         self._makeFrame()
         self._makeBackground()
-        self.backHome: Bouton = Bouton(self.window, self, 300, 700, width=206, heigth=49, file=APP_PATH + "/../media/assets/buttun_rules_return.png", son="button", command=self.multiplayerController.goBackMenu)    
+        self.backHome: Bouton = Bouton(self.window, self, 350, 520, width=206, heigth=49, file=APP_PATH + "/../media/assets/buttun_rules_return.png", son="button", command=self.multiplayerController.goBackMenu)    
 
-        self.entryClient = Entry(self.window,width=15)
+        self.entryClient = Entry(self.window,width=15, fg="grey", bg="grey", relief="sunken", foreground="white")
         self.entryClient.configure(font=('Roboto Bold', 20))
-        self.entryClient.place(x=150,y=505)
+        self.entryClient.place(x=265,y=345)
 
         self.createServer : Bouton = Bouton(
-            self.window, self, 290, 230, width=206, heigth=49, 
+            self.window, self, 520, 136, width=206, heigth=49, 
             file=APP_PATH + r"/../media/assets/createMulti_button.png", son="button", 
             command= lambda : self.multiplayerController._createServer('0.0.0.0'))    
         
         self.joinServer : Bouton = Bouton(
-            self.window, self, 420, 500, width=206, heigth=49, 
+            self.window, self, 520, 335, width=206, heigth=49, 
             file=APP_PATH + r"/../media/assets/joinMulti_button.png", son="button", 
             command=lambda : self.multiplayerController._joinServer(self.entryClient.get()))    
 
