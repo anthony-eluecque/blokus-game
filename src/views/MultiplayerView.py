@@ -135,7 +135,7 @@ class MultiplayerView(View):
         self.updatedConnection.destroy()
         self.updatedConnection = CTkLabel(self.window,text=f"En attente du meneur de jeu ... ",bg_color='white',text_color='black')
         self.updatedConnection.configure(font=('Roboto Bold', 25))
-        self.updatedConnection.place(x=130,y=100)
+        self.updatedConnection.place(x=140,y=50)
 
 
     def close(self):
