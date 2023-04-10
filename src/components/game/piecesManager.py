@@ -57,6 +57,7 @@ class piecesManager:
         """
         row = 750
         col = 50
+
         for i in range(len(self.imagesPieces)):
             self._makeImagePiece(self.imagesPieces[i],col,row)
             row+=100
@@ -200,22 +201,20 @@ class piecesManager:
         Args:
             player (Player): _description_
         """
+
         self.imagesPieces = player.pieces.getImagesPieces()
-        for piece in self.listeCanvas:
-            piece[0].destroy()
-            piece[1] = ""
+        for i in range(len(self.listeCanvas)):
+            canvas : Canvas = self.listeCanvas[i][0]
+            canvas.destroy()
+        self.listeCanvas.clear()
 
         self.nbinversion = 0
         self.nbrotation = 0
-
-        self.listeCanvas = []
         self.frame.destroy()
         
         self._makeFrame()
         self._displayPieces()
 
-    def bindPiece(self):
-        self._displayPieces()
 
     def unbindPiece(self):
         for propertyCanvas in self.listeCanvas:

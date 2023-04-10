@@ -25,10 +25,6 @@ class GameMultiplayerView(View):
         self.window = window
         self.commandesView = None
 
-    def bindConfig(self):
-        # self.piecesManager._makeFrame()
-        # self.piecesManager._displayPieces()
-        self.piecesManager.bindPiece()
 
     def unbindConfig(self):
         # for piece in self.piecesManager.listeCanvas:
@@ -53,10 +49,18 @@ class GameMultiplayerView(View):
         else:
             self.commandesView.focus()
 
+    def _cheatMode(self):
+        if self.gameController.cheat:
+            self.gameController.cheat = False
+        else:
+            self.gameController.cheat = True
+        self.gameController.cheatMode()
+
     def __createButtons(self):
         # self.newGameButton: Bouton = Bouton(self.window, self, 710, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/Button_new_game.png", son="button", command=self._newGame)
         self.leaveButton: Bouton = Bouton(self.window, self, 1060, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/button_leave_game.png", son="button", command=self._leaveGame)
-        self.commandesButton : Bouton = Bouton(self.window, self, 950, 757, width=40, heigth=40, file= APP_PATH + r"/../media/assets/commands_button.png", son="button", command=self._openCommandesView)
+        self.commandesButton : Bouton = Bouton(self.window, self, 1205, 15, width=40, heigth=40, file= APP_PATH + r"/../media/assets/commands_button.png", son="button", command=self._openCommandesView)
+        self.cheatButton : Bouton = Bouton(self.window, self, 1205, 55, width=40, heigth=40, file= APP_PATH + r"/../media/assets/cheat_button.png", son="button", command=self._cheatMode)
         self.tourLabel = CTkLabel(
         master=self.window,
         text="", 
@@ -92,11 +96,10 @@ class GameMultiplayerView(View):
         
     def drawCell(self,x,y,color):
         self.grille.canvas.create_rectangle(x,y, x+30, y+30, fill=color)
-        
+
     def update(self, player, index):
         self.score.nextPlayer(index, player )
         self.piecesManager.update(player)
-        
         self.leaveButton.destroy()
         # self.newGameButton.destroy()
         self.__createButtons()

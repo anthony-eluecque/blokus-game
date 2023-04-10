@@ -43,11 +43,12 @@ class Client(Thread):
         raise Exception
 
   def run(self):
+    couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
     ctx = Network.receiveMessage(self.client)  # ctx = 'color'
     self.color = ctx
-
     print("Ma couleur est ",self.color,"\n")
-    ctx = Network.receiveMessage(self.client) # ctx = 'start' || 'stop'
+    self.controller.multiPlayerView.colorLabel.configure(text="Votre couleur : " + self.color, text_color=couleurEN[self.color.upper()[0] + self.color[1:]])
+    ctx = Network.receiveMessage(self.client) # ctx = 'start' || 'stop'd
     if ctx=='stop':
         self.controller.closeConnectionByServer()
     else:
@@ -99,11 +100,13 @@ class Client(Thread):
                 
 
                 self.gameController.actualPlayer.hasPlayedPiece(numPiece-1)
-                # self.gameController.canvas = canvas
+
                 self.gameController.nextPlayer()
-                self.gameController.gameView.update(
-                    self.gameController.actualPlayer,
-                    self.gameController.index)
+                # self.gameController.gameView.update(
+                #     self.gameController.actualPlayer,
+                #     self.gameController.index)
+            
+                
                 
                 if nb_rotation > 0 or inversion%2 == 1:    
                     self.gameController.actualPlayer.pieces.resetRotation(numPiece-1)
@@ -111,7 +114,6 @@ class Client(Thread):
             # Partie changement de couleur
             ctx = Network.receiveMessage(self.client) # ctx = 'couleur' or fin
             print(ctx,'<---- Couleur')
-            couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
             
             if ctx == 'fin':
                 try:
@@ -119,7 +121,6 @@ class Client(Thread):
                 except : pass
             else:
                 if self.color == ctx:
-                    self.gameController.bindWhenYouPlay()
                     self.gameController.gameView.tourLabel.configure(text="C'est à votre Tour !", text_color=couleurEN[self.gameController.actualPlayer.getCouleur()])
                 else:
                     self.gameController.unbindAllPiecesWhenNotPlay()
@@ -211,14 +212,12 @@ class MultiplayerController(Controller):
         self.multiPlayerView = self.loadView("Multiplayer", self.window)
         self.core: Core = Core()
 
-
-        self.colors = ['Jaune','Vert','Rouge']
-
     def __initClient(self,ip):
         client = Client(str(ip),self)
         client.start()
 
     def waitingOthers(self):
+        couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
         self.multiPlayerView.close()
         self.multiPlayerView.waitingScreen()
 
@@ -226,7 +225,7 @@ class MultiplayerController(Controller):
         _openController(self.multiPlayerView,"Multiplayer",self.window)
         self.multiPlayerView.invalidServerClientSide()
 
-    def _createServer(self,ip):
+    def _createServer(self, ip):
         try:
             self.server = Server(gethostbyname(gethostname()),self)
             self.server.start()
@@ -241,9 +240,9 @@ class MultiplayerController(Controller):
     def _joinServer(self,ip):
         try:
             self.multiPlayerView.close()
-            self.__initClient(ip)
             self.multiPlayerView.waitingScreen()
             self.multiPlayerView.onConnectionClient()
+            self.__initClient(ip)
         except:
             self.multiPlayerView.close()
             self.multiPlayerView.invalidServer()

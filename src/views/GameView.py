@@ -46,11 +46,18 @@ class GameView(View):
         else:
             self.commandesView.focus()
 
-    def __createButtons(self):
+    def _cheatMode(self):
+        if self.gameController.cheat:
+            self.gameController.cheat = False
+        else:
+            self.gameController.cheat = True
+        self.gameController.cheatMode()
 
+    def __createButtons(self):
         self.newGameButton: Bouton = Bouton(self.window, self, 710, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/Button_new_game.png", son="button", command=self._newGame)
         self.leaveButton: Bouton = Bouton(self.window, self, 1060, 690, width=180, heigth=60, file= APP_PATH + r"/../media/assets/button_leave_game.png", son="button", command=self._leaveGame)
-        self.commandesButton : Bouton = Bouton(self.window, self, 950, 757, width=40, heigth=40, file= APP_PATH + r"/../media/assets/commands_button.png", son="button", command=self._openCommandesView)
+        self.commandesButton : Bouton = Bouton(self.window, self, 1205, 15, width=40, heigth=40, file= APP_PATH + r"/../media/assets/commands_button.png", son="button", command=self._openCommandesView)
+        self.cheatButton : Bouton = Bouton(self.window, self, 1205, 55, width=40, heigth=40, file= APP_PATH + r"/../media/assets/cheat_button.png", son="button", command=self._cheatMode)
 
     def _makeBackground(self):
         self.bgImage = CTkImage(Image.open(APP_PATH + r"/../media/assets/background_game.png"), size=(1300, 800))

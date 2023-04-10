@@ -235,13 +235,23 @@ def playerCanPlay(player: Player, plateau: Plateau) -> bool:
         for i in range(0, 20):
             for j in range(0, 20):
                 if validPlacement(player.pieces.liste_pieces[indice_piece], i, j, plateau, player):
-                    # print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j}")
                     return True
                 if validPlacementRotation(indice_piece, i, j, plateau, player):
-                    # print(f"La pièce n°{indice_piece+1} peut jouer en {i}-{j} en étant rotate")
+                    return True
+                if validPlacementInversion(indice_piece,i,j,plateau,player):
                     return True
                     
     player.canplay = False
+    return False
+
+def validPlacementInversion(indice_piece, i: int, j: int, plateau: Plateau, player: Player) -> bool:
+    for _ in range(2):
+        player.pieces.reverse(indice_piece)
+        piece = player.jouerPiece(indice_piece)
+        if validPlacement(piece, i, j, plateau, player):
+            player.pieces.resetRotation(indice_piece)
+            return True
+    player.pieces.resetRotation(indice_piece)
     return False
 
 def validPlacementRotation(indice_piece, i: int, j: int, plateau: Plateau, player: Player) -> bool:
@@ -372,8 +382,3 @@ def isValidMove(piece:list[list[int]],row:int,col:int,plateau:Plateau,player:Pla
             return False
 
     return pieceHasAdjacentDiagonal
-
-
-
-
-

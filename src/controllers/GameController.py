@@ -6,9 +6,10 @@ from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
 from utils.minmaxIA import medium_automate,gameManager
-from utils.automates_utils import easy_automate
+from utils.automate_utils import easy_automate
 from views.GameView import GameView
 from config import APP_PATH
+from utils.difficultIA import hardAutomate
 import asyncio
 import json
 from utils.data_utils import dataGame
@@ -30,17 +31,20 @@ class GameController(Controller):
         self.plateau = Plateau(20,20)
         self.gameView = GameView(self, self.window)
         # self.gameView = self.loadView("Game",window)
+        self.compteurNbPiecePose = 0
         self.nePeutPlusJouer = []
         self.logsPossibilities = []
-
+        self.cheat = False
 
         self.db = dataGame()
+        conf = Configuration.getConfig()
+        for player in conf:
+            self.db.addPseudoInData(player['couleur'],player['nom'])
 
     
     def callbackGame(self, file: str, x: int, y: int, rotation: int, inversion: int, canvas):
         """
         Procédure permettant de placer une pièce et de gérer les rotations/inversions. Si le placement est bon, la pièce se place sur la grille.
-
         Args:
             file (str) : chemin d'accès de l'image de la pièce.
             x (int) : coordonnées en abscisses de la pièce
@@ -88,18 +92,13 @@ class GameController(Controller):
             self.canvas = canvas
             self.nextPlayer()
             self.debut = False
+            self.compteurNbPiecePose += 1
 
         if nb_rotation > 0 or inversion%2==1:    
             self.actualPlayer.pieces.resetRotation(numPiece-1)
 
     def activateCheatMode(self):
-        if len(self.logsPossibilities):
-            for possibility in self.logsPossibilities:
-                x,y = possibility
-                self.gameView.drawCell(x,y,"white")
-            self.logsPossibilities.clear()
-
-        
+        self.clearCheatMode()
         possibilities = gameManager.getBestPossibilities(self.plateau,self.index,self.actualPlayer)
         for possibility in possibilities:
             x,y = possibility
@@ -108,7 +107,19 @@ class GameController(Controller):
             self.gameView.drawCell(y,x,"purple")
             self.logsPossibilities.append([y,x])
 
+    def clearCheatMode(self):
+        if len(self.logsPossibilities):
+            for possibility in self.logsPossibilities:
+                x,y = possibility
+                self.gameView.drawCell(x,y,"white")
+            self.logsPossibilities.clear()
 
+    def cheatMode(self):
+        if self.compteurNbPiecePose > 3:
+            if self.cheat:
+                self.activateCheatMode()
+            else: 
+                self.clearCheatMode()
 
     def nextPlayer(self) -> None:
         """        
@@ -145,7 +156,7 @@ class GameController(Controller):
             # makeClassement(self.joueurs)
             _openController(self.gameView, "Score", self.window)
         else:
-            self.activateCheatMode() #Comment for remove cheat mode
+            self.cheatMode() #Comment for remove cheat mode
             self.gameView.update(self.actualPlayer, self.index)
 
     def loadMap(self):
@@ -187,8 +198,7 @@ class GameController(Controller):
         self.gameView.main()
         self.startGame()    
         self.gameView.update(self.actualPlayer, self.index)
-        
-        self.activateCheatMode() # Comment for remove cheat mode
+        self.cheatMode()
         # self.loadMap()
 
     async def IA(self):
@@ -203,5 +213,8 @@ class GameController(Controller):
             easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
         elif niveau == "Moyen":
             result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
-        
+        elif niveau == "Difficile":
+            result = hardAutomate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
+            self.actualPlayer.canplay = result
+            
         self.nextPlayer()
