@@ -6,9 +6,10 @@ from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
 from utils.minmaxIA import medium_automate,gameManager
-from utils.automates_utils import easy_automate
+from utils.automate_utils import easy_automate
 from views.GameView import GameView
 from config import APP_PATH
+from utils.difficultIA import hardAutomate
 import asyncio
 import json
 from utils.data_utils import dataGame
@@ -212,5 +213,8 @@ class GameController(Controller):
             easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
         elif niveau == "Moyen":
             result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
-        
+        elif niveau == "Difficile":
+            result = hardAutomate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
+            self.actualPlayer.canplay = result
+            
         self.nextPlayer()

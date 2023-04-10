@@ -144,7 +144,7 @@ def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
         return [joueur.getPositionDepart()]
     return p
 
-def hardAutomate(joueurActuel : Player,plateau : Plateau,index:int,view):
+def hardAutomate(joueurActuel : Player,plateau : Plateau,index:int,view,db):
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
     tour = managePiece( joueurActuel,plateau, index )
 
@@ -156,6 +156,9 @@ def hardAutomate(joueurActuel : Player,plateau : Plateau,index:int,view):
             view._addToGrid(cheminFichierPiece,ypos,xpos)
             plateau.setColorOfCase(xpos,ypos,index)
 
+
+        db.addPoints(joueurActuel.couleur,len(pieceBlokus))
+        db.addToHistoriquePlayer(joueurActuel.couleur,pieceBlokus[0][0],pieceBlokus[0][1],idPiece,0,0)
         joueurActuel.pieces.resetRotation( idPiece )
 
     return tour != -1

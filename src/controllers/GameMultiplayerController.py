@@ -7,7 +7,7 @@ from utils.game_utils import coordsBlocs, validPlacement, playerCanPlay
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
-from utils.automates_utils import easy_automate
+from utils.automate_utils import easy_automate
 from utils.minmaxIA import gameManager
 from views.GameMultiplayerView import GameMultiplayerView
 from config import APP_PATH
