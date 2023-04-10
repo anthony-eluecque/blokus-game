@@ -1,5 +1,6 @@
 from constants import PIECES,PIECES_IMAGES
 from copy import deepcopy
+from config import APP_PATH
 
 class Pieces:
     
@@ -15,7 +16,7 @@ class Pieces:
 
         images_pieces : list[str] = ["" for _ in range(len(PIECES_IMAGES))]
         for i in range(len(self.images_pieces)):
-            images_pieces[i] = "./media/pieces/"+color.upper()+self.images_pieces[i]
+            images_pieces[i] = APP_PATH + r"/../media/pieces/"+color.upper()+self.images_pieces[i]
         return images_pieces
 
     def getNbPieces(self) -> int:
