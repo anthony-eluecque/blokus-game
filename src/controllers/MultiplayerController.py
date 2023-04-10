@@ -230,21 +230,19 @@ class MultiplayerController(Controller):
             self.server = Server(gethostbyname(gethostname()),self)
             self.server.start()
             self.waitingOthers()
+            self.multiPlayerView.backMenuServerSide()
             print('----> ip du serveur : ',gethostbyname(gethostname()))
             self.__initClient(gethostbyname(gethostname()))
-            self.multiPlayerView.backMenuServerSide()
         except:
             self.multiPlayerView.choiseJoinOrNot()
     
 
     def _joinServer(self,ip):
-        couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
         try:
             self.multiPlayerView.close()
-            self.__initClient(ip)
             self.multiPlayerView.waitingScreen()
             self.multiPlayerView.onConnectionClient()
-            self.multiPlayerView.colorLabel.configure(text="Votre couleur : " + self.color, text_color=couleurEN[self.color.upper()[0] + self.color[1:]])
+            self.__initClient(ip)
         except:
             self.multiPlayerView.close()
             self.multiPlayerView.invalidServer()
