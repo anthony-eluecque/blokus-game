@@ -6,7 +6,7 @@ from utils.leaderboard_utils import makeClassement, writeInJson, updateClassemen
 from testmap import MAP1
 from utils.controller_utils import _openController
 from utils.config_utils import Configuration
-from utils.automates_utils import easy_automate
+from utils.difficultIA import hardAutomate
 
 class GameController(Controller):
     """ 
@@ -155,6 +155,6 @@ class GameController(Controller):
         #self.loadMap()
 
     def IA(self):
-        played: bool = easy_automate(self.actualPlayer,self.plateau,self.index,self.gameView)
+        played: bool = hardAutomate(self.actualPlayer,self.plateau,self.index,self.gameView)
         self.actualPlayer.canplay = played
         self.nextPlayer()

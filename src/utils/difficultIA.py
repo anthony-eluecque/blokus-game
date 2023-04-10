@@ -144,7 +144,7 @@ def getPossibilities(indexJoueur:int,plateau:Plateau,joueur:Player)->list:
         return [joueur.getPositionDepart()]
     return p
 
-def easy_automate(joueurActuel : Player,plateau : Plateau,index:int,view):
+def hardAutomate(joueurActuel : Player,plateau : Plateau,index:int,view):
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
     tour = managePiece( joueurActuel,plateau, index )
 
