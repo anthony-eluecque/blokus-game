@@ -10,7 +10,7 @@
     <img src="https://img.shields.io/github/contributors/Antorakk/blokus-game">
 </p>
 
-> **Auteurs :** Anthony ELUECQUE, Frédéric DOURNEL, Evan LABIT, Anatole GINIAUX
+> **Auteurs :** [Anthony ELUECQUE](https://github.com/Antorakk), [Frédéric DOURNEL](https://github.com/Fredericdrnl), [Evan LABIT](https://github.com/EvanL2021), [Anatole GINIAUX](https://github.com/Okaneeee)
 
 # **Sommaire 📃**
 
