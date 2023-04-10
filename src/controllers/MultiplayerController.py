@@ -46,8 +46,8 @@ class Client(Thread):
     couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
     ctx = Network.receiveMessage(self.client)  # ctx = 'color'
     self.color = ctx
-    self.controller.multiPlayerView.colorLabel.configure(text="Votre couleur : " + self.color, text_color=couleurEN[self.color.upper()[0] + self.color[1:]])
     print("Ma couleur est ",self.color,"\n")
+    self.controller.multiPlayerView.colorLabel.configure(text="Votre couleur : " + self.color, text_color=couleurEN[self.color.upper()[0] + self.color[1:]])
     ctx = Network.receiveMessage(self.client) # ctx = 'start' || 'stop'd
     if ctx=='stop':
         self.controller.closeConnectionByServer()
@@ -217,6 +217,7 @@ class MultiplayerController(Controller):
         client.start()
 
     def waitingOthers(self):
+        couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
         self.multiPlayerView.close()
         self.multiPlayerView.waitingScreen()
 
@@ -237,11 +238,13 @@ class MultiplayerController(Controller):
     
 
     def _joinServer(self,ip):
+        couleurEN = {"Jaune" : "#F9DE2F", "Bleu" : "#3D5ECC", "Vert" : "#45A86B", "Rouge" : "#FF0004"}
         try:
             self.multiPlayerView.close()
             self.__initClient(ip)
             self.multiPlayerView.waitingScreen()
             self.multiPlayerView.onConnectionClient()
+            self.multiPlayerView.colorLabel.configure(text="Votre couleur : " + self.color, text_color=couleurEN[self.color.upper()[0] + self.color[1:]])
         except:
             self.multiPlayerView.close()
             self.multiPlayerView.invalidServer()

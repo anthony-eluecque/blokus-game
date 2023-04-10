@@ -8,6 +8,7 @@ from components.bouton import Bouton
 import os
 from customtkinter import CTk, CTkImage, CTkLabel, CTkCanvas
 from socket import gethostname, gethostbyname
+import pyperclip as pc
 
 class MultiplayerView(View):
 
@@ -98,8 +99,11 @@ class MultiplayerView(View):
             command= lambda : self.multiplayerController._joinServer(gethostbyname(gethostname())) 
         )
 
+    def __copyIp(self):
+        pc.copy(gethostbyname(gethostname()))
+        return(pc.paste())
+
     def waitingScreen(self):
-        
         _resizeWindow(self.window,600,300)
         self.mainFrame = _createFrame(self.window, 600, 300)
         self.bgImage = CTkImage(Image.open(APP_PATH + r"/../media/assets/waiting_bg.png"), size=(600, 300))
@@ -108,6 +112,7 @@ class MultiplayerView(View):
         self._createLabelPlayer()
         self.ipLabel = CTkLabel(self.mainFrame,text="Votre code d'acces à partager\n avec vos ami(e)s : " + gethostbyname(gethostname()),bg_color='white',text_color='black', font=('Roboto Bold', 25))
         self.ipLabel.place(x=120,y=100)
+        self.copyipbutton : Bouton = Bouton(self.window, self, 500, 125, width=40, heigth=40, file=APP_PATH + "/../media/assets/copy_button.png", son="button", command=self.__copyIp)    
         self.colorLabel = CTkLabel(self.mainFrame, text="", bg_color='white',text_color='black', font=('Roboto Bold', 25))
         self.colorLabel.place(x=180, y=200)
 
@@ -131,7 +136,6 @@ class MultiplayerView(View):
         self.updatedConnection = CTkLabel(self.window,text=f"En attente du meneur de jeu ... ",bg_color='white',text_color='black')
         self.updatedConnection.configure(font=('Roboto Bold', 25))
         self.updatedConnection.place(x=130,y=100)
-
 
 
     def close(self):
