@@ -382,8 +382,3 @@ def isValidMove(piece:list[list[int]],row:int,col:int,plateau:Plateau,player:Pla
             return False
 
     return pieceHasAdjacentDiagonal
-
-
-
-
-
