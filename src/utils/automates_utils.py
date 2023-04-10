@@ -1,109 +1,125 @@
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import validPlacement, coordsBlocs
+from utils.game_utils import validPlacement, coordsBlocs, isValidMove, isInGrid, hasAdjacentSameSquare
+from copy import deepcopy
+
+"""
+TODO: 
+1. Terminer l'adaptation de la fonction getSolution
+2. Terminer la fonction managePiece
+"""
 
 
-def managePiece(joueur: Player, plateau: Plateau, positions: list ) -> list :
+def getSolutions(positions: list, joueur: Player, plateau: Plateau, x: int = -1, y: int = -1, firstRota: int = -1, firstReverse: int = -1) -> list[dict]:
+    poses: list[dict] = []
+    pieces: list = joueur.pieces.pieces_joueurs
+    score: int = 0
+    
+    for pos in positions:
+        for pieceID in pieces:
+            for j in range(2):
+                if j == 1: joueur.pieces.reverse(pieceID)
+
+                for i in range(4):
+                    if i > 0: joueur.pieces.rotate(pieceID)
+                    piece: list = joueur.jouerPiece(pieceID)
+
+                    canPlace = isValidMove(piece, pos[0], pos[1], plateau, joueur) # type: ignore
+                    
+                    if canPlace:
+                        valPiece: int = 0
+
+                        for row in piece:
+                            # TODO: Simuler un coup et comptabiliser le score que celui ci apporte avec @valuateBoard
+                            ...
+                        
+                        preReverse: int = firstReverse
+                        if preReverse == -1: preReverse = j
+                        
+                        preRota: int = firstRota
+                        if preRota == -1: preRota = i
+
+                        preX: int = x
+                        if preX == -1: preX = pos[0]
+
+                        preY: int = y
+                        if preY == -1: preY = pos[1]
+                        
+                        poses.append({'x': pos[0], 'y': pos[1], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': i, 'nbReverse': j, 'firstX': preX, 'firstY': preY, 'firstRota': preRota, 'firstReverse': preReverse})
+
+            joueur.pieces.resetRotation( pieceID )
+    return poses
+
+def managePiece(joueur: Player, plateau: Plateau, positions: list) -> list:
     """TODO"""
     ...
 
-class Position:
-    def __init__(self, x, y) -> None:
-        self.left = [x, y-1]
-        self.right = [x, y+1]
-        self.top = [x-1, y]
-        self.bottom = [x+1, y]
+def getPossibilities(indexJoueur: int, plateau: Plateau, joueur: Player) -> list:
+    p = []
+    grille = plateau.getTab()
+    for i, ligne in enumerate(grille):
+        for j, col in enumerate(ligne):
+            if col == indexJoueur:
+                possibilities = getAdjacents(i,j,plateau,joueur)
+                if len(possibilities):
+                    for _pos in possibilities:
+                        p.append(_pos)
+    if not len(p):
+        return [joueur.getPositionDepart()]
+    return p
 
-TAILLE = 20
-class gameManager:
-
-    @staticmethod
-    def isInGrid(side: list)->bool:
-        if side[0] <= TAILLE and side[1] <= TAILLE and side[0] >= 0 and side[1] >= 0:
-            return True
-        return False
-    
-    @staticmethod
-    def iterateGrid(plateau: Plateau, indexJoueur: int):
-        for i in range(len(plateau.getTab())):
-            for j in range(len(plateau.getTab()[0])):
-                if plateau.getTab()[i][j] == indexJoueur:
-                    yield i,j
-
-    @staticmethod
-    def getBestPossibilities(plateau: Plateau, indexJoueur: int, joueur: Player):
-        """TODO: adapter la fonction pour jouer en fonction de @valoriser_grille"""
-        startPos = joueur.getPositionDepart()
-        grid = plateau.getTab()
-        if grid[startPos[0]][startPos[1]] != indexJoueur:
-            return [startPos]
-        
+def getAdjacents(x, y, plateau: Plateau, joueur: Player) -> list:
         possibilites = []
-        for cell in gameManager.iterateGrid(plateau,indexJoueur):
-            state = gameManager.getAdjacents(cell[0], cell[1], plateau, indexJoueur)
-            if len(state):
-                for pos in state:
-                    possibilites.append(pos)
+        
+        if isInGrid(y - 1, x - 1):
+            if not hasAdjacentSameSquare(plateau, joueur, x - 1, y - 1):
+                possibilites.append([y - 1, x - 1])
+
+        if isInGrid(y + 1, x - 1):
+            if not hasAdjacentSameSquare(plateau, joueur, x - 1, y + 1):
+                possibilites.append([y + 1 , x - 1])
+
+        if isInGrid(y - 1, x + 1):
+            if not hasAdjacentSameSquare(plateau, joueur, x + 1, y - 1):
+                possibilites.append([y - 1 , x + 1])
+
+        if isInGrid(y + 1, x + 1):
+            if not hasAdjacentSameSquare(plateau, joueur, x + 1, y + 1):
+                possibilites.append([y + 1, x + 1])
+
         return possibilites
 
-    @staticmethod
-    def valoriser_grille(plateau: Plateau) -> list[list[float]]:
-        """TODO: faire jouer l'ia en fonction du score du plateau"""
-        grille = plateau.getTab()
+def valuateBoard(plateau: Plateau) -> list[list[float]]:
+    """Évalue le plateau en fonction de la distance de chaque case par rapport au centre
 
-        centre_x, centre_y = len(grille) // 2, len(grille[0]) // 2
-        max_distance = max(centre_x, centre_y)
-        valeurs: list[list[float]] = []
-        for i in range(len(grille)):
-            ligne: list[float] = []
-            for j in range(len(grille[0])):
-                distance = abs(i - centre_x) + abs(j - centre_y)
-                proportion_distance = 1 - (distance / max_distance)
-                valeur = round((proportion_distance), 2)*10
-                ligne.append(valeur)
-            valeurs.append(ligne)
-        return valeurs
+    Args:
+        plateau (Plateau): Le plateau à valuer
 
-    @staticmethod
-    def canPlacePiece(numPiece: int, plateau: Plateau, x, y, joueur: Player) -> list:
+    Returns:
+        list[list[float]]: Le tableau de valeurs de chaque case du plateau
+    """
+    grille = plateau.getTab()
 
-        piece = joueur.jouerPiece(numPiece)
-        checkIf = validPlacement(piece,x,y,plateau,joueur)
+    centre_x, centre_y = len(grille) // 2, len(grille[0]) // 2
+    max_distance = max(centre_x, centre_y)
+    valeurs: list[list[float]] = []
 
-        if checkIf:
-            return coordsBlocs(piece,x,y)
-        return [-1, -1]
+    for i in range(len(grille)):
+        ligne: list[float] = []
 
-    @staticmethod
-    def getAdjacents(x: int , y: int, plateau: Plateau, indexJoueur: int) ->list:
-        possibilites = []
-        grid = plateau.getTab()
-        pos = Position(x,y)
+        for j in range(len(grille[0])):
+            distance = abs(i - centre_x) + abs(j - centre_y)
+            proportion_distance = 1 - (distance / max_distance)
+            valeur = round((proportion_distance), 2)*10
+            ligne.append(valeur)
 
-        if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.top):
-            if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
-                possibilites.append([pos.left[0], pos.top[1]])
-
-        if gameManager.isInGrid(pos.left) and gameManager.isInGrid(pos.right):
-            if grid[pos.left[0]][pos.left[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
-                possibilites.append([pos.left[0], pos.right[1]])
-
-        if gameManager.isInGrid(pos.bottom) and gameManager.isInGrid(pos.top):
-            if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.top[0]][pos.top[1]] != indexJoueur:
-                possibilites.append([pos.bottom[0], pos.top[1]])
-    
-        if gameManager.isInGrid(pos.right) and gameManager.isInGrid(pos.bottom):
-            if grid[pos.bottom[0]][pos.bottom[1]] != indexJoueur and grid[pos.right[0]][pos.right[1]] != indexJoueur:
-                possibilites.append([pos.bottom[0],pos.right[1]])
-
-        return list(filter(lambda coords: grid[coords[0]][coords[1]] != indexJoueur, possibilites))
+        valeurs.append(ligne)
+    return valeurs
 
 def easy_automate(joueurActuel: Player, plateau: Plateau, index: int, view):
-    """TODO: Modifier le code pour qu'il joue bien (voir avec l'évolution des autres programmes)"""
-
     cheminFichierPiece = "./media/pieces/" + joueurActuel.getCouleur().upper()[0] + "/1.png"
 
-    possibilities = gameManager.getBestPossibilities(plateau, index, joueurActuel)
+    possibilities = getPossibilities(index, plateau, joueurActuel)
     pieceBlokus = managePiece(joueurActuel, plateau, possibilities)
 
     if pieceBlokus != -1:
@@ -112,5 +128,5 @@ def easy_automate(joueurActuel: Player, plateau: Plateau, index: int, view):
             plateau.setColorOfCase(xpos, ypos, index)
 
     print("/////////////////////////")
-    print(gameManager.getBestPossibilities(plateau, index, joueurActuel))
+    print(getPossibilities(index, plateau, joueurActuel))
     print("/////////////////////////")
