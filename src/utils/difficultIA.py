@@ -2,53 +2,72 @@ from models.Player import Player
 from models.Plateau import Plateau
 from utils.game_utils import isValidMove, coordsBlocs, isInGrid, hasAdjacentSameSquare
 from copy import deepcopy
-from models.Thread import PossibilityThread
+from multiprocessing import Queue, Process
+
+def getSolucesSinglePiece( pieces, joueur, plateau, score, x, y, firstPID, firstRota, firstReverse, pos ): # , results: Queue ) -> list[ dict ]:
+    predicted = []
+
+    for pieceID in pieces:
+        for j in range( 2 ):
+            if j == 1: joueur.pieces.reverse( pieceID )
+
+            for i in range( 4 ):
+                if i > 0: joueur.pieces.rotate( pieceID )
+                piece: list = joueur.jouerPiece( pieceID )
+
+                canPlace = isValidMove( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
+                
+                if canPlace:
+                    valPiece: int = 0
+                    
+                    for row in piece:
+                        valPiece += row.count( 1 )
+                    
+                    preReverse: int = firstReverse
+                    if preReverse == -1: preReverse = j
+                    
+                    preRota: int = firstRota
+                    if preRota == -1: preRota = i
+
+                    prePID: int = firstPID
+                    if prePID == -1: prePID = pieceID
+
+                    preX: int = x
+                    if preX == -1: preX = pos[ 0 ]
+
+                    preY: int = y
+                    if preY == -1: preY = pos[ 1 ]
+
+                    # results.put( [ { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': i, 'nbReverse': j, 'firstX': preX, 'firstY': preY, 'firstPID': prePID, 'firstRota': preRota, 'firstReverse': preReverse } ] )
+                    predicted += [ { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': i, 'nbReverse': j, 'firstX': preX, 'firstY': preY, 'firstPID': prePID, 'firstRota': preRota, 'firstReverse': preReverse } ]
+
+        joueur.pieces.resetRotation( pieceID )
+    return predicted
 
 def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int, x: int = -1, y: int = -1, firstPID: int = -1, firstRota: int = -1, firstReverse: int = -1 ) -> list[ dict ]:
+    results: Queue = Queue()
+    procs: list[ Process ] = []
     poses: list[ dict ] = []
     pieces: list = joueur.pieces.pieces_joueurs
-    
+
     for pos in positions:
-        for pieceID in pieces:
-            for j in range( 2 ):
-                if j == 1: joueur.pieces.reverse( pieceID )
+        # process = Process( target = getSolucesSinglePiece, args = ( pieces, joueur, plateau, score, x, y, firstPID, firstRota, firstReverse, pos, results ) )
+        # procs.append( process )
+        # process.start()
+        poses += getSolucesSinglePiece( pieces, joueur, plateau, score, x, y, firstPID, firstRota, firstReverse, pos )
 
-                for i in range( 4 ):
-                    if i > 0: joueur.pieces.rotate( pieceID )
-                    piece: list = joueur.jouerPiece( pieceID )
+    # for process in procs:
+    #     process.join()
 
-                    canPlace = isValidMove( piece, pos[ 0 ], pos[ 1 ], plateau, joueur )
-                    
-                    if canPlace:
-                        valPiece: int = 0
+    # while not results.empty():
+    #     result = results.get()
+    #     if not result: continue
+    #     poses += [ results ]
 
-                        for row in piece:
-                            valPiece += row.count( 1 )
-                        
-                        preReverse: int = firstReverse
-                        if preReverse == -1: preReverse = j
-                        
-                        preRota: int = firstRota
-                        if preRota == -1: preRota = i
-
-                        prePID: int = firstPID
-                        if prePID == -1: prePID = pieceID
-
-                        preX: int = x
-                        if preX == -1: preX = pos[ 0 ]
-
-                        preY: int = y
-                        if preY == -1: preY = pos[ 1 ]
-                        
-                        poses.append( { 'x': pos[ 0 ], 'y': pos[ 1 ], 'score': score + valPiece, 'pieceID': pieceID, 'nbRota': i, 'nbReverse': j, 'firstX': preX, 'firstY': preY, 'firstPID': prePID, 'firstRota': preRota, 'firstReverse': preReverse } )
-
-            joueur.pieces.resetRotation( pieceID )
     return poses
 
 def predictSolutions( plateau: Plateau, joueur: Player, index: int, solutions: list[ dict ] ) -> list:
     secTourPossibilities: list[ dict ] = []
-    threads: list = []
-
     for pose in sorted( solutions, key = lambda x: x[ "score" ] ):
         predictedPlate: Plateau = deepcopy( plateau )
         pieceBlokus = coordsBlocs( joueur.jouerPiece( pose[ "pieceID" ] ), pose[ "y" ], pose[ "x" ] )
@@ -67,32 +86,27 @@ def predictSolutions( plateau: Plateau, joueur: Player, index: int, solutions: l
         joueur.nb_piece -= 1
 
         possibilities = getPossibilities( index, predictedPlate, joueur )
+        predictedPoses = getSolutions( possibilities, joueur, predictedPlate, pose[ "score" ], pose[ "x" ], pose[ "y" ], pose[ "pieceID" ], pose[ "nbRota" ], pose[ "nbReverse" ] )
 
-        thread = PossibilityThread( possibilities, joueur, predictedPlate, pose[ "score" ], pose[ "x" ], pose[ "y" ], pose[ "pieceID" ], pose[ "nbRota" ], pose[ "nbReverse" ] )
-        thread.start()
-        threads.append( thread )
+        if len( predictedPoses ) > 0: secTourPossibilities += predictedPoses
 
         joueur.pieces.resetRotation( pose[ "pieceID" ] )
         joueur.pieces.pieces_joueurs.append( pose[ "pieceID" ] )
         joueur.nb_piece += 1
 
-    for thread in threads:
-        thread.join()
-        if len( thread.result ) > 0: secTourPossibilities += thread.result
-        
     return secTourPossibilities
 
 def managePiece(joueur:Player,plateau:Plateau, index: int )->list:
     positions: list = getPossibilities( index, plateau, joueur )
+
     if len( positions ) < 1: return -1
 
     solutions: list[ dict ] = getSolutions( positions, joueur, plateau, 0 )
-
     secTourPossibilities: list[ dict ] = predictSolutions( plateau, joueur, index, solutions )
-
     possMin: dict = sorted( secTourPossibilities, key = lambda x: x[ "score" ], reverse = True )
 
     if len( possMin ) == 0: return -1
+
     possMin = possMin[ 0 ]
 
     idPiece: int = possMin[ "firstPID" ]
