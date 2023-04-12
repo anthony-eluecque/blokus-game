@@ -2,6 +2,7 @@ from models.Player import Player
 from models.Plateau import Plateau
 from utils.game_utils import isValidMove, coordsBlocs, isInGrid, hasAdjacentSameSquare
 from copy import deepcopy
+from models.Thread import PossibilityThread
 
 def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int, x: int = -1, y: int = -1, firstPID: int = -1, firstRota: int = -1, firstReverse: int = -1 ) -> list[ dict ]:
     poses: list[ dict ] = []
@@ -46,6 +47,7 @@ def getSolutions( positions: list, joueur: Player, plateau: Plateau, score: int,
 
 def predictSolutions( plateau: Plateau, joueur: Player, index: int, solutions: list[ dict ] ) -> list:
     secTourPossibilities: list[ dict ] = []
+    threads: list = []
 
     for pose in sorted( solutions, key = lambda x: x[ "score" ] ):
         predictedPlate: Plateau = deepcopy( plateau )
@@ -65,13 +67,19 @@ def predictSolutions( plateau: Plateau, joueur: Player, index: int, solutions: l
         joueur.nb_piece -= 1
 
         possibilities = getPossibilities( index, predictedPlate, joueur )
-        predictedFoundSoluces: list[ dict ] = getSolutions( possibilities, joueur, predictedPlate, pose[ "score" ], pose[ "x" ], pose[ "y" ], pose[ "pieceID" ], pose[ "nbRota" ], pose[ "nbReverse" ] )
-        
+
+        thread = PossibilityThread( possibilities, joueur, predictedPlate, pose[ "score" ], pose[ "x" ], pose[ "y" ], pose[ "pieceID" ], pose[ "nbRota" ], pose[ "nbReverse" ] )
+        thread.start()
+        threads.append( thread )
+
         joueur.pieces.resetRotation( pose[ "pieceID" ] )
         joueur.pieces.pieces_joueurs.append( pose[ "pieceID" ] )
         joueur.nb_piece += 1
 
-        if len( predictedFoundSoluces ) > 0: secTourPossibilities += predictedFoundSoluces
+    for thread in threads:
+        thread.join()
+        if len( thread.result ) > 0: secTourPossibilities += thread.result
+        
     return secTourPossibilities
 
 def managePiece(joueur:Player,plateau:Plateau, index: int )->list:
@@ -105,7 +113,7 @@ def managePiece(joueur:Player,plateau:Plateau, index: int )->list:
 
     for _ in range( rota ):
         joueur.pieces.rotate( idPiece )
-    print( possMin )
+        
     joueur.hasPlayedPiece( idPiece )
     return ( coordsBlocs( joueur.jouerPiece( idPiece ), y, x ), idPiece )
 
