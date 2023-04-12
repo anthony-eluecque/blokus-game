@@ -7,6 +7,9 @@ from typing_extensions import Self
 from utils.window_utils import _resizeWindow, _deleteChilds, _createFrame
 from components.bouton import Bouton
 from config import APP_PATH
+import win32gui
+import win32con
+import win32api
 
 class GameParamView(View):
     """
@@ -58,10 +61,34 @@ class GameParamView(View):
         self.gameParamTitle.place(x = 0,y = 0)
         
     def __makeButtons(self)->None:
-        self.settingsBt: Bouton = Bouton( self.window, self, 56, 12, width=65, heigth=65, file= APP_PATH + r"/../media/assets/button_settings.png", son="button" )
         self.launchBt: Bouton = Bouton( self.window, self, 543.5, 345.5, width=207, heigth=105, file= APP_PATH + r"/../media/assets/button_launch.png", son="button", command=self.paramController.btn_play )
         self.retourBt: Bouton = Bouton( self.window, self, 40, 743, width=570, heigth=48, file= APP_PATH + r"/../media/assets/button_retour.png", son="button", command=self.paramController.btn_retour )
         self.reglesBt: Bouton = Bouton( self.window, self, 695, 743, width=570, heigth=48, file= APP_PATH + r"/../media/assets/button_regles.png", son="button", command=self.paramController.btn_regles )
+
+        self.launchBt.configure(bg='maroon')
+        hwnd = self.launchBt.winfo_id()
+        colorkey = win32api.RGB(128, 0, 0)
+        wnd_exstyle = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+        new_exstyle = wnd_exstyle | win32con.WS_EX_LAYERED
+        win32gui.SetWindowLong(hwnd,win32con.GWL_EXSTYLE,new_exstyle)
+        win32gui.SetLayeredWindowAttributes(hwnd,colorkey,255,win32con.LWA_COLORKEY)
+
+        self.retourBt.configure(bg='maroon')
+        hwnd = self.retourBt.winfo_id()
+        colorkey = win32api.RGB(128, 0, 0)
+        wnd_exstyle = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+        new_exstyle = wnd_exstyle | win32con.WS_EX_LAYERED
+        win32gui.SetWindowLong(hwnd,win32con.GWL_EXSTYLE,new_exstyle)
+        win32gui.SetLayeredWindowAttributes(hwnd,colorkey,255,win32con.LWA_COLORKEY)
+
+        self.reglesBt.configure(bg='maroon')
+        hwnd = self.reglesBt.winfo_id()
+        colorkey = win32api.RGB(128, 0, 0)
+        wnd_exstyle = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+        new_exstyle = wnd_exstyle | win32con.WS_EX_LAYERED
+        win32gui.SetWindowLong(hwnd,win32con.GWL_EXSTYLE,new_exstyle)
+        win32gui.SetLayeredWindowAttributes(hwnd,colorkey,255,win32con.LWA_COLORKEY)
+
 
     def __makeCardPlayer(self)->None:
 
@@ -127,7 +154,7 @@ class GameParamView(View):
         entryy.configure(font=('Roboto Bold', 20))
         entryy.place(x=self.posWidgetsPlayer[index]["saisi_clavier"][0],y=self.posWidgetsPlayer[index]["saisi_clavier"][1])
         
-        entryy.bind( "<FocusOut>", lambda e: self.setConfAttr( e, int( index ), "nom" ) )
+        entryy.bind( "<KeyRelease>", lambda e: self.setConfAttr( e, int( index ), "nom" ) )
         selecteur.bind( "<FocusOut>", lambda e: self.setConfAttr( e, int( index ), "couleur" ) )
 
         return [label,label2,selecteur,entryy]
@@ -160,7 +187,7 @@ class GameParamView(View):
 
         selecteur.bind( "<FocusOut>", lambda e: self.setConfAttr( e, int( index ), "couleur" ) )
         selecteur2.bind( "<FocusOut>", lambda e: self.setConfAttr( e, int( index ), "niveau_difficulte" ) )
-        entryy.bind( "<FocusOut>", lambda e: self.setConfAttr( e, int( index ), "nom" ) )
+        entryy.bind( "<Key>", lambda e: self.setConfAttr( e, int( index ), "nom" ) )
 
         return [label,label2,label3,selecteur,selecteur2,entryy]
 
@@ -177,5 +204,6 @@ class GameParamView(View):
         _deleteChilds( self.window )
 
     def setConfAttr( self, event, index, attribute ):
+        print("test")
         val: str = event.widget.get()
         self.paramController.setConfigAttribute( index - 1, attribute, val )
