@@ -112,7 +112,7 @@ class MultiplayerView(View):
         self._createLabelPlayer()
         self.ipLabel = CTkLabel(self.mainFrame,text="Votre code d'acces à partager\n avec vos ami(e)s : " + gethostbyname(gethostname()),bg_color='white',text_color='black', font=('Roboto Bold', 25))
         self.ipLabel.place(x=120,y=100)
-        self.copyipbutton : Bouton = Bouton(self.window, self, 500, 125, width=40, heigth=40, file=APP_PATH + "/../media/assets/copy_button.png", son="button", command=self.__copyIp)    
+        self.copyipbutton : Bouton = Bouton(self.window, self, 500, 170, width=40, heigth=40, file=APP_PATH + "/../media/assets/copy_button.png", son="button", command=self.__copyIp)    
         self.colorLabel = CTkLabel(self.mainFrame, text="", bg_color='white',text_color='black', font=('Roboto Bold', 25))
         self.colorLabel.place(x=180, y=200)
 
