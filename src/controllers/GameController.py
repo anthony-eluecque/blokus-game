@@ -214,7 +214,7 @@ class GameController(Controller):
         elif niveau == "Moyen":
             result = await medium_automate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
         elif niveau == "Difficile":
-            result = hardAutomate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
+            result = await hardAutomate(self.actualPlayer,self.plateau,self.index,self.gameView,self.db)
             self.actualPlayer.canplay = result
             
         self.nextPlayer()
