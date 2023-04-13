@@ -1,18 +1,40 @@
-import multiprocessing
-from random import randint
-import threading
 from models.Player import Player
 from models.Plateau import Plateau
-from utils.game_utils import hasAdjacentSameSquare, isInGrid, isValidMove, validPlacement,coordsBlocs,getDiagonals,getAdjacents
+from utils.game_utils import hasAdjacentSameSquare, isInGrid, isValidMove, coordsBlocs
 from copy import deepcopy
-from utils.tree import Tree
-from utils.tree import evaluateGame
 import math
-from time import sleep
-import asyncio
 import time
-from concurrent.futures.thread import ThreadPoolExecutor
 import itertools
+
+def valuateBoard(plateau: Plateau) -> list[list[float]]:
+    """Évalue le plateau en fonction de la distance de chaque case par rapport au centre
+
+    Args:
+        plateau (Plateau): Le plateau à valuer
+
+    Returns:
+        list[list[float]]: Le tableau de valeurs de chaque case du plateau
+    """
+    # Un dictionnaire de valeur pour attributer correctement la valuation de chaque case
+    values: dict = {-10 : 0, -9 : 1, -8 : 2, -7 : 3, -6 : 4, -5 : 5, -4 : 6, -3 : 7, -2 : 8, -1 : 9, 0 : 10,
+                    1 : 20, 2 : 30, 3 : 40, 4 : 50, 5 : 60, 6 : 70, 7 : 80, 8 : 90, 9 : 100, 10 : 00}
+    grille = plateau.getTab()
+
+    centre_x, centre_y = len(grille) // 2, len(grille[0]) // 2
+    max_distance = max(centre_x, centre_y)
+    valeurs: list[list[float]] = []
+
+    for i in range(len(grille)):
+        ligne: list[float] = []
+
+        for j in range(len(grille[0])):
+            distance = abs(i - centre_x) + abs(j - centre_y)
+            proportion_distance = 1 - (distance / max_distance)
+            valeur = values[int(round((proportion_distance), 2)*10)]
+            ligne.append(valeur)
+
+        valeurs.append(ligne)
+    return valeurs
 
 async def medium_automate(joueurActuel : Player, plateau : Plateau, index : int, view,db):
 
@@ -38,6 +60,7 @@ def doMinmax(numPiece: int, plateau: Plateau, possibility:list[int,int], joueur:
 
     x,y = possibility
     check = gameManager.canPlacePiece(numPiece,plateau,x,y,joueur)
+    valBoard = valuateBoard(plateau)
 
     if not check:
         return None
@@ -54,6 +77,7 @@ def doMinmax(numPiece: int, plateau: Plateau, possibility:list[int,int], joueur:
     starttime = time.time()
     score = minmax(joueur,plateau,indexJoueur)
     for xpos,ypos in pieceBlokus:
+        score += valBoard[xpos][ypos]
         plateau.setColorOfCase(xpos,ypos,'X')
 
     joueur.logPieces.pop()
