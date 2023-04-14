@@ -154,10 +154,12 @@ La partie Réseau ne prend pas en charge les IA. Elle peut se faire sur différe
 Pour lancer une partie, il faut se rendre dans le menu *Multiplayer* et ensuite l'host doit créer un serveur. Les autres joueurs doivent saisir l'adresse ip de l'host puis cliquer sur rejoindre. Temps qu'il n'y a pas 4 joueurs, les joueurs ont un waiting screen. Dès qu'il y a 4 joueurs, la partie se lance
 
 <p align="center">
-    <img src="./media/imgReadme/schema_lancement_reseau.jpg" width=350>
+    <img src="./media/imgReadme/schema_lancement_reseau.png" width=350>
 </p>
 
 ### **5.2 Pendant la partie**
+
+Après que tout les joueurs ont rejoind la partie, la partie se lance pour tout le monde
 
 ## **6 Statistiques 📊**
 
