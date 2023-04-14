@@ -151,7 +151,7 @@ La partie Réseau ne prend pas en charge les IA. Elle peut se faire sur différe
 
 ### **5.1 Lancement de la partie**
 
-Pour lancer une partie, il faut se rendre dans le menu *Multiplayer* et ensuite l'host doit créer un serveur. Les autres joueurs doivent saisir l'adresse ip de l'host puis cliquer sur rejoindre. Temps qu'il n'y a pas 4 joueurs, les joueurs ont un waiting screen. Dès qu'il y a 4 joueurs, la partie se lance
+Pour lancer une partie, il faut se rendre dans le menu *Multiplayer* et ensuite l'host doit créer un serveur. Les autres joueurs doivent saisir l'adresse ip de l'host puis cliquer sur rejoindre. Temps qu'il n'y a pas 4 joueurs, les joueurs ont un waiting screen. Dès qu'il y a 4 joueurs, la partie se lance.
 
 <p align="center">
     <img src="./media/imgReadme/schema_lancement_reseau.png" width=350>
@@ -159,13 +159,19 @@ Pour lancer une partie, il faut se rendre dans le menu *Multiplayer* et ensuite 
 
 ### **5.2 Pendant la partie**
 
-Après que tout les joueurs ont rejoind la partie, la partie se lance pour tout le monde
+Après que tout les joueurs ont rejoint, la partie se lance pour tout le monde. L'host est le premier joueur à jouer, dès qu'il a joué, il envoie l'information de la pièce posé aux autre joueur et ainsi de suite pour les autres joueurs. Dès que les 4 joueurs ne peuvent plus jouer, le tableau des scores s'affiche et le jeu disparait. Les statistiques de la partie joué sont disponible que pour l'host de la partie.
+
+<p align="center">
+    <img src="./media/imgReadme/schema_jeu_reseau.png" width=270>
+</p>
 
 ## **6 Statistiques 📊**
 
-
+Les statistiques sont disponible dans le menu en cliquant sur le bouton *Statistique*. Vous pouvez constater comme information le winrate de chacune des couleurs pour toutes les parties enregistrées ainsi qu'un registre de toutes les parties jouées.
+Si vous cliquer sur une partie vous pouvez voir plus d'information sur la partie comme le plateau avec toutes les pièces posées ainsi que le score de chacun des joueurs.
 
 ## **7 Copyrights & Droits d'auteur ©️**
+
 Tous les <u>sons</u> utilisés sont libres de droit, accessibles et utilisables par tous. <br>
 La <u>musique de fond</u> provenant du jeu **Portal 2** qui utilisée sur le menu principal est la propriété intellectuelle de **Valve Corporation**. <br>
 Selon l'**Utilisation Équitable** ou **Fair Use** en anglais et du respect de ses quatres facteurs, l'utilisation de la musique du jeu **Portal 2** pour ce projet à fin éducatif et non lucratif, ne brise ni les copyrights ni les droits d'auteurs.
