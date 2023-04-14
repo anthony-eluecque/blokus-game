@@ -29,7 +29,13 @@
         - 3.3.1 Début de la partie
         - 3.3.2 Au cours de la partie
         - 3.3.3 Fin de la partie
-- **4 Copyrights & Droits d'auteur**
+- **4 IA**
+    - 4.1 IA facile
+    - 4.1 IA moyenne
+    - 4.1 IA difficile
+- **5 Réseau**
+- **7 Statistiques**
+- **6 Copyrights & Droits d'auteur**
 
 ## **1 Introduction 📌**
 
@@ -121,8 +127,43 @@ Lorsqu’un joueur est bloqué et ne peut plus placer de pièce, il est obligé 
 - +15 points si les 21 pièces ont été posées. 
 - +20 points si les 21 pièces ont été posées avec le carré solitaire (seul et unique sur les 21 pièces) en dernière position. 
 
+## **4 IA 🤖**
 
-## **4 Copyrights & Droits d'auteur ©️**
+Pour notre jeu nous avons conçu 3 types d'IA
+
+### **4.1 IA facile**
+
+Cette IA est juste une IA qui joue aléatoirement, pour cela, nous utilisons la bibliothèque random. Les IA fonctionnent que pour la couleur bleu.
+
+### **4.2 IA moyenne**
+
+Cette IA utilise l'algorithme mathématiques du Minmax pour faire les meilleures coup possible. Cependant ne prend pas en compte la rotation et l'inversion pour faute de temps de calcul
+
+<sub>l'algorithme du Minmax : https://fr.wikipedia.org/wiki/Algorithme_minimax</sub>
+
+### **4.3 IA difficile**
+
+Cette IA privilégie les pièces qui rapporte le plus de point avec un peu d'aléatoire pour éviter la redondance. Celle-ci prend en charge la rotation ainsi que l'inversion.
+
+## **5 Réseau 📡** 
+
+La partie Réseau ne prend pas en charge les IA. Elle peut se faire sur différent ordinateur temps qu'il sont conecté sur le même réseau internet.
+
+### **5.1 Lancement de la partie**
+
+Pour lancer une partie, il faut se rendre dans le menu *Multiplayer* et ensuite l'host doit créer un serveur. Les autres joueurs doivent saisir l'adresse ip de l'host puis cliquer sur rejoindre. Temps qu'il n'y a pas 4 joueurs, les joueurs ont un waiting screen. Dès qu'il y a 4 joueurs, la partie se lance
+
+<p align="center">
+    <img src="./media/imgReadme/schema_lancement_reseau.jpg" width=350>
+</p>
+
+### **5.2 Pendant la partie**
+
+## **6 Statistiques 📊**
+
+
+
+## **7 Copyrights & Droits d'auteur ©️**
 Tous les <u>sons</u> utilisés sont libres de droit, accessibles et utilisables par tous. <br>
 La <u>musique de fond</u> provenant du jeu **Portal 2** qui utilisée sur le menu principal est la propriété intellectuelle de **Valve Corporation**. <br>
 Selon l'**Utilisation Équitable** ou **Fair Use** en anglais et du respect de ses quatres facteurs, l'utilisation de la musique du jeu **Portal 2** pour ce projet à fin éducatif et non lucratif, ne brise ni les copyrights ni les droits d'auteurs.
