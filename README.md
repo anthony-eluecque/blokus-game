@@ -129,11 +129,11 @@ Lorsqu’un joueur est bloqué et ne peut plus placer de pièce, il est obligé 
 
 ## **4 IA 🤖**
 
-Pour notre jeu nous avons conçu 3 types d'IA
+Pour notre jeu nous avons conçu 3 types d'IA. Elles fonctionnent que pour la couleur bleu.
 
 ### **4.1 IA facile**
 
-Cette IA est juste une IA qui joue aléatoirement, pour cela, nous utilisons la bibliothèque random. Les IA fonctionnent que pour la couleur bleu.
+Cette IA est juste une IA qui joue aléatoirement, pour cela, nous utilisons la bibliothèque random. 
 
 ### **4.2 IA moyenne**
 
@@ -168,7 +168,17 @@ Après que tout les joueurs ont rejoint, la partie se lance pour tout le monde. 
 ## **6 Statistiques 📊**
 
 Les statistiques sont disponible dans le menu en cliquant sur le bouton *Statistique*. Vous pouvez constater comme information le winrate de chacune des couleurs pour toutes les parties enregistrées ainsi qu'un registre de toutes les parties jouées.
+
+<p align="center">
+    <img src="./media/imgReadme/screen_stats_global.png" width=400>
+</p>
+
 Si vous cliquer sur une partie vous pouvez voir plus d'information sur la partie comme le plateau avec toutes les pièces posées ainsi que le score de chacun des joueurs.
+
+<p align="center">
+    <img src="./media/imgReadme/schema_jeu_reseau.png" width=270>
+</p>
+
 
 ## **7 Copyrights & Droits d'auteur ©️**
 
