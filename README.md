@@ -170,13 +170,13 @@ Après que tout les joueurs ont rejoint, la partie se lance pour tout le monde. 
 Les statistiques sont disponible dans le menu en cliquant sur le bouton *Statistique*. Vous pouvez constater comme information le winrate de chacune des couleurs pour toutes les parties enregistrées ainsi qu'un registre de toutes les parties jouées.
 
 <p align="center">
-    <img src="./media/imgReadme/screen_stats_global.png" width=500>
+    <img src="./media/imgReadme/screen_stats_global.png" width=700>
 </p>
 
 Si vous cliquer sur une partie vous pouvez voir plus d'information sur la partie comme le plateau avec toutes les pièces posées ainsi que le score de chacun des joueurs.
 
 <p align="center">
-    <img src="./media/imgReadme/screen_stats_precis.png" width=500>
+    <img src="./media/imgReadme/screen_stats_precis.png" width=700>
 </p>
 
 
