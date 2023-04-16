@@ -34,6 +34,8 @@
     - 4.1 IA moyenne
     - 4.1 IA difficile
 - **5 Réseau**
+    - 5.1 Lancement de la partie
+    - 5.2 Pendant la partie
 - **7 Statistiques**
 - **6 Copyrights & Droits d'auteur**
 
